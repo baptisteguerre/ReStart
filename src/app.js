@@ -1,5 +1,10 @@
 import { ICONS, UI } from "./icons.js";
 
+// Firefox exposes the extension APIs as `browser` (promise-based), Chromium as `chrome`.
+const ext = globalThis.browser ?? globalThis.chrome;
+// The favicon cache API only exists in Chromium; Firefox builds use the most visited sites' icons.
+const HAS_FAVICON_API = (ext.runtime.getManifest().permissions || []).includes("favicon");
+
 /* ===================== Constants ===================== */
 
 const PASTELS = [
@@ -42,9 +47,9 @@ const DEFAULT_SETTINGS = {
 };
 
 const $ = (id) => document.getElementById(id);
-const t = (key, ...subs) => chrome.i18n.getMessage(key, subs.map(String)) || key;
+const t = (key, ...subs) => ext.i18n.getMessage(key, subs.map(String)) || key;
 const colorName = (id) => t(`c_${id}`);
-const percent = new Intl.NumberFormat(chrome.i18n.getUILanguage(), { style: "percent" });
+const percent = new Intl.NumberFormat(ext.i18n.getUILanguage(), { style: "percent" });
 const els = {
   search: $("search"),
   searchLabel: document.querySelector(".search"),
@@ -143,21 +148,23 @@ const hasIcon = (name) => typeof name === "string" && Object.hasOwn(ICONS, name)
 
 // All settings live in the extension's local storage, on this device only.
 // (Moving them to another device is done with Export / Import.)
-const store = chrome.storage.local;
+const store = ext.storage.local;
 const isPrefKey = (k) => ["settings", "order", "hidden", "highlighted"].includes(k) || k.startsWith(STYLE_PREFIX);
 const saveLocal = (items) => store.set(items).catch((e) => console.warn("ReStart: could not save settings", e));
 
 function openUrl(url, { newTab = false } = {}) {
   if (!url || isScriptUrl(url)) return; // bookmarklets can't run from a new tab page
-  if (newTab) chrome.tabs.create({ url, active: false });
+  // Some internal pages can't be opened by extensions (Firefox refuses most about: pages).
+  const fail = (e) => console.warn("ReStart: could not open", e);
+  if (newTab) ext.tabs.create({ url, active: false }).catch(fail);
   else if (isWebUrl(url)) location.href = url;
-  else chrome.tabs.update({ url });
+  else ext.tabs.update({ url }).catch(fail);
 }
 
 /* ===================== Favicons ===================== */
 
 function faviconUrl(pageUrl, size) {
-  const u = new URL(chrome.runtime.getURL("/_favicon/"));
+  const u = new URL(ext.runtime.getURL("/_favicon/"));
   u.searchParams.set("pageUrl", pageUrl);
   u.searchParams.set("size", String(size));
   return u.toString();
@@ -192,9 +199,37 @@ function letterBadge(title, url) {
   return h("span", { class: "letter", style: `background-color:${isDark() ? p.dark : p.light}` }, ch);
 }
 
-// Site icon from the browser's favicon cache, or a colored letter when it has none.
+// Firefox: icons of the most visited sites, as data: URLs returned by the
+// topSites API (nothing is downloaded). Keyed by full URL and by host, so a
+// bookmark to any page of a frequently visited site gets its icon.
+const siteIcons = new Map();
+const isImageData = (v) => typeof v === "string" && v.length < 200_000 && /^data:image\/(png|x-icon|vnd\.microsoft\.icon|svg\+xml|gif|jpeg|webp);/i.test(v);
+async function loadSiteIcons() {
+  if (HAS_FAVICON_API) return;
+  try {
+    const sites = await ext.topSites.get({ limit: 100, includeFavicon: true, onePerDomain: false });
+    for (const s of sites) {
+      if (!isImageData(s.favicon) || !isWebUrl(s.url)) continue;
+      if (!siteIcons.has(s.url)) siteIcons.set(s.url, s.favicon);
+      const host = hostOf(s.url);
+      if (host && !siteIcons.has(host)) siteIcons.set(host, s.favicon);
+    }
+  } catch (e) {
+    console.warn("ReStart: site icons unavailable", e);
+  }
+}
+
+// Site icon from the browser, or a colored letter when there is none.
 function favicon(url, title, size) {
   if (!isWebUrl(url)) return letterBadge(title, url);
+  if (!HAS_FAVICON_API) {
+    const data = siteIcons.get(url) || siteIcons.get(hostOf(url));
+    if (!data) return letterBadge(title, url);
+    const img = h("img", { class: "fav", alt: "", decoding: "async", draggable: "false" });
+    img.addEventListener("error", () => img.replaceWith(letterBadge(title, url)), { once: true });
+    img.src = data;
+    return img;
+  }
   const img = h("img", { class: "fav", alt: "", decoding: "async", draggable: "false" });
   img.addEventListener("load", async () => {
     const ref = await defaultFingerprint(size);
@@ -932,7 +967,7 @@ function openBookmarkMenu(node, anchor, x, y) {
         return;
       }
       closePopover({ restoreFocus: false });
-      chrome.bookmarks.remove(node.id).catch((e) => console.warn("ReStart: delete failed", e));
+      ext.bookmarks.remove(node.id).catch((e) => console.warn("ReStart: delete failed", e));
     }, "danger");
     els.popover.replaceChildren(...[
       canOpen ? item(t("openNewTab"), UI.openNew, () => { closePopover(); openUrl(node.url, { newTab: true }); }) : null,
@@ -958,7 +993,7 @@ function openBookmarkMenu(node, anchor, x, y) {
       const title = input.value.trim();
       closePopover({ restoreFocus: false });
       if (title && title !== node.title) {
-        chrome.bookmarks.update(node.id, { title }).catch((e) => console.warn("ReStart: rename failed", e));
+        ext.bookmarks.update(node.id, { title }).catch((e) => console.warn("ReStart: rename failed", e));
       }
     };
     input.addEventListener("keydown", (e) => {
@@ -1000,7 +1035,7 @@ function openFolderMenu(node, anchor, x, y) {
         return;
       }
       closePopover({ restoreFocus: false });
-      chrome.bookmarks.removeTree(node.id).catch((e) => console.warn("ReStart: delete failed", e));
+      ext.bookmarks.removeTree(node.id).catch((e) => console.warn("ReStart: delete failed", e));
     }, "danger");
     els.popover.replaceChildren(item(t("rename"), UI.edit, showRename), del);
   };
@@ -1013,7 +1048,7 @@ function openFolderMenu(node, anchor, x, y) {
       if (!title || title === node.title) return;
       // Folder customizations, order and visibility are keyed by title: carry them over.
       if (node.parentId === state.bar.id) moveFolderPrefs(node.title, title);
-      chrome.bookmarks.update(node.id, { title }).catch((e) => console.warn("ReStart: rename failed", e));
+      ext.bookmarks.update(node.id, { title }).catch((e) => console.warn("ReStart: rename failed", e));
     };
     input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") { e.preventDefault(); save(); }
@@ -1075,7 +1110,7 @@ function openTopSiteMenu(node, anchor, x, y) {
 
   const add = (parentId) => {
     closePopover({ restoreFocus: false });
-    chrome.bookmarks.create({ parentId, title, url: node.url }).catch((e) => console.warn("ReStart: could not add bookmark", e));
+    ext.bookmarks.create({ parentId, title, url: node.url }).catch((e) => console.warn("ReStart: could not add bookmark", e));
   };
 
   const showMain = () => {
@@ -1109,8 +1144,8 @@ function openTopSiteMenu(node, anchor, x, y) {
       if (!name) { input.focus(); return; }
       closePopover({ restoreFocus: false });
       try {
-        const folder = await chrome.bookmarks.create({ parentId: state.bar.id, title: name });
-        await chrome.bookmarks.create({ parentId: folder.id, title, url: node.url });
+        const folder = await ext.bookmarks.create({ parentId: state.bar.id, title: name });
+        await ext.bookmarks.create({ parentId: folder.id, title, url: node.url });
       } catch (e) {
         console.warn("ReStart: could not create folder", e);
       }
@@ -1564,15 +1599,26 @@ document.addEventListener("keydown", (e) => {
 
 /* ===================== Data ===================== */
 
+// Firefox adds separators and "place:" queries (smart folders) to the tree: keep
+// only real bookmarks and folders.
+function cleanTree(node, depth = 0) {
+  if (depth > 64 || !node.children) return node;
+  node.children = node.children
+    .filter((c) => c.type !== "separator" && !(c.url && /^place:/i.test(c.url)))
+    .map((c) => cleanTree(c, depth + 1));
+  return node;
+}
+
 async function loadBookmarks() {
-  const [root] = await chrome.bookmarks.getTree();
-  const kids = root.children || [];
-  state.bar = kids.find((n) => n.folderType === "bookmarks-bar") || kids.find((n) => n.id === "1") || kids[0];
-  state.other = kids.find((n) => n.folderType === "other") || kids.find((n) => n.id === "2") || null;
+  const [root] = await ext.bookmarks.getTree();
+  const kids = cleanTree(root).children || [];
+  // Chromium: folderType (recent versions) or ids "1" and "2". Firefox: fixed root ids.
+  state.bar = kids.find((n) => n.folderType === "bookmarks-bar") || kids.find((n) => n.id === "1" || n.id === "toolbar_____") || kids[0];
+  state.other = kids.find((n) => n.folderType === "other") || kids.find((n) => n.id === "2" || n.id === "unfiled_____") || null;
 }
 
 async function loadTopSites() {
-  try { state.topSites = (await chrome.topSites.get()).slice(0, 10); }
+  try { state.topSites = (await ext.topSites.get()).slice(0, 10); }
   catch { state.topSites = []; }
 }
 
@@ -1629,16 +1675,17 @@ function sanitizeImport(prefs) {
   return out;
 }
 
-// Pre-release builds kept settings in chrome.storage.sync: move them here once.
+// Pre-release builds kept settings in ext.storage.sync: move them here once.
 async function migrateFromSync() {
   const { migratedFromSync } = await store.get("migratedFromSync");
   if (migratedFromSync) return;
+  if (!HAS_FAVICON_API) { await store.set({ migratedFromSync: true }); return; } // Firefox: no pre-release data
   try {
-    const old = await chrome.storage.sync.get(null);
+    const old = await ext.storage.sync.get(null);
     const prefs = sanitizeImport(old);
     const local = await store.get(null);
     if (!Object.keys(local).some(isPrefKey) && Object.keys(old).length) await store.set(prefs);
-    await chrome.storage.sync.clear();
+    await ext.storage.sync.clear();
   } catch (e) {
     console.warn("ReStart: migration skipped", e);
   }
@@ -1681,12 +1728,12 @@ function scheduleReload() {
   reloadTimer = setTimeout(async () => { await loadBookmarks(); render(); }, 120);
 }
 for (const ev of ["onCreated", "onRemoved", "onChanged", "onMoved", "onChildrenReordered", "onImportEnded"]) {
-  chrome.bookmarks[ev]?.addListener(scheduleReload);
+  ext.bookmarks[ev]?.addListener(scheduleReload);
 }
 
 // Another open tab (or an import) can change settings: stay in step.
 let storageTimer;
-chrome.storage.onChanged.addListener((changes, area) => {
+ext.storage.onChanged.addListener((changes, area) => {
   if (area !== "local" || !Object.keys(changes).some(isPrefKey)) return;
   clearTimeout(storageTimer);
   storageTimer = setTimeout(async () => {
@@ -1701,7 +1748,7 @@ narrowQuery.addEventListener("change", render);
 
 /* ===================== Init ===================== */
 
-document.documentElement.lang = chrome.i18n.getUILanguage();
+document.documentElement.lang = ext.i18n.getUILanguage();
 document.title = t("newTab");
 document.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
 for (const attr of ["aria-label", "title", "placeholder"]) {
@@ -1716,7 +1763,7 @@ $("enter-path").setAttribute("d", UI.enter);
   dropLegacyIconCache();
   await loadStorage();
   applyAppearance();
-  await Promise.all([loadBookmarks(), state.hidden.includes(KEY_TOP) ? null : loadTopSites()]);
+  await Promise.all([loadBookmarks(), loadSiteIcons(), state.hidden.includes(KEY_TOP) ? null : loadTopSites()]);
   render();
   scheduleClock();
   requestAnimationFrame(() => document.body.classList.add("ready"));

@@ -2,7 +2,7 @@
 
 **A calm, simple start page built around your bookmarks, in their real order. As it always should have been.**
 
-ReStart replaces the new tab page of Chromium-based browsers that let extensions do so (Brave, Chrome, Edge…, version 116 or later) with a macOS-inspired start page built from your existing bookmarks bar. No feeds, no widgets, no distractions. No account, no server, no tracking, no network requests.
+ReStart replaces the new tab page of Firefox (version 140 or later) and of Chromium-based browsers that let extensions do so (Brave, Chrome, Edge…, version 116 or later) with a macOS-inspired start page built from your existing bookmarks bar. No feeds, no widgets, no distractions. No account, no server, no tracking, no network requests.
 
 ## Features
 
@@ -15,39 +15,48 @@ ReStart replaces the new tab page of Chromium-based browsers that let extensions
 - **Reorder or hide columns** by dragging their header or from the settings. This only affects ReStart, never your bookmarks.
 - **Most visited** column, optional. Right-click a site there to add it to your bookmarks, which helps build the page from your browsing habits, even when starting with no bookmarks.
 - **Appearance:** light and dark mode follow the system, or can be fixed to light or dark. Background: none, a plain color (a pastel or any custom color), a halo, or rays (diffuse shafts of light, like sunlight under water). The halo and the rays come in 10 preset colors or any custom color, with adjustable intensity and an optional color underneath (a pastel or any custom color); they move with the sun, from the left in the morning to the right in the evening, change color with the time of day, and are gently animated (optional, and off when the system asks for reduced motion). An optional warmer tint in the evening goes with the plain backgrounds. Column opacity is adjustable.
-- **Site icons** from the browser's favicon cache, with a colored letter when a site has none.
+- **Site icons** from the browser, with a colored letter when there is none. Chromium-based browsers provide icons from their favicon cache. Firefox gives extensions no access to that cache, so ReStart uses the icons Firefox returns with your most visited sites (up to 100), matched by site; other bookmarks show a colored letter. Nothing is ever downloaded.
 - **Export and import** of your customizations (icons, colors, order, hidden columns, pinned sites, appearance) as a JSON file, to back them up or move them to another device. Customizations are stored on the device only.
 - **7 languages:** English, French, Spanish, Portuguese (Brazil and Portugal), Dutch, Italian, German.
 
 ## Install
 
-### From the Chrome Web Store
+### From the stores
 
-*Coming soon.*
+- Chrome Web Store (Brave, Chrome, Edge…): *coming soon.*
+- Firefox Add-ons: *coming soon.*
 
 ### From source
+
+Brave, Chrome, Edge…:
 
 1. Download or clone this repository.
 2. Open `brave://extensions` (or `chrome://extensions`) and turn on **Developer mode**.
 3. Click **Load unpacked** and select the `src` folder.
 4. Open a new tab. If the browser asks whether to keep the new tab page change, confirm.
 
+Firefox:
+
+1. Run `./build.sh` (it creates `dist/firefox/`).
+2. Open `about:debugging#/runtime/this-firefox` and click **Load Temporary Add-on…**.
+3. Select `dist/firefox/manifest.json`. A temporary add-on stays installed until Firefox restarts.
+
 ## Permissions
 
 | Permission | Why |
 |---|---|
 | `bookmarks` | Read your bookmarks to display them; rename, delete or add a bookmark, or rename, create or delete a folder, when you ask from the right-click menu. |
-| `favicon` | Show site icons from the browser's favicon cache. |
+| `favicon` | Chromium-based browsers only: show site icons from the browser's favicon cache. |
 | `storage` | Save settings and folder customizations, on the device only. |
-| `topSites` | Show the optional *Most visited* column. |
+| `topSites` | Show the optional *Most visited* column. In Firefox, also provides the icons of the most visited sites. |
 
 See [PRIVACY.md](PRIVACY.md) for details, and [SECURITY.md](SECURITY.md) for how untrusted data is handled.
 
 ## Project structure
 
 ```
-src/                  The extension (load this folder, or zip it for the store)
-  manifest.json
+src/                  The extension, shared by all browsers (load this folder in Chromium)
+  manifest.json       Chromium manifest; its "version" is the version of both builds
   newtab.html         New tab page
   theme-boot.js       Applies the theme before the first paint
   app.js              Page logic
@@ -56,10 +65,12 @@ src/                  The extension (load this folder, or zip it for the store)
   _locales/           Translations
 store/                Chrome Web Store listing texts, permission justifications,
                       screenshots (1280x800), an extra narrow-window screenshot,
-                      promo tiles and store icon
+                      promo tiles and store icon; firefox.md for addons.mozilla.org
+platforms/firefox/    Firefox manifest
+build.sh              Builds dist/restart-chrome-<version>.zip and dist/restart-firefox-<version>.zip
 ```
 
-No build step: plain HTML, CSS and JavaScript (ES modules).
+Plain HTML, CSS and JavaScript (ES modules), no compilation. `build.sh` only copies `src/` and picks the manifest for each browser. To release a new version, change `version` in `src/manifest.json`, run `./build.sh`, and upload each zip to its store.
 
 ## Contributing
 

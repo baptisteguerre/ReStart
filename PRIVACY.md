@@ -9,8 +9,8 @@ ReStart is a new tab page that displays your browser bookmarks. It has no server
 | Data | What for | Where it stays |
 |---|---|---|
 | Your bookmarks | Displayed on the new tab page. Changed only when you choose an action from the right-click menu: rename or delete a bookmark or a folder, or add a most visited site to your bookmarks (optionally in a new folder). | In your browser. ReStart reads and edits them through the browser's bookmarks API. |
-| Most visited sites (optional column) | Displayed in the *Most visited* column. | In your browser, read on demand, never stored by ReStart. |
-| Site icons | Displayed next to each bookmark. | Read from your browser's own favicon cache. ReStart does not download or store them. |
+| Most visited sites | Displayed in the optional *Most visited* column. In Firefox, also used to show the icons of those sites next to matching bookmarks. | In your browser, read on demand, never stored by ReStart. |
+| Site icons | Displayed next to each bookmark. | Read from your browser: its favicon cache in Chromium-based browsers, the icons of your most visited sites in Firefox. ReStart does not download or store them. |
 | Your settings and customizations (folder icons and colors, column order, hidden columns, pinned sites, appearance) and display state (which folders are expanded) | To remember your preferences. | In the extension's local storage, on your device only. The theme choice (auto, light or dark) is also kept in the page's local storage, so the page opens in the right theme without a flash. ReStart does not sync them; use Export / Import in the settings to move them to another device. |
 
 ## Export files
@@ -23,7 +23,7 @@ ReStart makes no network requests. Everything it shows comes from your browser: 
 
 ## Sharing
 
-ReStart does not sell, share or transfer any data to anyone. The use of data complies with the Chrome Web Store User Data Policy, including the Limited Use requirements.
+ReStart does not sell, share or transfer any data to anyone. The use of data complies with the Chrome Web Store User Data Policy, including the Limited Use requirements, and with Mozilla's Add-on Policies.
 
 ## Deleting your data
 

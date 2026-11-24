@@ -399,11 +399,6 @@ body.ready { opacity: 1; }
   background-size: cover; background-position: center;
   pointer-events: none;
 }
-.time-tint {
-  position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background: var(--time-tint, transparent);
-  transition: background 2s;
-}
 
 /* Search: enter hint */
 .search-enter {
@@ -713,3 +708,135 @@ body.glow-rays .glow { animation: none; }
 .col-row.is-empty .row-label { opacity: .5; }
 .col-row .empty-tag { font-size: 11px; color: var(--text-3); background: var(--hover); border-radius: 5px; padding: 1px 6px; margin-left: 6px; flex: none; }
 .switch:disabled { opacity: .4; cursor: default; }
+
+/* ===================== Focus mode ===================== */
+.topbar { display: flex; gap: 4px; }
+.icon-btn[aria-pressed="true"] { background: var(--hover); color: var(--text); }
+body.focus .page { visibility: hidden; }
+.focus-view {
+  position: fixed; inset: 0; z-index: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  pointer-events: none; padding: 24px; text-align: center;
+}
+.focus-view[hidden] { display: none; }
+.fc-time {
+  font-size: clamp(72px, 15vw, 190px); font-weight: 200; letter-spacing: -0.045em; line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--text) 13%, transparent);
+}
+.fc-date {
+  margin-top: 14px; font-size: clamp(15px, 2vw, 20px); letter-spacing: .01em;
+  color: color-mix(in srgb, var(--text) 24%, transparent);
+}
+.fc-icons { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 56px; max-width: 640px; pointer-events: auto; }
+.fc-icons:empty { display: none; }
+.fc-icon {
+  width: 48px; height: 48px; border-radius: 13px; display: grid; place-items: center;
+  background: color-mix(in srgb, var(--surface-solid) 55%, transparent); box-shadow: var(--shadow-sm);
+  opacity: .85; transition: opacity .15s, transform .15s;
+}
+.fc-icon:hover, .fc-icon:focus-visible { opacity: 1; transform: translateY(-1px); }
+.fc-icon img, .fc-icon .letter { width: 26px; height: 26px; border-radius: 7px; }
+.fc-icon .letter { display: grid; place-items: center; font-size: 14px; font-weight: 600; color: rgba(0,0,0,.55); }
+/* Tiles being reordered */
+.bar-row .tile.dragging { opacity: .35; }
+.bar-row .tile.drop-before { box-shadow: -3px 0 0 -1px var(--accent); }
+.bar-row .tile.drop-after { box-shadow: 3px 0 0 -1px var(--accent); }
+.fc-period { font-size: .32em; letter-spacing: 0; margin-left: .15em; font-weight: 300; }
+.fc-time[hidden], .fc-date[hidden] { display: none; }
+.fc-time[hidden] ~ .fc-icons { margin-top: 0; }
+/* Focus mode without the clock: the icons are the only thing left, so they get bigger */
+.fc-time[hidden] ~ .fc-icons { gap: 20px; max-width: 860px; }
+.fc-time[hidden] ~ .fc-icons .fc-icon { width: 72px; height: 72px; border-radius: 19px; }
+.fc-time[hidden] ~ .fc-icons .fc-icon img,
+.fc-time[hidden] ~ .fc-icons .fc-icon .letter { width: 40px; height: 40px; border-radius: 10px; }
+.fc-time[hidden] ~ .fc-icons .fc-icon .letter { font-size: 20px; }
+/* Focus mode button: icon and short label, so it's easy to find */
+.pill-btn {
+  display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px 0 9px;
+  border: 0; border-radius: 15px; cursor: pointer; font-size: 12.5px; font-weight: 500;
+  color: var(--text-2); background: color-mix(in srgb, var(--surface-solid) 70%, transparent); box-shadow: var(--shadow-sm);
+  transition: background .15s, color .15s;
+}
+.pill-btn svg { width: 16px; height: 16px; fill: currentColor; flex: none; }
+.pill-btn:hover { color: var(--text); background: var(--surface-solid); }
+.pill-btn[aria-pressed="true"] { color: var(--text); background: var(--surface-solid); box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--border-strong); }
+.pill-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.topbar { align-items: center; }
+/* ===================== Color picker ===================== */
+button.swatch-custom { border: 0; padding: 0; }
+.swatch-custom[aria-expanded="true"] { box-shadow: 0 0 0 2px var(--surface-solid), 0 0 0 4px var(--accent); }
+.cp {
+  margin-top: 10px; padding: 10px; border-radius: 10px;
+  background: var(--surface-solid); box-shadow: var(--shadow-sm), 0 0 0 1px var(--border);
+  display: grid; gap: 10px;
+}
+.cp-row { display: flex; align-items: center; gap: 4px; }
+.cp-preview { width: 24px; height: 24px; border-radius: 6px; margin-right: 6px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); flex: none; }
+.cp-hash { color: var(--text-3); font: 13px ui-monospace, "SF Mono", Menlo, monospace; }
+.cp-hex {
+  width: 84px; height: 26px; padding: 0 6px; border-radius: 6px; border: 1px solid var(--border-strong);
+  background: var(--bg); color: var(--text); font: 13px ui-monospace, "SF Mono", Menlo, monospace;
+}
+.cp-hex:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+.cp-hex.invalid { border-color: #e5484d; }
+.cp-done { margin-left: auto; }
+.cp-area {
+  --hue: 0;
+  position: relative; height: 120px; border-radius: 8px; cursor: crosshair; touch-action: none;
+  background: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, hsl(calc(var(--hue) * 1deg) 100% 50%));
+}
+.cp-area:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.cp-knob {
+  position: absolute; width: 14px; height: 14px; border-radius: 50%; transform: translate(-50%, -50%);
+  border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.35), 0 1px 3px rgba(0,0,0,.3); pointer-events: none;
+}
+.cp-hue {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 12px; margin: 0; border-radius: 6px; cursor: pointer;
+  background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+}
+.cp-hue::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.3); }
+.cp-hue::-moz-range-thumb { width: 14px; height: 14px; border: 0; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.3); }
+.cp-hue::-moz-range-track { background: transparent; }
+/* Focus mode: icons in gray, as soft as the time; they regain their color on hover. */
+.fc-glyph { display: grid; place-items: center; border-radius: 7px; }
+.fc-time[hidden] ~ .fc-icons .fc-glyph { border-radius: 10px; }
+.fc-icons.gray .fc-glyph { filter: grayscale(1); opacity: .6; transition: filter .2s, opacity .2s; }
+.fc-icons.gray .fc-icon:hover .fc-glyph, .fc-icons.gray .fc-icon:focus-visible .fc-glyph { filter: none; opacity: 1; }
+.popover.settings { overflow-x: hidden; }
+.bg-preset:not([aria-pressed="true"]) { box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); }
+[data-theme="dark"] .bg-preset:not([aria-pressed="true"]) { box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+
+/* ===================== Leaf shadows background ===================== */
+/* Soft shadows of branches on a sunlit wall, swaying slowly in the wind. Two layers:
+   a sharper one close to the wall, and a blurrier, mirrored one further away. */
+.leaves { position: fixed; inset: -6% -4% 0; z-index: -2; pointer-events: none; display: none; }
+body.bg-leaves .leaves { display: block; }
+.leaves i {
+  position: absolute; inset: 0;
+  background: url(img/leaves.svg) top center / cover no-repeat;
+  opacity: var(--leaf-alpha, .17);
+  filter: blur(4px);
+  transform-origin: 88% 0;
+  animation: leaf-sway 9s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.leaves i:nth-child(2) {
+  filter: blur(11px); opacity: calc(var(--leaf-alpha, .17) * .65);
+  transform-origin: 12% 0;
+  animation-name: leaf-sway-far; animation-duration: 13s; animation-delay: -5s;
+}
+body.leaves-palm .leaves i { background-image: url(img/palms.svg); }
+@keyframes leaf-sway {
+  0%   { transform: rotate(-1.1deg) skewX(-.8deg); }
+  60%  { transform: rotate(.6deg) skewX(.4deg); }
+  100% { transform: rotate(1.3deg) skewX(1.2deg) translateY(4px); }
+}
+@keyframes leaf-sway-far {
+  0%   { transform: scaleX(-1) scale(1.12) rotate(.8deg); }
+  100% { transform: scaleX(-1) scale(1.12) rotate(-1.4deg) translateY(6px); }
+}
+body.glow-still .leaves i { animation: none; }
+body.glow-still .leaves i:nth-child(2) { transform: scaleX(-1) scale(1.12); }
+/* Kind of leaves, under the background choice: set apart by a little space and a hairline */
+.set-field .leaf-kind { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }

@@ -37,8 +37,12 @@ const KEY_SITES = "__sites__";
 const SITES_LIMIT = 20; // beyond this, loose sites move into a wide card
 
 const DEFAULT_SETTINGS = {
-  timeTint: true,
   theme: "auto",              // auto (follows the system) | light | dark
+  focus: false,               // focus mode: only the background and the time
+  focusClock: true,           // in focus mode, show the time and date
+  clockFormat: "auto",        // auto (the language's usual format) | 12 | 24
+  focusIcons: false,          // in focus mode, also show the sites above the search bar, as icons
+  focusGray: true,            // ...in gray, as soft as the time (on by default)
   animateGlow: true,          // slow "breathing" of the halo
   glowStrength: 1,            // 0 .. 2, shown as 0-100 % with the default (1) at 50 %; multiplies the halo intensity
   colAlpha: 0.5,              // 0 .. 1
@@ -61,6 +65,9 @@ const els = {
   empty: $("empty-state"),
   popover: $("popover"),
   settingsBtn: $("settings-btn"),
+  focusBtn: $("focus-btn"),
+  focusView: $("focus-view"),
+  page: document.querySelector(".page"),
   fileImport: $("file-import"),
 };
 
@@ -75,6 +82,7 @@ const state = {
   open: new Set(),           // expanded subfolder ids
   openCols: new Set(),       // expanded columns in stacked layout
   highlighted: [],           // URLs of bookmarks pinned above the search bar (loose or inside folders)
+  tileOrder: [],             // URLs: order of the sites above the search bar, in ReStart only
   query: "",
   target: null,              // the single remaining link while filtering
 };
@@ -149,7 +157,7 @@ const hasIcon = (name) => typeof name === "string" && Object.hasOwn(ICONS, name)
 // All settings live in the extension's local storage, on this device only.
 // (Moving them to another device is done with Export / Import.)
 const store = ext.storage.local;
-const isPrefKey = (k) => ["settings", "order", "hidden", "highlighted"].includes(k) || k.startsWith(STYLE_PREFIX);
+const isPrefKey = (k) => ["settings", "order", "hidden", "highlighted", "tileOrder"].includes(k) || k.startsWith(STYLE_PREFIX);
 const saveLocal = (items) => store.set(items).catch((e) => console.warn("ReStart: could not save settings", e));
 
 function openUrl(url, { newTab = false } = {}) {
@@ -327,7 +335,22 @@ function topRowSites() {
   };
   for (const c of state.bar.children) if (!c.url) walk(c);
   if (state.other) walk(state.other);
-  return out;
+  // The order set by dragging tiles (ReStart only); sites not in it keep their natural place at the end.
+  const rank = (c) => { const i = state.tileOrder.indexOf(c.url); return i === -1 ? Infinity : i; };
+  return out.sort((a, b) => rank(a) - rank(b));
+}
+
+function saveTileOrder(urls) {
+  state.tileOrder = urls;
+  saveLocal({ tileOrder: urls });
+  render();
+}
+
+function moveTile(url, delta) {
+  const urls = topRowSites().map((c) => c.url).filter((u) => u !== url);
+  const from = topRowSites().findIndex((c) => c.url === url);
+  urls.splice(Math.max(0, Math.min(urls.length, from + delta)), 0, url);
+  saveTileOrder(urls);
 }
 const topGlyph = () => {
   const g = folderGlyph(null, {});
@@ -570,8 +593,71 @@ function render() {
   state.target?.classList.add("is-target");
   els.searchEnter.hidden = !state.target;
 
+  renderFocusIcons();
   requestAnimationFrame(updateBoardChrome);
 }
+
+/* ===================== Focus mode ===================== */
+
+// Focus mode hides everything but the background and shows the time, for a calm
+// tab or a screen shared during a demo. It stays on, in every new tab, until the
+// user turns it off with the same button.
+// The locale of the translations in use, so the date matches the rest of the page.
+const uiLocale = (ext.i18n.getMessage("@@ui_locale") || ext.i18n.getUILanguage()).replace("_", "-");
+// Time: the language's usual format ("auto"), or 12-hour / 24-hour as chosen in the settings.
+const timeFormats = {
+  auto: new Intl.DateTimeFormat(uiLocale, { hour: "numeric", minute: "2-digit" }),
+  12: new Intl.DateTimeFormat(uiLocale, { hour: "numeric", minute: "2-digit", hourCycle: "h12" }),
+  24: new Intl.DateTimeFormat(uiLocale, { hour: "2-digit", minute: "2-digit", hourCycle: "h23" }),
+};
+const dateFormat = new Intl.DateTimeFormat(uiLocale, { weekday: "long", month: "long", day: "numeric" });
+
+function applyFocus() {
+  const on = !!state.settings.focus;
+  document.body.classList.toggle("focus", on);
+  els.focusBtn.setAttribute("aria-pressed", String(on));
+  els.focusView.hidden = !on;
+  els.page.inert = on; // hidden bookmarks can't be reached with the keyboard either
+  const showClock = state.settings.focusClock !== false;
+  $("fc-time").hidden = $("fc-date").hidden = !showClock;
+  if (!on || !showClock) return;
+  const now = new Date();
+  // AM / PM (in 12-hour locales) is shown smaller than the digits.
+  const timeFormat = timeFormats[state.settings.clockFormat] || timeFormats.auto;
+  $("fc-time").replaceChildren(...timeFormat.formatToParts(now).map((p) =>
+    p.type === "dayPeriod" ? h("span", { class: "fc-period" }, p.value) : document.createTextNode(p.value)));
+  const date = dateFormat.format(now);
+  $("fc-date").textContent = date.charAt(0).toLocaleUpperCase(uiLocale) + date.slice(1);
+}
+
+// In focus mode, the sites above the search bar can stay available as plain icons:
+// no names, no tooltips, no right-click menu.
+function renderFocusIcons() {
+  const row = $("fc-icons");
+  if (!state.settings.focus || !state.settings.focusIcons) { row.replaceChildren(); return; }
+  row.classList.toggle("gray", !!state.settings.focusGray);
+  row.replaceChildren(...topRowSites().map((node) => {
+    const scriptUrl = isScriptUrl(node.url);
+    const a = h("a", {
+      class: "fc-icon",
+      href: scriptUrl ? null : node.url,
+      "aria-label": cleanText(node.title || hostOf(node.url)),
+    }, h("span", { class: "fc-glyph" }, favicon(node.url, node.title, 64)));
+    a.addEventListener("contextmenu", (e) => e.preventDefault());
+    if (!isWebUrl(node.url) && !scriptUrl) {
+      a.addEventListener("click", (e) => { e.preventDefault(); openUrl(node.url, { newTab: e.metaKey || e.ctrlKey }); });
+    }
+    return a;
+  }));
+}
+
+els.focusBtn.addEventListener("click", () => {
+  state.settings.focus = !state.settings.focus;
+  if (state.settings.focus) { state.query = ""; els.search.value = ""; }
+  saveSettings();
+  render();
+  refreshSettings();
+});
 
 /* ===================== Sites row (bookmarks outside folders) ===================== */
 
@@ -591,7 +677,42 @@ function renderBar(links, tokens) {
   const normalCap = tilesPerRow(false) * MAX_ROWS;
   barCapacityKey = `${normalCap}/${tilesPerRow(true) * MAX_ROWS}`;
   els.barRow.classList.toggle("compact", links.length > normalCap);
-  els.barRow.replaceChildren(...links.map((c) => bookmarkLink(c, tokens, { cls: "tile" })));
+  const tiles = links.map((c) => bookmarkLink(c, tokens, { cls: "tile" }));
+  if (!tokens.length) tiles.forEach((tile, i) => wireTileDrag(tile, links[i].url));
+  els.barRow.replaceChildren(...tiles);
+}
+
+// Drag a tile to change the order of the sites above the search bar (ReStart only).
+let dragUrl = null;
+function wireTileDrag(tile, url) {
+  tile.draggable = true;
+  tile.addEventListener("dragstart", (e) => {
+    dragUrl = url;
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/uri-list", url);
+    requestAnimationFrame(() => tile.classList.add("dragging"));
+  });
+  tile.addEventListener("dragend", () => {
+    dragUrl = null;
+    els.barRow.querySelectorAll(".dragging, .drop-before, .drop-after").forEach((n) => n.classList.remove("dragging", "drop-before", "drop-after"));
+  });
+  tile.addEventListener("dragover", (e) => {
+    if (!dragUrl || dragUrl === url) return;
+    e.preventDefault();
+    const r = tile.getBoundingClientRect();
+    const before = e.clientX < r.left + r.width / 2;
+    tile.classList.toggle("drop-before", before);
+    tile.classList.toggle("drop-after", !before);
+  });
+  tile.addEventListener("dragleave", (e) => { if (!tile.contains(e.relatedTarget)) tile.classList.remove("drop-before", "drop-after"); });
+  tile.addEventListener("drop", (e) => {
+    if (!dragUrl) return;
+    e.preventDefault();
+    const before = tile.classList.contains("drop-before");
+    const urls = topRowSites().map((c) => c.url).filter((u) => u !== dragUrl);
+    urls.splice(urls.indexOf(url) + (before ? 0 : 1), 0, dragUrl);
+    saveTileOrder(urls);
+  });
 }
 
 // Recompute when the window width changes how many tiles fit.
@@ -737,15 +858,20 @@ els.next.addEventListener("click", () => pageBoard(1));
 
 /* ===================== Appearance ===================== */
 
-function plainBackground(id) {
-  if (HEX_COLOR.test(id)) return `linear-gradient(${id}, ${id})`; // custom color: shown as picked
+// A plain background color: a custom color as picked, or a pastel softened for
+// the page (the swatches in the settings show this same color). It never changes
+// with the time of day: only the halo and the rays do.
+function plainColor(id) {
+  if (HEX_COLOR.test(id)) return id;
   const c = pastel(id);
-  const mixed = isDark() ? `color-mix(in srgb, ${c} 22%, #1c1c1e)` : `color-mix(in srgb, ${c} 45%, #f7f6f4)`;
-  return `linear-gradient(${mixed}, ${mixed})`;
+  return isDark() ? `color-mix(in srgb, ${c} 22%, #1c1c1e)` : `color-mix(in srgb, ${c} 45%, #f7f6f4)`;
 }
+const plainBackground = (id) => `linear-gradient(${plainColor(id)}, ${plainColor(id)})`;
 
 // Backgrounds drawn from the halo color: the halo itself and the light rays.
 const isLit = (type) => type === "glow" || type === "rays";
+// Backgrounds that can have a plain color underneath: the halo, the rays and the leaf shadows.
+const hasUnderColor = (type) => isLit(type) || type === "leaves";
 
 function applyAppearance() {
   const s = state.settings;
@@ -761,9 +887,15 @@ function applyAppearance() {
     glow = glowLayer(new Date(), value, type === "rays");
     // Optional plain color under the halo or the rays.
     if (s.bg.tint) layer = plainBackground(s.bg.tint);
+  } else if (type === "leaves") {
+    // Leaf shadows on a wall softly lit by the sun: a warm, very light tint by default.
+    layer = s.bg.tint ? plainBackground(s.bg.tint) : `linear-gradient(${isDark() ? "#24211e" : "#f4efe6"}, ${isDark() ? "#24211e" : "#f4efe6"})`;
+    root.setProperty("--leaf-alpha", String(Math.min(1, (isDark() ? 0.5 : 0.17) * (s.glowStrength ?? 1))));
   } else if (type === "color") {
     layer = plainBackground(value || "blue");
   }
+  document.body.classList.toggle("bg-leaves", type === "leaves");
+  document.body.classList.toggle("leaves-palm", type === "leaves" && value === "palm");
   root.setProperty("--bg-layer", layer);
   root.setProperty("--glow-layer", glow.halo);
   RAY_LAYERS.forEach((_, i) => root.setProperty(`--rays-${i + 1}`, glow.rays[i] || "none"));
@@ -775,7 +907,7 @@ function applyAppearance() {
   }
   document.body.classList.toggle("glow-still", !s.animateGlow);
 
-  updateClock();
+  applyFocus();
 }
 
 // Halo at the top of the page, in the chosen color. It follows the sun: it rises
@@ -899,21 +1031,8 @@ function glowGradient(r, g, bl, alpha, x, strength = 1) {
   return `radial-gradient(ellipse 55% ${size}px at ${x.toFixed(1)}% -30px, ${c(1)}, ${c(0.55)} 40%, ${c(0.15)} 70%, transparent 100%)`;
 }
 
-// Slightly warmer light in the evening.
-function updateClock() {
-  const now = new Date();
-  const hr = now.getHours();
-  let tint = "transparent";
-  if (state.settings.timeTint && !isLit(state.settings.bg?.type)) {
-    const dark = isDark();
-    if (hr >= 17 && hr < 20) tint = dark ? "rgba(255,150,70,0.035)" : "rgba(255,160,80,0.06)";
-    else if (hr >= 20 || hr < 6) tint = dark ? "rgba(255,130,50,0.035)" : "rgba(255,140,60,0.09)";
-    else if (hr < 9) tint = dark ? "rgba(255,220,180,0.02)" : "rgba(255,225,190,0.04)";
-  }
-  document.documentElement.style.setProperty("--time-tint", tint);
-}
 function scheduleClock() {
-  applyAppearance(); // refreshes the halo color and the evening tint
+  applyAppearance(); // refreshes the halo or rays (position and color follow the time) and the clock
   setTimeout(scheduleClock, 60000 - (Date.now() % 60000) + 50);
 }
 
@@ -959,6 +1078,17 @@ function openBookmarkMenu(node, anchor, x, y) {
   const item = (label, icon, onclick, cls = "") =>
     h("button", { class: `menu-item ${cls}`.trim(), role: "menuitem", onclick }, icon ? svg(icon) : h("span", { class: "menu-ico" }), label);
 
+  const tileMoves = () => {
+    if (!anchor.closest?.(".bar-row") || state.query) return [];
+    const urls = topRowSites().map((c) => c.url);
+    const i = urls.indexOf(node.url);
+    const move = (d) => () => { closePopover({ restoreFocus: false }); moveTile(node.url, d); };
+    return [
+      i > 0 ? item(t("moveLeft"), null, move(-1)) : null,
+      i !== -1 && i < urls.length - 1 ? item(t("moveRight"), null, move(1)) : null,
+    ];
+  };
+
   const showMain = () => {
     const del = item(t("delete"), UI.trash, () => {
       if (!del.classList.contains("armed")) {
@@ -981,6 +1111,8 @@ function openBookmarkMenu(node, anchor, x, y) {
           render();
         })
         : null,
+      // Tiles above the search bar: move left or right (order kept in ReStart only).
+      ...tileMoves(),
       editable ? h("div", { class: "menu-sep" }) : null,
       editable ? item(t("rename"), UI.edit, showRename) : null,
       editable ? del : null,
@@ -1308,23 +1440,114 @@ let settingsMsg = "";
 // A rounded box grouping related settings, like macOS System Settings.
 const group = (...children) => h("div", { class: "set-group" }, ...children.flat().filter(Boolean));
 
-// Last swatch of a background color row: any color, through the system color picker.
-function colorPickerSwatch(current, fallback, onPick) {
+/* ----- Color picker: ReStart's own, so it looks and works the same in every browser ----- */
+
+let openPicker = null; // the picker open in the settings: "glow" | "tint" | "color"
+
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+const hexToRgb = (hex) => { const n = parseInt(hex.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+const rgbToHex = (r, g, b) => `#${[r, g, b].map((v) => Math.round(v).toString(16).padStart(2, "0")).join("")}`;
+function rgbToHsv(r, g, b) {
+  [r, g, b] = [r / 255, g / 255, b / 255];
+  const max = Math.max(r, g, b), d = max - Math.min(r, g, b);
+  let hue = 0;
+  if (d) {
+    hue = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+    hue = (hue * 60 + 360) % 360;
+  }
+  return [hue, max ? d / max : 0, max];
+}
+function hsvToRgb(hue, sat, val) {
+  const f = (n) => { const k = (n + hue / 60) % 6; return (val - val * sat * Math.max(0, Math.min(k, 4 - k, 1))) * 255; };
+  return [f(5), f(3), f(1)];
+}
+// A hex code typed by hand ("eadef7", "#EADEF7" or "eaf"), as #rrggbb, or null.
+function parseHex(text) {
+  const v = String(text).trim().replace(/^#/, "").toLowerCase();
+  if (/^[0-9a-f]{6}$/.test(v)) return `#${v}`;
+  if (/^[0-9a-f]{3}$/.test(v)) return `#${[...v].map((c) => c + c).join("")}`;
+  return null;
+}
+
+// Last swatch of a color row: shows the custom color and opens the picker below the row.
+function customColorSwatch(key, current, cls) {
   const custom = HEX_COLOR.test(current) ? current : null;
-  const picker = h("input", { type: "color", value: custom || fallback, "aria-label": t("customColor"), tabindex: "-1" });
-  const swatch = h("label", {
-    class: "bg-preset swatch-custom",
-    title: t("customColor"),
+  return h("button", {
+    class: `${cls} swatch-custom`, title: t("customColor"), "aria-label": t("customColor"),
     style: custom ? `background:${custom}` : null,
-    "aria-pressed": String(!!custom),
-  }, picker);
-  picker.addEventListener("input", () => {
-    swatch.style.background = picker.value;
-    onPick(picker.value.toLowerCase());
-    saveSettingsSoon();
+    "aria-pressed": String(!!custom), "aria-expanded": String(openPicker === key),
+    onclick: () => { openPicker = openPicker === key ? null : key; refreshSettings(); },
   });
-  picker.addEventListener("change", () => refreshSettings());
-  return swatch;
+}
+
+// Saturation/brightness area, hue slider and hex field (shown first, as the main input).
+function colorPickerPanel(key, current, fallback, onPick) {
+  if (openPicker !== key) return null;
+  let [hue, sat, val] = rgbToHsv(...hexToRgb(HEX_COLOR.test(current) ? current : fallback));
+  const knob = h("span", { class: "cp-knob" });
+  const area = h("div", { class: "cp-area", tabindex: "0", role: "slider", "aria-label": t("customColor") }, knob);
+  const hueInput = h("input", { type: "range", class: "cp-hue", min: "0", max: "359", step: "1", value: String(Math.round(hue)), "aria-label": t("hue") });
+  const preview = h("span", { class: "cp-preview" });
+  const hex = h("input", { type: "text", class: "cp-hex", maxlength: "7", spellcheck: "false", autocomplete: "off", "aria-label": "HEX" });
+
+  const draw = (fromHex = false) => {
+    const color = rgbToHex(...hsvToRgb(hue, sat, val));
+    area.style.setProperty("--hue", String(hue));
+    knob.style.left = `${sat * 100}%`;
+    knob.style.top = `${(1 - val) * 100}%`;
+    preview.style.background = color;
+    area.setAttribute("aria-valuetext", color);
+    if (!fromHex) { hex.value = color.slice(1); hex.classList.remove("invalid"); }
+    return color;
+  };
+  // A change made by the user: apply it, and show it as the selected swatch of the row.
+  const commit = (fromHex = false) => {
+    const color = draw(fromHex);
+    const swatch = els.popover.querySelector('.swatch-custom[aria-expanded="true"]');
+    if (swatch) {
+      swatch.parentElement.querySelectorAll("[aria-pressed]").forEach((el) => el.setAttribute("aria-pressed", "false"));
+      swatch.style.background = color;
+      swatch.setAttribute("aria-pressed", "true");
+    }
+    onPick(color);
+    saveSettingsSoon();
+  };
+  const close = () => { openPicker = null; refreshSettings(); };
+
+  const fromPointer = (e) => {
+    const r = area.getBoundingClientRect();
+    sat = clamp01((e.clientX - r.left) / r.width);
+    val = 1 - clamp01((e.clientY - r.top) / r.height);
+    commit();
+  };
+  area.addEventListener("pointerdown", (e) => { area.setPointerCapture(e.pointerId); fromPointer(e); });
+  area.addEventListener("pointermove", (e) => { if (area.hasPointerCapture(e.pointerId)) fromPointer(e); });
+  area.addEventListener("keydown", (e) => {
+    const d = e.shiftKey ? 0.1 : 0.02;
+    const step = { ArrowLeft: [-d, 0], ArrowRight: [d, 0], ArrowUp: [0, d], ArrowDown: [0, -d] }[e.key];
+    if (!step) return;
+    e.preventDefault();
+    sat = clamp01(sat + step[0]);
+    val = clamp01(val + step[1]);
+    commit();
+  });
+  hueInput.addEventListener("input", () => { hue = Number(hueInput.value); commit(); });
+  hex.addEventListener("input", () => {
+    const parsed = parseHex(hex.value);
+    hex.classList.toggle("invalid", !!hex.value.trim() && !parsed);
+    if (!parsed) return;
+    [hue, sat, val] = rgbToHsv(...hexToRgb(parsed));
+    hueInput.value = String(Math.round(hue));
+    commit(true);
+  });
+  hex.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); close(); } });
+
+  draw();
+  return h("div", { class: "cp" },
+    h("div", { class: "cp-row" },
+      preview, h("span", { class: "cp-hash" }, "#"), hex,
+      h("button", { class: "text-btn primary cp-done", onclick: close }, t("done"))),
+    area, hueInput);
 }
 
 function settingsContent() {
@@ -1333,32 +1556,28 @@ function settingsContent() {
 
   // Background choices
   let bgExtra = null;
-  if (isLit(bg.type)) {
+  if (hasUnderColor(bg.type)) {
+    const lit = isLit(bg.type);
+    const leaves = bg.type === "leaves";
     const glow = glowOf(bg.value);
-    // Custom color: a swatch wrapping the system color picker.
-    const lastCustom = HEX_COLOR.test(bg.value?.custom) ? bg.value.custom : "#ff8c46";
-    const picker = h("input", { type: "color", value: lastCustom, "aria-label": t("customColor"), tabindex: "-1" });
-    const customSwatch = h("label", {
-      class: `swatch swatch-custom${glow.id === "custom" ? " is-set" : ""}`,
-      title: t("customColor"),
-      style: glow.id === "custom" ? `background:${glow.base}` : null,
-      "aria-pressed": String(glow.id === "custom"),
-    }, picker);
-    picker.addEventListener("input", () => {
-      s.bg = { type: bg.type, value: { color: "custom", custom: picker.value }, tint: bg.tint };
-      customSwatch.classList.add("is-set");
-      customSwatch.style.background = picker.value;
-      saveSettingsSoon();
-    });
-    picker.addEventListener("change", () => refreshSettings());
+    const selected = glow.id;
+    const customGlow = glow.id === "custom" ? glow.base : null;
+    const customSwatch = customColorSwatch("glow", customGlow, "swatch");
+    const tintSwatch = customColorSwatch("tint", bg.tint, "bg-preset");
+    const withTint = (value) => (s.bg.tint ? { type: bg.type, value, tint: s.bg.tint } : { type: bg.type, value });
     bgExtra = h("div", {},
-      h("div", { class: "swatches", role: "group", "aria-label": t("glowColor") }, GLOW_COLORS.map((c) => h("button", {
+      leaves ? h("div", { class: "leaf-kind" }, segmented([["leaves", t("leafKindLeaves")], ["palm", t("leafKindPalm")]], bg.value === "palm" ? "palm" : "leaves",
+        (v) => { s.bg = { ...s.bg, value: v === "palm" ? "palm" : null }; saveSettings(); })) : null,
+      leaves ? null : h("div", { class: "swatches", role: "group", "aria-label": t("glowColor") },
+        GLOW_COLORS.map((c) => h("button", {
         class: "swatch", title: colorName(c.id), "aria-label": colorName(c.id),
         style: `background:${c.swatch}`,
-        "aria-pressed": String(c.id === glow.id),
+        "aria-pressed": String(c.id === selected),
         onclick: () => { s.bg = { type: bg.type, value: { color: c.id, custom: bg.value?.custom }, tint: bg.tint }; saveSettings(); refreshSettings(); },
       })), customSwatch),
-      h("p", { class: "setting-hint" }, t("glowHint")),
+      leaves ? null : colorPickerPanel("glow", customGlow || (HEX_COLOR.test(bg.value?.custom) ? bg.value.custom : null), "#ff8c46",
+        (v) => { s.bg = withTint({ color: "custom", custom: v }); }),
+      h("p", { class: "setting-hint" }, t(leaves ? "leavesHint" : "glowHint")),
       h("div", { class: "set-label tint-label" }, t("bgTint")),
       h("div", { class: "bg-presets tint-presets" },
         h("button", {
@@ -1368,24 +1587,27 @@ function settingsContent() {
         }),
         BG_PASTELS.map((p) => h("button", {
           class: "bg-preset", title: colorName(p.id), "aria-label": colorName(p.id),
-          style: `background:${pastel(p.id)}`,
+          style: `background:${plainColor(p.id)}`,
           "aria-pressed": String(bg.tint === p.id),
           onclick: () => { s.bg.tint = p.id; saveSettings(); refreshSettings(); },
         })),
-        colorPickerSwatch(bg.tint, "#dfe8f7", (v) => { s.bg.tint = v; })),
+        tintSwatch),
+      colorPickerPanel("tint", bg.tint, "#dfe8f7", (v) => { s.bg.tint = v; }),
       // Shown on a 0-100 scale, the default intensity sitting in the middle.
       rangeRow(t("intensity"), 0, 100, 5, Math.round((s.glowStrength ?? 1) * 50), (v) => { s.glowStrength = v / 50; saveSettingsSoon(); },
         (v) => percent.format(v / 100)),
-      switchRow("set-breathe", t(bg.type === "rays" ? "animateRays" : "animateGlow"), s.animateGlow !== false, (v) => { s.animateGlow = v; saveSettings(); }));
+      switchRow("set-breathe", t(bg.type === "rays" ? "animateRays" : leaves ? "animateLeaves" : "animateGlow"), s.animateGlow !== false, (v) => { s.animateGlow = v; saveSettings(); }));
   } else if (bg.type === "color") {
-    bgExtra = h("div", { class: "bg-presets" },
+    const colorSwatch = customColorSwatch("color", bg.value, "bg-preset");
+    bgExtra = h("div", {}, h("div", { class: "bg-presets" },
       BG_PASTELS.map((p) => h("button", {
         class: "bg-preset", title: colorName(p.id), "aria-label": colorName(p.id),
-        style: `background:${pastel(p.id)}`,
+        style: `background:${plainColor(p.id)}`,
         "aria-pressed": String((bg.value || "blue") === p.id),
         onclick: () => { s.bg = { type: "color", value: p.id }; saveSettings(); refreshSettings(); },
       })),
-      colorPickerSwatch(bg.value, "#dfe8f7", (v) => { s.bg = { type: "color", value: v }; }));
+      colorSwatch),
+      colorPickerPanel("color", bg.value, "#dfe8f7", (v) => { s.bg = { type: "color", value: v }; }));
   }
 
   // Column list: show/hide and reorder (drag the handle, or use the arrows).
@@ -1457,10 +1679,12 @@ function settingsContent() {
         })),
       h("div", { class: "set-field" },
         h("div", { class: "set-label" }, t("background")),
-        segmented([["none", t("bgNone")], ["color", t("bgColor")], ["glow", t("bgGlow")], ["rays", t("styleRays")]], bg.type, (v) => {
-          // Switching between the halo and the rays keeps the chosen color.
-          const keep = isLit(v) && isLit(bg.type); // halo <-> rays: keep the colors
-          s.bg = { type: v, value: v === "color" ? "blue" : keep ? bg.value : null, ...(keep && bg.tint ? { tint: bg.tint } : {}) };
+        segmented([["none", t("bgNone")], ["color", t("bgColor")], ["glow", t("bgGlow")], ["rays", t("styleRays")], ["leaves", t("bgLeaves")]], bg.type, (v) => {
+          // Switching between the halo and the rays keeps their color; between halo, rays and
+          // leaves, the color underneath is kept too.
+          const keep = isLit(v) && isLit(bg.type);
+          const keepTint = hasUnderColor(v) && hasUnderColor(bg.type) && bg.tint;
+          s.bg = { type: v, value: v === "color" ? "blue" : keep ? bg.value : null, ...(keepTint ? { tint: bg.tint } : {}) };
           saveSettings();
           refreshSettings();
         }),
@@ -1472,8 +1696,19 @@ function settingsContent() {
         h("div", { class: "set-label" }, t("layout")),
         segmented([["board", t("layoutBoard")], ["masonry", t("layoutMasonry")]], s.layout, (v) => { s.layout = v; saveSettings(); render(); }),
         narrowQuery.matches ? h("p", { class: "setting-hint" }, t("layoutNarrowHint")) : null),
-      isLit(bg.type) ? null : switchRow("set-tint", t("warmEvening"), s.timeTint, (v) => { s.timeTint = v; saveSettings(); }),
     ),
+
+    h("div", { class: "set-section" }, t("focusMode")),
+    group(
+      switchRow("set-focus-clock", t("focusClock"), s.focusClock !== false, (v) => { s.focusClock = v; saveSettings(); refreshSettings(); }),
+      s.focusClock !== false ? h("div", { class: "set-field" },
+        h("div", { class: "set-label" }, t("clockFormat")),
+        segmented([["auto", t("clockAuto")], ["12", t("clock12")], ["24", t("clock24")]], s.clockFormat || "auto",
+          (v) => { s.clockFormat = v; saveSettings(); })) : null,
+      switchRow("set-focus-icons", t("focusIcons"), !!s.focusIcons, (v) => { s.focusIcons = v; saveSettings(); render(); refreshSettings(); }),
+      s.focusIcons ? switchRow("set-focus-gray", t("focusGray"), !!s.focusGray, (v) => { s.focusGray = v; saveSettings(); render(); }) : null,
+    ),
+    h("p", { class: "group-hint" }, t("focusHint")),
 
     h("div", { class: "set-section" }, t("columns")),
     group(colList),
@@ -1509,13 +1744,15 @@ function labelForKey(k) {
 
 function openSettings() {
   settingsMsg = "";
+  openPicker = null;
   openPopover(els.settingsBtn, settingsContent(), { align: "end", cls: "settings" });
 }
 function refreshSettings() {
   if (els.popover.hidden || popoverAnchor !== els.settingsBtn) return;
   const y = els.popover.scrollTop;
+  // Rebuild the content in place: the panel keeps its position and scroll, so
+  // nothing moves under the pointer while settings are changed.
   els.popover.replaceChildren(...settingsContent());
-  placePopover(els.settingsBtn, "end");
   els.popover.scrollTop = y;
 }
 els.settingsBtn.addEventListener("click", () =>
@@ -1592,7 +1829,7 @@ document.addEventListener("keydown", (e) => {
   }
   const t = e.target;
   const typing = t instanceof HTMLInputElement || t instanceof HTMLTextAreaElement || t.isContentEditable;
-  if (!typing && e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey && els.popover.hidden) {
+  if (!typing && !state.settings.focus && e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey && els.popover.hidden) {
     els.search.focus();
   }
 });
@@ -1629,8 +1866,12 @@ const stringList = (v, max = 500) => (Array.isArray(v) ? v.filter((x) => typeof 
 function sanitizeSettings(raw) {
   const s = structuredClone(DEFAULT_SETTINGS);
   if (!raw || typeof raw !== "object") return s;
-  if (typeof raw.timeTint === "boolean") s.timeTint = raw.timeTint;
   if (typeof raw.animateGlow === "boolean") s.animateGlow = raw.animateGlow;
+  if (typeof raw.focus === "boolean") s.focus = raw.focus;
+  if (typeof raw.focusIcons === "boolean") s.focusIcons = raw.focusIcons;
+  if (typeof raw.focusClock === "boolean") s.focusClock = raw.focusClock;
+  if (["auto", "12", "24"].includes(raw.clockFormat)) s.clockFormat = raw.clockFormat;
+  if (typeof raw.focusGray === "boolean") s.focusGray = raw.focusGray;
   if (["auto", "light", "dark"].includes(raw.theme)) s.theme = raw.theme;
   if (Number.isFinite(raw.glowStrength)) s.glowStrength = Math.min(2, Math.max(0, raw.glowStrength));
   if (Number.isFinite(raw.colAlpha)) s.colAlpha = Math.min(1, Math.max(0, raw.colAlpha));
@@ -1643,6 +1884,11 @@ function sanitizeSettings(raw) {
     const v = bg.value;
     if (v?.color === "custom" && HEX_COLOR.test(v.custom)) s.bg = { type, value: { color: "custom", custom: v.custom.toLowerCase() } };
     else s.bg = { type, value: GLOW_COLORS.some((c) => c.id === v?.color) ? { color: v.color } : null };
+    if (BG_IDS.has(bg.tint)) s.bg.tint = bg.tint;
+    else if (HEX_COLOR.test(bg.tint)) s.bg.tint = bg.tint.toLowerCase();
+  }
+  if (bg?.type === "leaves") {
+    s.bg = { type: "leaves", value: bg.value === "palm" ? "palm" : null };
     if (BG_IDS.has(bg.tint)) s.bg.tint = bg.tint;
     else if (HEX_COLOR.test(bg.tint)) s.bg.tint = bg.tint.toLowerCase();
   }
@@ -1666,7 +1912,7 @@ function sanitizeFolderStyle(raw) {
 function sanitizeImport(prefs) {
   const out = { settings: sanitizeSettings(prefs.settings) };
   delete out.settings.showTopSites;
-  for (const key of ["order", "hidden", "highlighted"]) if (key in prefs) out[key] = stringList(prefs[key]);
+  for (const key of ["order", "hidden", "highlighted", "tileOrder"]) if (key in prefs) out[key] = stringList(prefs[key]);
   for (const [k, v] of Object.entries(prefs)) {
     if (!k.startsWith(STYLE_PREFIX) || k.length > 512) continue;
     const style = sanitizeFolderStyle(v);
@@ -1704,6 +1950,7 @@ async function loadStorage() {
   state.order = stringList(data.order);
   state.hidden = stringList(data.hidden);
   state.highlighted = stringList(data.highlighted);
+  state.tileOrder = stringList(data.tileOrder);
   // Pre-release builds stored a boolean for the Most visited column: migrate it once, then drop it,
   // otherwise it would hide the column again on every load.
   if ("showTopSites" in saved) {
@@ -1755,6 +2002,7 @@ for (const attr of ["aria-label", "title", "placeholder"]) {
   document.querySelectorAll(`[data-i18n-${attr}]`).forEach((el) => el.setAttribute(attr, t(el.getAttribute(`data-i18n-${attr}`))));
 }
 $("settings-path").setAttribute("d", UI.tune);
+$("focus-path").setAttribute("d", UI.focus);
 $("search-path").setAttribute("d", UI.search);
 $("enter-path").setAttribute("d", UI.enter);
 

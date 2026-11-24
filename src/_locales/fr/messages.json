@@ -91,9 +91,6 @@
   "colOpacity": {
     "message": "Opacité colonnes"
   },
-  "warmEvening": {
-    "message": "Teinte plus chaude le soir"
-  },
   "columns": {
     "message": "Colonnes"
   },
@@ -240,6 +237,63 @@
   },
   "emptyHint": {
     "message": "Ce dossier ne contient encore aucun favori : il s'affichera dès qu'il en aura un."
+  },
+  "focusMode": {
+    "message": "Mode Focus"
+  },
+  "focusClock": {
+    "message": "Afficher l'heure et la date"
+  },
+  "focusIcons": {
+    "message": "Garder les icônes des sites, sans les noms"
+  },
+  "focusHint": {
+    "message": "Masque vos favoris et ne garde que le fond, pour un onglet calme ou un écran partagé. Il s'active et se désactive avec le bouton Focus, et reste actif dans chaque nouvel onglet jusqu'à ce que vous l'éteigniez."
+  },
+  "moveLeft": {
+    "message": "Déplacer à gauche"
+  },
+  "moveRight": {
+    "message": "Déplacer à droite"
+  },
+  "focusLabel": {
+    "message": "Focus"
+  },
+  "hue": {
+    "message": "Teinte"
+  },
+  "done": {
+    "message": "OK"
+  },
+  "focusGray": {
+    "message": "Icônes grisées"
+  },
+  "bgLeaves": {
+    "message": "Feuilles"
+  },
+  "leafKindLeaves": {
+    "message": "Branches"
+  },
+  "leafKindPalm": {
+    "message": "Palmes"
+  },
+  "leavesHint": {
+    "message": "Les ombres douces de feuillages sur un mur au soleil, qui bougent lentement dans le vent."
+  },
+  "animateLeaves": {
+    "message": "Faire bouger les feuilles dans le vent"
+  },
+  "clockFormat": {
+    "message": "Horloge"
+  },
+  "clockAuto": {
+    "message": "Auto"
+  },
+  "clock12": {
+    "message": "12 h"
+  },
+  "clock24": {
+    "message": "24 h"
   },
   "animateGlow": {
     "message": "Faire respirer doucement le halo"

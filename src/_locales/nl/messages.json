@@ -91,9 +91,6 @@
   "colOpacity": {
     "message": "Dekking kolommen"
   },
-  "warmEvening": {
-    "message": "Warmere tint in de avond"
-  },
   "columns": {
     "message": "Kolommen"
   },
@@ -240,6 +237,63 @@
   },
   "emptyHint": {
     "message": "Deze map heeft nog geen bladwijzers: hij verschijnt zodra er een in staat."
+  },
+  "focusMode": {
+    "message": "Focusmodus"
+  },
+  "focusClock": {
+    "message": "Tijd en datum tonen"
+  },
+  "focusIcons": {
+    "message": "Pictogrammen van sites houden, zonder namen"
+  },
+  "focusHint": {
+    "message": "Verbergt je bladwijzers en laat alleen de achtergrond over, voor een rustig tabblad of een gedeeld scherm. Zet hem aan en uit met de knop Focus: hij blijft aan in elk nieuw tabblad tot je hem uitzet."
+  },
+  "moveLeft": {
+    "message": "Naar links"
+  },
+  "moveRight": {
+    "message": "Naar rechts"
+  },
+  "focusLabel": {
+    "message": "Focus"
+  },
+  "hue": {
+    "message": "Tint"
+  },
+  "done": {
+    "message": "Klaar"
+  },
+  "focusGray": {
+    "message": "Grijze pictogrammen"
+  },
+  "bgLeaves": {
+    "message": "Bladeren"
+  },
+  "leafKindLeaves": {
+    "message": "Takken"
+  },
+  "leafKindPalm": {
+    "message": "Palm"
+  },
+  "leavesHint": {
+    "message": "Zachte schaduwen van bladeren op een zonnige muur, die langzaam wiegen in de wind."
+  },
+  "animateLeaves": {
+    "message": "Laat de bladeren bewegen in de wind"
+  },
+  "clockFormat": {
+    "message": "Klok"
+  },
+  "clockAuto": {
+    "message": "Auto"
+  },
+  "clock12": {
+    "message": "12-uurs"
+  },
+  "clock24": {
+    "message": "24-uurs"
   },
   "animateGlow": {
     "message": "Laat de gloed zacht ademen"

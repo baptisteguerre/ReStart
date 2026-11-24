@@ -91,9 +91,6 @@
   "colOpacity": {
     "message": "Opacità colonne"
   },
-  "warmEvening": {
-    "message": "Tinta più calda la sera"
-  },
   "columns": {
     "message": "Colonne"
   },
@@ -240,6 +237,63 @@
   },
   "emptyHint": {
     "message": "Questa cartella non ha ancora preferiti: comparirà appena ne avrà uno."
+  },
+  "focusMode": {
+    "message": "Modalità Focus"
+  },
+  "focusClock": {
+    "message": "Mostra l'ora e la data"
+  },
+  "focusIcons": {
+    "message": "Tieni le icone dei siti, senza nomi"
+  },
+  "focusHint": {
+    "message": "Nasconde i preferiti e lascia solo lo sfondo, per una scheda tranquilla o uno schermo condiviso. Si attiva e disattiva con il pulsante Focus e resta attiva in ogni nuova scheda finché non la spegni."
+  },
+  "moveLeft": {
+    "message": "Sposta a sinistra"
+  },
+  "moveRight": {
+    "message": "Sposta a destra"
+  },
+  "focusLabel": {
+    "message": "Focus"
+  },
+  "hue": {
+    "message": "Tonalità"
+  },
+  "done": {
+    "message": "Fatto"
+  },
+  "focusGray": {
+    "message": "Icone in grigio"
+  },
+  "bgLeaves": {
+    "message": "Foglie"
+  },
+  "leafKindLeaves": {
+    "message": "Rami"
+  },
+  "leafKindPalm": {
+    "message": "Palme"
+  },
+  "leavesHint": {
+    "message": "Ombre morbide di foglie su un muro al sole, che ondeggiano lentamente al vento."
+  },
+  "animateLeaves": {
+    "message": "Fai muovere le foglie al vento"
+  },
+  "clockFormat": {
+    "message": "Orologio"
+  },
+  "clockAuto": {
+    "message": "Auto"
+  },
+  "clock12": {
+    "message": "12 ore"
+  },
+  "clock24": {
+    "message": "24 ore"
   },
   "animateGlow": {
     "message": "Fai respirare dolcemente l'alone"

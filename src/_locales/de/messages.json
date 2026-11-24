@@ -91,9 +91,6 @@
   "colOpacity": {
     "message": "Spaltendeckkraft"
   },
-  "warmEvening": {
-    "message": "Wärmerer Farbton am Abend"
-  },
   "columns": {
     "message": "Spalten"
   },
@@ -240,6 +237,63 @@
   },
   "emptyHint": {
     "message": "Dieser Ordner hat noch keine Lesezeichen: Er erscheint, sobald einer darin ist."
+  },
+  "focusMode": {
+    "message": "Fokusmodus"
+  },
+  "focusClock": {
+    "message": "Uhrzeit und Datum anzeigen"
+  },
+  "focusIcons": {
+    "message": "Seitensymbole behalten, ohne Namen"
+  },
+  "focusHint": {
+    "message": "Blendet deine Lesezeichen aus und lässt nur den Hintergrund, für einen ruhigen Tab oder einen geteilten Bildschirm. Ein- und ausschalten mit dem Knopf Fokus: Er bleibt in jedem neuen Tab aktiv, bis du ihn ausschaltest."
+  },
+  "moveLeft": {
+    "message": "Nach links"
+  },
+  "moveRight": {
+    "message": "Nach rechts"
+  },
+  "focusLabel": {
+    "message": "Fokus"
+  },
+  "hue": {
+    "message": "Farbton"
+  },
+  "done": {
+    "message": "Fertig"
+  },
+  "focusGray": {
+    "message": "Graue Symbole"
+  },
+  "bgLeaves": {
+    "message": "Blätter"
+  },
+  "leafKindLeaves": {
+    "message": "Zweige"
+  },
+  "leafKindPalm": {
+    "message": "Palmen"
+  },
+  "leavesHint": {
+    "message": "Sanfte Blätterschatten auf einer sonnigen Wand, die sich langsam im Wind wiegen."
+  },
+  "animateLeaves": {
+    "message": "Blätter im Wind bewegen lassen"
+  },
+  "clockFormat": {
+    "message": "Uhr"
+  },
+  "clockAuto": {
+    "message": "Auto"
+  },
+  "clock12": {
+    "message": "12 Std."
+  },
+  "clock24": {
+    "message": "24 Std."
   },
   "animateGlow": {
     "message": "Schein sanft atmen lassen"

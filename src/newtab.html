@@ -10,10 +10,14 @@
 </head>
 <body>
   <div class="backdrop" aria-hidden="true"></div>
+  <div class="leaves" aria-hidden="true"><i></i><i></i></div>
   <div class="glow" aria-hidden="true"><div class="ray"></div><div class="ray"></div><div class="ray"></div><div class="ray"></div></div>
-  <div class="time-tint" aria-hidden="true"></div>
 
   <header class="topbar">
+    <button class="pill-btn" id="focus-btn" data-i18n-title="focusMode" aria-pressed="false">
+      <svg viewBox="0 -960 960 960" aria-hidden="true"><path id="focus-path"/></svg>
+      <span data-i18n="focusLabel"></span>
+    </button>
     <button class="icon-btn" id="settings-btn" data-i18n-aria-label="settings" data-i18n-title="settings" aria-haspopup="dialog">
       <svg viewBox="0 -960 960 960" aria-hidden="true"><path id="settings-path"/></svg>
     </button>
@@ -41,6 +45,13 @@
 
     <p class="empty-state" id="empty-state" data-i18n="noMatch" hidden></p>
   </main>
+
+  <!-- Focus mode: only the background, the time and (optionally) the sites as icons -->
+  <div class="focus-view" id="focus-view" hidden>
+    <div class="fc-time" id="fc-time"></div>
+    <div class="fc-date" id="fc-date"></div>
+    <nav class="fc-icons" id="fc-icons" data-i18n-aria-label="bookmarksBar"></nav>
+  </div>
 
   <div class="popover" id="popover" role="dialog" aria-modal="false" hidden></div>
   <input type="file" id="file-import" accept="application/json,.json" hidden>

@@ -91,9 +91,6 @@
   "colOpacity": {
     "message": "Opacidade colunas"
   },
-  "warmEvening": {
-    "message": "Tom mais quente à noite"
-  },
   "columns": {
     "message": "Colunas"
   },
@@ -240,6 +237,63 @@
   },
   "emptyHint": {
     "message": "Esta pasta ainda não tem marcadores: aparece assim que tiver um."
+  },
+  "focusMode": {
+    "message": "Modo Foco"
+  },
+  "focusClock": {
+    "message": "Mostrar a hora e a data"
+  },
+  "focusIcons": {
+    "message": "Manter os ícones dos sites, sem nomes"
+  },
+  "focusHint": {
+    "message": "Oculta os seus marcadores e deixa só o fundo, para um separador calmo ou um ecrã partilhado. Liga e desliga com o botão Foco, e fica ativo em cada novo separador até o desligar."
+  },
+  "moveLeft": {
+    "message": "Mover para a esquerda"
+  },
+  "moveRight": {
+    "message": "Mover para a direita"
+  },
+  "focusLabel": {
+    "message": "Foco"
+  },
+  "hue": {
+    "message": "Matiz"
+  },
+  "done": {
+    "message": "Concluído"
+  },
+  "focusGray": {
+    "message": "Ícones em cinza"
+  },
+  "bgLeaves": {
+    "message": "Folhas"
+  },
+  "leafKindLeaves": {
+    "message": "Ramos"
+  },
+  "leafKindPalm": {
+    "message": "Palmas"
+  },
+  "leavesHint": {
+    "message": "Sombras suaves de folhas numa parede ao sol, balançando devagar ao vento."
+  },
+  "animateLeaves": {
+    "message": "Mover as folhas ao vento"
+  },
+  "clockFormat": {
+    "message": "Relógio"
+  },
+  "clockAuto": {
+    "message": "Auto"
+  },
+  "clock12": {
+    "message": "12 h"
+  },
+  "clock24": {
+    "message": "24 h"
   },
   "animateGlow": {
     "message": "Fazer o halo respirar suavemente"

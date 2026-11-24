@@ -91,9 +91,6 @@
   "colOpacity": {
     "message": "Column opacity"
   },
-  "warmEvening": {
-    "message": "Warmer tint in the evening"
-  },
   "columns": {
     "message": "Columns"
   },
@@ -240,6 +237,63 @@
   },
   "emptyHint": {
     "message": "This folder has no bookmarks yet: it shows up once it has one."
+  },
+  "focusMode": {
+    "message": "Focus mode"
+  },
+  "focusClock": {
+    "message": "Show the time and date"
+  },
+  "focusIcons": {
+    "message": "Keep site icons, without names"
+  },
+  "focusHint": {
+    "message": "Hides your bookmarks and keeps only the background, for a calm tab or a shared screen. Turn it on and off with the Focus button: it stays on in every new tab until you turn it off."
+  },
+  "moveLeft": {
+    "message": "Move left"
+  },
+  "moveRight": {
+    "message": "Move right"
+  },
+  "focusLabel": {
+    "message": "Focus"
+  },
+  "hue": {
+    "message": "Hue"
+  },
+  "done": {
+    "message": "Done"
+  },
+  "focusGray": {
+    "message": "Gray icons"
+  },
+  "bgLeaves": {
+    "message": "Leaves"
+  },
+  "leafKindLeaves": {
+    "message": "Branches"
+  },
+  "leafKindPalm": {
+    "message": "Palm"
+  },
+  "leavesHint": {
+    "message": "Soft shadows of leaves on a sunlit wall, swaying slowly in the wind."
+  },
+  "animateLeaves": {
+    "message": "Let the leaves move in the wind"
+  },
+  "clockFormat": {
+    "message": "Clock"
+  },
+  "clockAuto": {
+    "message": "Auto"
+  },
+  "clock12": {
+    "message": "12-hour"
+  },
+  "clock24": {
+    "message": "24-hour"
   },
   "animateGlow": {
     "message": "Let the halo breathe gently"

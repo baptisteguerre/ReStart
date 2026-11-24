@@ -91,9 +91,6 @@
   "colOpacity": {
     "message": "Opacidad columnas"
   },
-  "warmEvening": {
-    "message": "Tono más cálido por la noche"
-  },
   "columns": {
     "message": "Columnas"
   },
@@ -240,6 +237,63 @@
   },
   "emptyHint": {
     "message": "Esta carpeta aún no tiene marcadores: aparecerá en cuanto tenga uno."
+  },
+  "focusMode": {
+    "message": "Modo Enfoque"
+  },
+  "focusClock": {
+    "message": "Mostrar la hora y la fecha"
+  },
+  "focusIcons": {
+    "message": "Mantener los iconos de los sitios, sin nombres"
+  },
+  "focusHint": {
+    "message": "Oculta tus marcadores y deja solo el fondo, para una pestaña tranquila o una pantalla compartida. Se activa y desactiva con el botón Enfoque, y sigue activo en cada pestaña nueva hasta que lo desactives."
+  },
+  "moveLeft": {
+    "message": "Mover a la izquierda"
+  },
+  "moveRight": {
+    "message": "Mover a la derecha"
+  },
+  "focusLabel": {
+    "message": "Enfoque"
+  },
+  "hue": {
+    "message": "Tono"
+  },
+  "done": {
+    "message": "Listo"
+  },
+  "focusGray": {
+    "message": "Iconos en gris"
+  },
+  "bgLeaves": {
+    "message": "Hojas"
+  },
+  "leafKindLeaves": {
+    "message": "Ramas"
+  },
+  "leafKindPalm": {
+    "message": "Palmas"
+  },
+  "leavesHint": {
+    "message": "Sombras suaves de hojas sobre una pared soleada, que se mecen despacio con el viento."
+  },
+  "animateLeaves": {
+    "message": "Mover las hojas con el viento"
+  },
+  "clockFormat": {
+    "message": "Reloj"
+  },
+  "clockAuto": {
+    "message": "Auto"
+  },
+  "clock12": {
+    "message": "12 h"
+  },
+  "clock24": {
+    "message": "24 h"
   },
   "animateGlow": {
     "message": "Hacer respirar suavemente el halo"

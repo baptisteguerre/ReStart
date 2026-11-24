@@ -13,7 +13,7 @@ ReStart's single purpose is to display the user's bookmarks on the new tab page.
 Used to display each bookmarked site's icon from the browser's favicon cache, next to the bookmark title.
 
 **storage**
-Stores, in local extension storage on the user's device only, the user's preferences: folder icons and colors, column order, hidden columns, pinned sites, layout and appearance. The theme choice (auto, light or dark) is also kept in the page's local storage so the page opens in the right theme.
+Stores, in local extension storage on the user's device only, the user's preferences: folder icons and colors, column and tile order, hidden columns, pinned sites, layout, appearance and focus mode. The theme choice (auto, light or dark) is also kept in the page's local storage so the page opens in the right theme.
 
 **topSites**
 Used to display the optional "Most visited" column on the new tab page. The user can hide it in the settings.

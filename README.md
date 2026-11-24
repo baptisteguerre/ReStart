@@ -37,7 +37,7 @@ Brave, Chrome, Edge…:
 
 Firefox:
 
-1. Run `./build.sh` (it creates `dist/firefox/`).
+1. Run `sh build.sh` (it creates `dist/firefox/`).
 2. Open `about:debugging#/runtime/this-firefox` and click **Load Temporary Add-on…**.
 3. Select `dist/firefox/manifest.json`. A temporary add-on stays installed until Firefox restarts.
 
@@ -68,9 +68,14 @@ store/                Chrome Web Store listing texts, permission justifications,
                       promo tiles and store icon; firefox.md for addons.mozilla.org
 platforms/firefox/    Firefox manifest
 build.sh              Builds dist/restart-chrome-<version>.zip and dist/restart-firefox-<version>.zip
+.github/workflows/    Release workflow: builds the zips and attaches them to each GitHub release
 ```
 
-Plain HTML, CSS and JavaScript (ES modules), no compilation. `build.sh` only copies `src/` and picks the manifest for each browser. To release a new version, change `version` in `src/manifest.json`, run `./build.sh`, and upload each zip to its store.
+Plain HTML, CSS and JavaScript (ES modules), no compilation. `build.sh` only copies `src/` and picks the manifest for each browser. To release a new version:
+
+1. Change `version` in `src/manifest.json`.
+2. Publish a GitHub release with the tag `v<version>` (for example `v1.0.1`). The *Release packages* workflow (`.github/workflows/release.yml`) checks that the tag matches the version, runs `build.sh` and attaches both zips to the release. You can also run `sh build.sh` locally.
+3. Upload each zip to its store.
 
 ## Contributing
 

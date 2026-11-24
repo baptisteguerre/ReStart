@@ -1,6 +1,6 @@
 # Firefox Add-ons (addons.mozilla.org)
 
-Package: `dist/restart-firefox-<version>.zip`, built with `./build.sh`.
+Package: `dist/restart-firefox-<version>.zip`, built with `sh build.sh`, or attached automatically to each GitHub release.
 
 ## Upload
 

@@ -3,6 +3,7 @@
 #   dist/restart-chrome-<version>.zip   (src/ as is: Chrome, Brave, Edge…)
 #   dist/restart-firefox-<version>.zip  (src/ with platforms/firefox/manifest.json)
 # The version comes from src/manifest.json: change it there only.
+# Run with: sh build.sh
 set -eu
 cd "$(dirname "$0")"
 

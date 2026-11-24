@@ -4,6 +4,30 @@
 
 ReStart replaces the new tab page of Firefox (version 140 or later) and of Chromium-based browsers that let extensions do so (Brave, Chrome, Edge…, version 116 or later) with a macOS-inspired start page built from your existing bookmarks bar. No feeds, no widgets, no distractions. No account, no server, no tracking, no network requests.
 
+![ReStart: bookmarks as columns, with a halo following the sun](store/screenshots/1-board-light.png)
+
+<table>
+  <tr>
+    <td><img src="store/screenshots/2-board-dark.png" alt="Dark mode with light rays"></td>
+    <td><img src="store/screenshots/3-mosaic.png" alt="Mosaic layout"></td>
+  </tr>
+  <tr>
+    <td align="center">Dark mode, light rays</td>
+    <td align="center">Mosaic layout</td>
+  </tr>
+  <tr>
+    <td><img src="store/screenshots/4-customize-folder.png" alt="Pastel color and icon for a folder"></td>
+    <td><img src="store/screenshots/5-bookmark-menu.png" alt="Right-click menu on a bookmark"></td>
+  </tr>
+  <tr>
+    <td align="center">Folder color and icon</td>
+    <td align="center">Right-click menu</td>
+  </tr>
+</table>
+
+<p align="center"><img src="store/extra/narrow-window.png" alt="Narrow windows, in light and dark mode" width="640"></p>
+<p align="center">Narrow windows</p>
+
 ## Features
 
 - **Your bookmarks, as you organized them.** Folders of the bookmarks bar become columns, in the exact order you set (never alphabetical). Subfolders expand in place. *Other bookmarks* get their own column when they contain bookmarks. Empty folders are hidden (they appear, disabled, in the settings' column list).

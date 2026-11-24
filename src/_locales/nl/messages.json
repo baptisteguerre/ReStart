@@ -1,0 +1,289 @@
+{
+  "appName": {
+    "message": "ReStart"
+  },
+  "extName": {
+    "message": "ReStart - Startpagina voor je bladwijzers"
+  },
+  "appDesc": {
+    "message": "Een rustige, eenvoudige startpagina rond je bladwijzers, in hun echte volgorde. Zoals het altijd had moeten zijn."
+  },
+  "newTab": {
+    "message": "Nieuw tabblad"
+  },
+  "settings": {
+    "message": "Instellingen"
+  },
+  "bookmarksBar": {
+    "message": "Bladwijzerbalk"
+  },
+  "folders": {
+    "message": "Mappen"
+  },
+  "searchPlaceholder": {
+    "message": "Typ om te filteren"
+  },
+  "open": {
+    "message": "Openen"
+  },
+  "scrollLeft": {
+    "message": "Naar links scrollen"
+  },
+  "scrollRight": {
+    "message": "Naar rechts scrollen"
+  },
+  "noMatch": {
+    "message": "Geen bladwijzers gevonden."
+  },
+  "emptyFolder": {
+    "message": "Lege map"
+  },
+  "mostVisited": {
+    "message": "Meest bezocht"
+  },
+  "otherBookmarks": {
+    "message": "Andere bladwijzers"
+  },
+  "customizeIcon": {
+    "message": "Pictogram aanpassen"
+  },
+  "customizeIconOf": {
+    "message": "Pictogram van $NAME$ aanpassen",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "reset": {
+    "message": "Herstellen"
+  },
+  "color": {
+    "message": "Kleur"
+  },
+  "icon": {
+    "message": "Pictogram"
+  },
+  "searchIcons": {
+    "message": "Pictogrammen zoeken (in het Engels)"
+  },
+  "appearance": {
+    "message": "Weergave"
+  },
+  "background": {
+    "message": "Achtergrond"
+  },
+  "bgNone": {
+    "message": "Geen"
+  },
+  "bgGlow": {
+    "message": "Gloed"
+  },
+  "bgColor": {
+    "message": "Kleur"
+  },
+  "glowColor": {
+    "message": "Kleur van de gloed"
+  },
+  "glowHint": {
+    "message": "De gloed volgt de zon: 's ochtends links, 's avonds rechts, bleek rond de middag en dieper bij zonsondergang."
+  },
+  "colOpacity": {
+    "message": "Dekking kolommen"
+  },
+  "warmEvening": {
+    "message": "Warmere tint in de avond"
+  },
+  "columns": {
+    "message": "Kolommen"
+  },
+  "columnsHint": {
+    "message": "Sleep om de volgorde te wijzigen, hier of via de kop van een kolom. De volgorde geldt alleen voor $APP$, niet voor je bladwijzers.",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "originalOrder": {
+    "message": "Oorspronkelijke volgorde"
+  },
+  "moveUp": {
+    "message": "Omhoog"
+  },
+  "moveDown": {
+    "message": "Omlaag"
+  },
+  "dragToReorder": {
+    "message": "Sleep om te ordenen"
+  },
+  "showColumn": {
+    "message": "$NAME$ tonen",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "data": {
+    "message": "Gegevens"
+  },
+  "export": {
+    "message": "Exporteren"
+  },
+  "import": {
+    "message": "Importeren"
+  },
+  "importDone": {
+    "message": "Import voltooid."
+  },
+  "importFailed": {
+    "message": "Bestand niet herkend."
+  },
+  "dataHint": {
+    "message": "Pictogrammen, kleuren, volgorde, verborgen kolommen en weergave. Mappictogrammen zijn gekoppeld aan de mapnaam."
+  },
+  "layout": {
+    "message": "Indeling"
+  },
+  "layoutBoard": {
+    "message": "Bord"
+  },
+  "layoutMasonry": {
+    "message": "Mozaïek"
+  },
+  "layoutNarrowHint": {
+    "message": "Geldt voor brede vensters. Smalle vensters tonen altijd een lijst."
+  },
+  "openNewTab": {
+    "message": "Openen in nieuw tabblad"
+  },
+  "copyLink": {
+    "message": "Link kopiëren"
+  },
+  "highlight": {
+    "message": "Boven zoekbalk vastzetten"
+  },
+  "unhighlight": {
+    "message": "Losmaken"
+  },
+  "rename": {
+    "message": "Naam wijzigen"
+  },
+  "save": {
+    "message": "Opslaan"
+  },
+  "cancel": {
+    "message": "Annuleren"
+  },
+  "delete": {
+    "message": "Verwijderen"
+  },
+  "confirmDelete": {
+    "message": "Klik nogmaals om te verwijderen"
+  },
+  "theme": {
+    "message": "Thema"
+  },
+  "themeAuto": {
+    "message": "Auto"
+  },
+  "themeLight": {
+    "message": "Licht"
+  },
+  "themeDark": {
+    "message": "Donker"
+  },
+  "styleRays": {
+    "message": "Stralen"
+  },
+  "intensity": {
+    "message": "Sterkte"
+  },
+  "animateRays": {
+    "message": "Laat de stralen zacht bewegen"
+  },
+  "bgTint": {
+    "message": "Achtergrondkleur"
+  },
+  "noColor": {
+    "message": "Geen kleur"
+  },
+  "addBookmark": {
+    "message": "Toevoegen aan bladwijzers"
+  },
+  "alreadyBookmarked": {
+    "message": "Al in bladwijzers"
+  },
+  "addTo": {
+    "message": "Toevoegen aan"
+  },
+  "newFolder": {
+    "message": "Nieuwe map…"
+  },
+  "folderName": {
+    "message": "Mapnaam"
+  },
+  "create": {
+    "message": "Maken"
+  },
+  "folderContains": {
+    "message": "Bevat $NAME$ bladwijzers, die mee worden verwijderd",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "emptyTag": {
+    "message": "Leeg"
+  },
+  "emptyHint": {
+    "message": "Deze map heeft nog geen bladwijzers: hij verschijnt zodra er een in staat."
+  },
+  "animateGlow": {
+    "message": "Laat de gloed zacht ademen"
+  },
+  "customColor": {
+    "message": "Aangepaste kleur"
+  },
+  "c_gray": {
+    "message": "Grijs"
+  },
+  "c_red": {
+    "message": "Rood"
+  },
+  "c_orange": {
+    "message": "Oranje"
+  },
+  "c_yellow": {
+    "message": "Geel"
+  },
+  "c_green": {
+    "message": "Groen"
+  },
+  "c_mint": {
+    "message": "Mint"
+  },
+  "c_teal": {
+    "message": "Blauwgroen"
+  },
+  "c_blue": {
+    "message": "Blauw"
+  },
+  "c_indigo": {
+    "message": "Indigo"
+  },
+  "c_purple": {
+    "message": "Paars"
+  },
+  "c_pink": {
+    "message": "Roze"
+  },
+  "c_lime": {
+    "message": "Limoen"
+  },
+  "c_brown": {
+    "message": "Bruin"
+  }
+}

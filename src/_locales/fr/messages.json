@@ -1,0 +1,289 @@
+{
+  "appName": {
+    "message": "ReStart"
+  },
+  "extName": {
+    "message": "ReStart - Page de démarrage pour vos favoris"
+  },
+  "appDesc": {
+    "message": "Une page de démarrage calme et simple, centrée sur vos favoris, dans leur ordre réel. Comme elle aurait toujours dû être."
+  },
+  "newTab": {
+    "message": "Nouvel onglet"
+  },
+  "settings": {
+    "message": "Réglages"
+  },
+  "bookmarksBar": {
+    "message": "Barre de favoris"
+  },
+  "folders": {
+    "message": "Dossiers"
+  },
+  "searchPlaceholder": {
+    "message": "Tapez pour filtrer"
+  },
+  "open": {
+    "message": "Ouvrir"
+  },
+  "scrollLeft": {
+    "message": "Défiler à gauche"
+  },
+  "scrollRight": {
+    "message": "Défiler à droite"
+  },
+  "noMatch": {
+    "message": "Aucun favori ne correspond."
+  },
+  "emptyFolder": {
+    "message": "Dossier vide"
+  },
+  "mostVisited": {
+    "message": "Les plus visités"
+  },
+  "otherBookmarks": {
+    "message": "Autres favoris"
+  },
+  "customizeIcon": {
+    "message": "Personnaliser l'icône"
+  },
+  "customizeIconOf": {
+    "message": "Personnaliser l'icône de $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "reset": {
+    "message": "Réinitialiser"
+  },
+  "color": {
+    "message": "Couleur"
+  },
+  "icon": {
+    "message": "Icône"
+  },
+  "searchIcons": {
+    "message": "Rechercher une icône (en anglais)"
+  },
+  "appearance": {
+    "message": "Apparence"
+  },
+  "background": {
+    "message": "Fond"
+  },
+  "bgNone": {
+    "message": "Aucun"
+  },
+  "bgGlow": {
+    "message": "Halo"
+  },
+  "bgColor": {
+    "message": "Couleur"
+  },
+  "glowColor": {
+    "message": "Couleur du halo"
+  },
+  "glowHint": {
+    "message": "Il suit le soleil : à gauche le matin, à droite le soir, pâle à midi et plus profond au crépuscule."
+  },
+  "colOpacity": {
+    "message": "Opacité colonnes"
+  },
+  "warmEvening": {
+    "message": "Teinte plus chaude le soir"
+  },
+  "columns": {
+    "message": "Colonnes"
+  },
+  "columnsHint": {
+    "message": "Glissez pour réordonner, ici ou par l'en-tête d'une colonne. L'ordre n'affecte que $APP$, pas vos favoris.",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "originalOrder": {
+    "message": "Ordre d'origine"
+  },
+  "moveUp": {
+    "message": "Monter"
+  },
+  "moveDown": {
+    "message": "Descendre"
+  },
+  "dragToReorder": {
+    "message": "Glisser pour réordonner"
+  },
+  "showColumn": {
+    "message": "Afficher $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "data": {
+    "message": "Données"
+  },
+  "export": {
+    "message": "Exporter"
+  },
+  "import": {
+    "message": "Importer"
+  },
+  "importDone": {
+    "message": "Import terminé."
+  },
+  "importFailed": {
+    "message": "Fichier non reconnu."
+  },
+  "dataHint": {
+    "message": "Icônes, couleurs, ordre, colonnes masquées et apparence. Les icônes de dossiers sont liées au nom du dossier."
+  },
+  "layout": {
+    "message": "Disposition"
+  },
+  "layoutBoard": {
+    "message": "Tableau"
+  },
+  "layoutMasonry": {
+    "message": "Mosaïque"
+  },
+  "layoutNarrowHint": {
+    "message": "S'applique aux fenêtres larges. Les fenêtres étroites affichent toujours une liste."
+  },
+  "openNewTab": {
+    "message": "Ouvrir dans un nouvel onglet"
+  },
+  "copyLink": {
+    "message": "Copier le lien"
+  },
+  "highlight": {
+    "message": "Mettre en avant"
+  },
+  "unhighlight": {
+    "message": "Ne plus mettre en avant"
+  },
+  "rename": {
+    "message": "Renommer"
+  },
+  "save": {
+    "message": "Enregistrer"
+  },
+  "cancel": {
+    "message": "Annuler"
+  },
+  "delete": {
+    "message": "Supprimer"
+  },
+  "confirmDelete": {
+    "message": "Cliquez à nouveau pour supprimer"
+  },
+  "theme": {
+    "message": "Thème"
+  },
+  "themeAuto": {
+    "message": "Auto"
+  },
+  "themeLight": {
+    "message": "Clair"
+  },
+  "themeDark": {
+    "message": "Sombre"
+  },
+  "styleRays": {
+    "message": "Rayons"
+  },
+  "intensity": {
+    "message": "Intensité"
+  },
+  "animateRays": {
+    "message": "Faire bouger doucement les rayons"
+  },
+  "bgTint": {
+    "message": "Couleur de fond"
+  },
+  "noColor": {
+    "message": "Aucune couleur"
+  },
+  "addBookmark": {
+    "message": "Ajouter aux favoris"
+  },
+  "alreadyBookmarked": {
+    "message": "Déjà dans les favoris"
+  },
+  "addTo": {
+    "message": "Ajouter dans"
+  },
+  "newFolder": {
+    "message": "Nouveau dossier…"
+  },
+  "folderName": {
+    "message": "Nom du dossier"
+  },
+  "create": {
+    "message": "Créer"
+  },
+  "folderContains": {
+    "message": "Contient $NAME$ favoris, supprimés avec lui",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "emptyTag": {
+    "message": "Vide"
+  },
+  "emptyHint": {
+    "message": "Ce dossier ne contient encore aucun favori : il s'affichera dès qu'il en aura un."
+  },
+  "animateGlow": {
+    "message": "Faire respirer doucement le halo"
+  },
+  "customColor": {
+    "message": "Couleur personnalisée"
+  },
+  "c_gray": {
+    "message": "Gris"
+  },
+  "c_red": {
+    "message": "Rouge"
+  },
+  "c_orange": {
+    "message": "Orange"
+  },
+  "c_yellow": {
+    "message": "Jaune"
+  },
+  "c_green": {
+    "message": "Vert"
+  },
+  "c_mint": {
+    "message": "Menthe"
+  },
+  "c_teal": {
+    "message": "Turquoise"
+  },
+  "c_blue": {
+    "message": "Bleu"
+  },
+  "c_indigo": {
+    "message": "Indigo"
+  },
+  "c_purple": {
+    "message": "Violet"
+  },
+  "c_pink": {
+    "message": "Rose"
+  },
+  "c_lime": {
+    "message": "Citron vert"
+  },
+  "c_brown": {
+    "message": "Marron"
+  }
+}

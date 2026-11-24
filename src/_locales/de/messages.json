@@ -1,0 +1,289 @@
+{
+  "appName": {
+    "message": "ReStart"
+  },
+  "extName": {
+    "message": "ReStart - Lesezeichen-Startseite"
+  },
+  "appDesc": {
+    "message": "Eine ruhige, einfache Startseite rund um deine Lesezeichen, in ihrer echten Reihenfolge. So, wie sie immer hätte sein sollen."
+  },
+  "newTab": {
+    "message": "Neuer Tab"
+  },
+  "settings": {
+    "message": "Einstellungen"
+  },
+  "bookmarksBar": {
+    "message": "Lesezeichenleiste"
+  },
+  "folders": {
+    "message": "Ordner"
+  },
+  "searchPlaceholder": {
+    "message": "Tippen zum Filtern"
+  },
+  "open": {
+    "message": "Öffnen"
+  },
+  "scrollLeft": {
+    "message": "Nach links scrollen"
+  },
+  "scrollRight": {
+    "message": "Nach rechts scrollen"
+  },
+  "noMatch": {
+    "message": "Keine passenden Lesezeichen."
+  },
+  "emptyFolder": {
+    "message": "Leerer Ordner"
+  },
+  "mostVisited": {
+    "message": "Meistbesucht"
+  },
+  "otherBookmarks": {
+    "message": "Weitere Lesezeichen"
+  },
+  "customizeIcon": {
+    "message": "Symbol anpassen"
+  },
+  "customizeIconOf": {
+    "message": "Symbol von $NAME$ anpassen",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "reset": {
+    "message": "Zurücksetzen"
+  },
+  "color": {
+    "message": "Farbe"
+  },
+  "icon": {
+    "message": "Symbol"
+  },
+  "searchIcons": {
+    "message": "Symbole suchen (auf Englisch)"
+  },
+  "appearance": {
+    "message": "Darstellung"
+  },
+  "background": {
+    "message": "Hintergrund"
+  },
+  "bgNone": {
+    "message": "Keiner"
+  },
+  "bgGlow": {
+    "message": "Schein"
+  },
+  "bgColor": {
+    "message": "Farbe"
+  },
+  "glowColor": {
+    "message": "Farbe des Scheins"
+  },
+  "glowHint": {
+    "message": "Er folgt der Sonne: morgens links, abends rechts, mittags blass und in der Dämmerung kräftiger."
+  },
+  "colOpacity": {
+    "message": "Spaltendeckkraft"
+  },
+  "warmEvening": {
+    "message": "Wärmerer Farbton am Abend"
+  },
+  "columns": {
+    "message": "Spalten"
+  },
+  "columnsHint": {
+    "message": "Zum Umsortieren ziehen, hier oder am Kopf einer Spalte. Die Reihenfolge gilt nur für $APP$, nicht für deine Lesezeichen.",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "originalOrder": {
+    "message": "Ursprüngliche Reihenfolge"
+  },
+  "moveUp": {
+    "message": "Nach oben"
+  },
+  "moveDown": {
+    "message": "Nach unten"
+  },
+  "dragToReorder": {
+    "message": "Zum Sortieren ziehen"
+  },
+  "showColumn": {
+    "message": "$NAME$ anzeigen",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "data": {
+    "message": "Daten"
+  },
+  "export": {
+    "message": "Exportieren"
+  },
+  "import": {
+    "message": "Importieren"
+  },
+  "importDone": {
+    "message": "Import abgeschlossen."
+  },
+  "importFailed": {
+    "message": "Datei nicht erkannt."
+  },
+  "dataHint": {
+    "message": "Symbole, Farben, Reihenfolge, ausgeblendete Spalten und Darstellung. Ordnersymbole sind an den Ordnernamen gebunden."
+  },
+  "layout": {
+    "message": "Anordnung"
+  },
+  "layoutBoard": {
+    "message": "Board"
+  },
+  "layoutMasonry": {
+    "message": "Mosaik"
+  },
+  "layoutNarrowHint": {
+    "message": "Gilt für breite Fenster. Schmale Fenster zeigen immer eine Liste."
+  },
+  "openNewTab": {
+    "message": "In neuem Tab öffnen"
+  },
+  "copyLink": {
+    "message": "Link kopieren"
+  },
+  "highlight": {
+    "message": "Über der Suche anheften"
+  },
+  "unhighlight": {
+    "message": "Lösen"
+  },
+  "rename": {
+    "message": "Umbenennen"
+  },
+  "save": {
+    "message": "Speichern"
+  },
+  "cancel": {
+    "message": "Abbrechen"
+  },
+  "delete": {
+    "message": "Löschen"
+  },
+  "confirmDelete": {
+    "message": "Zum Löschen erneut klicken"
+  },
+  "theme": {
+    "message": "Design"
+  },
+  "themeAuto": {
+    "message": "Auto"
+  },
+  "themeLight": {
+    "message": "Hell"
+  },
+  "themeDark": {
+    "message": "Dunkel"
+  },
+  "styleRays": {
+    "message": "Strahlen"
+  },
+  "intensity": {
+    "message": "Stärke"
+  },
+  "animateRays": {
+    "message": "Strahlen sanft bewegen lassen"
+  },
+  "bgTint": {
+    "message": "Hintergrundfarbe"
+  },
+  "noColor": {
+    "message": "Keine Farbe"
+  },
+  "addBookmark": {
+    "message": "Zu Lesezeichen hinzufügen"
+  },
+  "alreadyBookmarked": {
+    "message": "Bereits in Lesezeichen"
+  },
+  "addTo": {
+    "message": "Hinzufügen zu"
+  },
+  "newFolder": {
+    "message": "Neuer Ordner…"
+  },
+  "folderName": {
+    "message": "Ordnername"
+  },
+  "create": {
+    "message": "Erstellen"
+  },
+  "folderContains": {
+    "message": "Enthält $NAME$ Lesezeichen, die mitgelöscht werden",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "emptyTag": {
+    "message": "Leer"
+  },
+  "emptyHint": {
+    "message": "Dieser Ordner hat noch keine Lesezeichen: Er erscheint, sobald einer darin ist."
+  },
+  "animateGlow": {
+    "message": "Schein sanft atmen lassen"
+  },
+  "customColor": {
+    "message": "Eigene Farbe"
+  },
+  "c_gray": {
+    "message": "Grau"
+  },
+  "c_red": {
+    "message": "Rot"
+  },
+  "c_orange": {
+    "message": "Orange"
+  },
+  "c_yellow": {
+    "message": "Gelb"
+  },
+  "c_green": {
+    "message": "Grün"
+  },
+  "c_mint": {
+    "message": "Mint"
+  },
+  "c_teal": {
+    "message": "Türkis"
+  },
+  "c_blue": {
+    "message": "Blau"
+  },
+  "c_indigo": {
+    "message": "Indigo"
+  },
+  "c_purple": {
+    "message": "Lila"
+  },
+  "c_pink": {
+    "message": "Rosa"
+  },
+  "c_lime": {
+    "message": "Limette"
+  },
+  "c_brown": {
+    "message": "Braun"
+  }
+}

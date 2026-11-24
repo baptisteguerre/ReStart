@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title></title>
+  <script src="theme-boot.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="backdrop" aria-hidden="true"></div>
+  <div class="glow" aria-hidden="true"><div class="ray"></div><div class="ray"></div><div class="ray"></div><div class="ray"></div></div>
+  <div class="time-tint" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <button class="icon-btn" id="settings-btn" data-i18n-aria-label="settings" data-i18n-title="settings" aria-haspopup="dialog">
+      <svg viewBox="0 -960 960 960" aria-hidden="true"><path id="settings-path"/></svg>
+    </button>
+  </header>
+
+  <main class="page">
+    <section class="bar-row" id="bar-row" data-i18n-aria-label="bookmarksBar"></section>
+
+    <div class="search-wrap">
+      <label class="search" for="search">
+        <svg viewBox="0 -960 960 960" aria-hidden="true" class="search-ico"><path id="search-path"/></svg>
+        <input id="search" type="search" maxlength="200" data-i18n-placeholder="searchPlaceholder" autocomplete="off" spellcheck="false" autofocus>
+        <span class="search-enter" id="search-enter" hidden>
+          <svg viewBox="0 -960 960 960" aria-hidden="true"><path id="enter-path"/></svg><span data-i18n="open"></span>
+        </span>
+        <kbd class="search-hint" id="search-hint">Esc</kbd>
+      </label>
+    </div>
+
+    <div class="board-wrap" id="board-wrap">
+      <button class="board-nav prev" id="nav-prev" data-i18n-aria-label="scrollLeft" tabindex="-1">‹</button>
+      <section class="board" id="board" data-i18n-aria-label="folders"></section>
+      <button class="board-nav next" id="nav-next" data-i18n-aria-label="scrollRight" tabindex="-1">›</button>
+    </div>
+
+    <p class="empty-state" id="empty-state" data-i18n="noMatch" hidden></p>
+  </main>
+
+  <div class="popover" id="popover" role="dialog" aria-modal="false" hidden></div>
+  <input type="file" id="file-import" accept="application/json,.json" hidden>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

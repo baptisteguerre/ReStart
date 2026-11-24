@@ -1,0 +1,289 @@
+{
+  "appName": {
+    "message": "ReStart"
+  },
+  "extName": {
+    "message": "ReStart - Página de inicio de marcadores"
+  },
+  "appDesc": {
+    "message": "Una página de inicio tranquila y sencilla, centrada en tus marcadores, en su orden real. Como siempre debió ser."
+  },
+  "newTab": {
+    "message": "Nueva pestaña"
+  },
+  "settings": {
+    "message": "Ajustes"
+  },
+  "bookmarksBar": {
+    "message": "Barra de marcadores"
+  },
+  "folders": {
+    "message": "Carpetas"
+  },
+  "searchPlaceholder": {
+    "message": "Escribe para filtrar"
+  },
+  "open": {
+    "message": "Abrir"
+  },
+  "scrollLeft": {
+    "message": "Desplazar a la izquierda"
+  },
+  "scrollRight": {
+    "message": "Desplazar a la derecha"
+  },
+  "noMatch": {
+    "message": "Ningún marcador coincide."
+  },
+  "emptyFolder": {
+    "message": "Carpeta vacía"
+  },
+  "mostVisited": {
+    "message": "Más visitados"
+  },
+  "otherBookmarks": {
+    "message": "Otros marcadores"
+  },
+  "customizeIcon": {
+    "message": "Personalizar icono"
+  },
+  "customizeIconOf": {
+    "message": "Personalizar el icono de $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "reset": {
+    "message": "Restablecer"
+  },
+  "color": {
+    "message": "Color"
+  },
+  "icon": {
+    "message": "Icono"
+  },
+  "searchIcons": {
+    "message": "Buscar iconos (en inglés)"
+  },
+  "appearance": {
+    "message": "Apariencia"
+  },
+  "background": {
+    "message": "Fondo"
+  },
+  "bgNone": {
+    "message": "Ninguno"
+  },
+  "bgGlow": {
+    "message": "Halo"
+  },
+  "bgColor": {
+    "message": "Color"
+  },
+  "glowColor": {
+    "message": "Color del halo"
+  },
+  "glowHint": {
+    "message": "Sigue al sol: a la izquierda por la mañana, a la derecha por la tarde, pálido al mediodía y más intenso al atardecer."
+  },
+  "colOpacity": {
+    "message": "Opacidad columnas"
+  },
+  "warmEvening": {
+    "message": "Tono más cálido por la noche"
+  },
+  "columns": {
+    "message": "Columnas"
+  },
+  "columnsHint": {
+    "message": "Arrastra para reordenar, aquí o desde el encabezado de una columna. El orden solo afecta a $APP$, no a tus marcadores.",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "originalOrder": {
+    "message": "Orden original"
+  },
+  "moveUp": {
+    "message": "Subir"
+  },
+  "moveDown": {
+    "message": "Bajar"
+  },
+  "dragToReorder": {
+    "message": "Arrastrar para reordenar"
+  },
+  "showColumn": {
+    "message": "Mostrar $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "data": {
+    "message": "Datos"
+  },
+  "export": {
+    "message": "Exportar"
+  },
+  "import": {
+    "message": "Importar"
+  },
+  "importDone": {
+    "message": "Importación completada."
+  },
+  "importFailed": {
+    "message": "Archivo no reconocido."
+  },
+  "dataHint": {
+    "message": "Iconos, colores, orden, columnas ocultas y apariencia. Los iconos de carpeta están vinculados al nombre de la carpeta."
+  },
+  "layout": {
+    "message": "Disposición"
+  },
+  "layoutBoard": {
+    "message": "Tablero"
+  },
+  "layoutMasonry": {
+    "message": "Mosaico"
+  },
+  "layoutNarrowHint": {
+    "message": "Se aplica a ventanas anchas. Las ventanas estrechas siempre muestran una lista."
+  },
+  "openNewTab": {
+    "message": "Abrir en una pestaña nueva"
+  },
+  "copyLink": {
+    "message": "Copiar enlace"
+  },
+  "highlight": {
+    "message": "Destacar arriba"
+  },
+  "unhighlight": {
+    "message": "Quitar de destacados"
+  },
+  "rename": {
+    "message": "Cambiar nombre"
+  },
+  "save": {
+    "message": "Guardar"
+  },
+  "cancel": {
+    "message": "Cancelar"
+  },
+  "delete": {
+    "message": "Eliminar"
+  },
+  "confirmDelete": {
+    "message": "Haz clic de nuevo para eliminar"
+  },
+  "theme": {
+    "message": "Tema"
+  },
+  "themeAuto": {
+    "message": "Auto"
+  },
+  "themeLight": {
+    "message": "Claro"
+  },
+  "themeDark": {
+    "message": "Oscuro"
+  },
+  "styleRays": {
+    "message": "Rayos"
+  },
+  "intensity": {
+    "message": "Intensidad"
+  },
+  "animateRays": {
+    "message": "Mover suavemente los rayos"
+  },
+  "bgTint": {
+    "message": "Color de fondo"
+  },
+  "noColor": {
+    "message": "Sin color"
+  },
+  "addBookmark": {
+    "message": "Añadir a marcadores"
+  },
+  "alreadyBookmarked": {
+    "message": "Ya está en marcadores"
+  },
+  "addTo": {
+    "message": "Añadir a"
+  },
+  "newFolder": {
+    "message": "Nueva carpeta…"
+  },
+  "folderName": {
+    "message": "Nombre de la carpeta"
+  },
+  "create": {
+    "message": "Crear"
+  },
+  "folderContains": {
+    "message": "Contiene $NAME$ marcadores, que se eliminarán con ella",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "emptyTag": {
+    "message": "Vacía"
+  },
+  "emptyHint": {
+    "message": "Esta carpeta aún no tiene marcadores: aparecerá en cuanto tenga uno."
+  },
+  "animateGlow": {
+    "message": "Hacer respirar suavemente el halo"
+  },
+  "customColor": {
+    "message": "Color personalizado"
+  },
+  "c_gray": {
+    "message": "Gris"
+  },
+  "c_red": {
+    "message": "Rojo"
+  },
+  "c_orange": {
+    "message": "Naranja"
+  },
+  "c_yellow": {
+    "message": "Amarillo"
+  },
+  "c_green": {
+    "message": "Verde"
+  },
+  "c_mint": {
+    "message": "Menta"
+  },
+  "c_teal": {
+    "message": "Turquesa"
+  },
+  "c_blue": {
+    "message": "Azul"
+  },
+  "c_indigo": {
+    "message": "Índigo"
+  },
+  "c_purple": {
+    "message": "Morado"
+  },
+  "c_pink": {
+    "message": "Rosa"
+  },
+  "c_lime": {
+    "message": "Lima"
+  },
+  "c_brown": {
+    "message": "Marrón"
+  }
+}

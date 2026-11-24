@@ -1,0 +1,289 @@
+{
+  "appName": {
+    "message": "ReStart"
+  },
+  "extName": {
+    "message": "ReStart - Bookmarks Start Page"
+  },
+  "appDesc": {
+    "message": "A calm, simple start page built around your bookmarks, in their real order. As it always should have been."
+  },
+  "newTab": {
+    "message": "New Tab"
+  },
+  "settings": {
+    "message": "Settings"
+  },
+  "bookmarksBar": {
+    "message": "Bookmarks bar"
+  },
+  "folders": {
+    "message": "Folders"
+  },
+  "searchPlaceholder": {
+    "message": "Type to filter"
+  },
+  "open": {
+    "message": "Open"
+  },
+  "scrollLeft": {
+    "message": "Scroll left"
+  },
+  "scrollRight": {
+    "message": "Scroll right"
+  },
+  "noMatch": {
+    "message": "No bookmarks match."
+  },
+  "emptyFolder": {
+    "message": "Empty folder"
+  },
+  "mostVisited": {
+    "message": "Most visited"
+  },
+  "otherBookmarks": {
+    "message": "Other bookmarks"
+  },
+  "customizeIcon": {
+    "message": "Customize icon"
+  },
+  "customizeIconOf": {
+    "message": "Customize the icon of $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "reset": {
+    "message": "Reset"
+  },
+  "color": {
+    "message": "Color"
+  },
+  "icon": {
+    "message": "Icon"
+  },
+  "searchIcons": {
+    "message": "Search icons (in English)"
+  },
+  "appearance": {
+    "message": "Appearance"
+  },
+  "background": {
+    "message": "Background"
+  },
+  "bgNone": {
+    "message": "None"
+  },
+  "bgGlow": {
+    "message": "Halo"
+  },
+  "bgColor": {
+    "message": "Color"
+  },
+  "glowColor": {
+    "message": "Halo color"
+  },
+  "glowHint": {
+    "message": "It follows the sun: from the left in the morning to the right in the evening, pale at midday and deeper at dusk."
+  },
+  "colOpacity": {
+    "message": "Column opacity"
+  },
+  "warmEvening": {
+    "message": "Warmer tint in the evening"
+  },
+  "columns": {
+    "message": "Columns"
+  },
+  "columnsHint": {
+    "message": "Drag to reorder, here or by a column's header. The order only affects $APP$, not your bookmarks.",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "originalOrder": {
+    "message": "Original order"
+  },
+  "moveUp": {
+    "message": "Move up"
+  },
+  "moveDown": {
+    "message": "Move down"
+  },
+  "dragToReorder": {
+    "message": "Drag to reorder"
+  },
+  "showColumn": {
+    "message": "Show $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "data": {
+    "message": "Data"
+  },
+  "export": {
+    "message": "Export"
+  },
+  "import": {
+    "message": "Import"
+  },
+  "importDone": {
+    "message": "Import complete."
+  },
+  "importFailed": {
+    "message": "File not recognized."
+  },
+  "dataHint": {
+    "message": "Icons, colors, order, hidden columns and appearance. Folder icons are linked to the folder name."
+  },
+  "layout": {
+    "message": "Layout"
+  },
+  "layoutBoard": {
+    "message": "Board"
+  },
+  "layoutMasonry": {
+    "message": "Mosaic"
+  },
+  "layoutNarrowHint": {
+    "message": "Applies to wide windows. Narrow windows always show a list."
+  },
+  "openNewTab": {
+    "message": "Open in new tab"
+  },
+  "copyLink": {
+    "message": "Copy link"
+  },
+  "highlight": {
+    "message": "Pin above search"
+  },
+  "unhighlight": {
+    "message": "Unpin"
+  },
+  "rename": {
+    "message": "Rename"
+  },
+  "save": {
+    "message": "Save"
+  },
+  "cancel": {
+    "message": "Cancel"
+  },
+  "delete": {
+    "message": "Delete"
+  },
+  "confirmDelete": {
+    "message": "Click again to delete"
+  },
+  "theme": {
+    "message": "Theme"
+  },
+  "themeAuto": {
+    "message": "Auto"
+  },
+  "themeLight": {
+    "message": "Light"
+  },
+  "themeDark": {
+    "message": "Dark"
+  },
+  "styleRays": {
+    "message": "Rays"
+  },
+  "intensity": {
+    "message": "Intensity"
+  },
+  "animateRays": {
+    "message": "Let the rays move gently"
+  },
+  "bgTint": {
+    "message": "Background color"
+  },
+  "noColor": {
+    "message": "No color"
+  },
+  "addBookmark": {
+    "message": "Add to bookmarks"
+  },
+  "alreadyBookmarked": {
+    "message": "Already in bookmarks"
+  },
+  "addTo": {
+    "message": "Add to"
+  },
+  "newFolder": {
+    "message": "New folder…"
+  },
+  "folderName": {
+    "message": "Folder name"
+  },
+  "create": {
+    "message": "Create"
+  },
+  "folderContains": {
+    "message": "Contains $NAME$ bookmarks, deleted with it",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "emptyTag": {
+    "message": "Empty"
+  },
+  "emptyHint": {
+    "message": "This folder has no bookmarks yet: it shows up once it has one."
+  },
+  "animateGlow": {
+    "message": "Let the halo breathe gently"
+  },
+  "customColor": {
+    "message": "Custom color"
+  },
+  "c_gray": {
+    "message": "Gray"
+  },
+  "c_red": {
+    "message": "Red"
+  },
+  "c_orange": {
+    "message": "Orange"
+  },
+  "c_yellow": {
+    "message": "Yellow"
+  },
+  "c_green": {
+    "message": "Green"
+  },
+  "c_mint": {
+    "message": "Mint"
+  },
+  "c_teal": {
+    "message": "Teal"
+  },
+  "c_blue": {
+    "message": "Blue"
+  },
+  "c_indigo": {
+    "message": "Indigo"
+  },
+  "c_purple": {
+    "message": "Purple"
+  },
+  "c_pink": {
+    "message": "Pink"
+  },
+  "c_lime": {
+    "message": "Lime"
+  },
+  "c_brown": {
+    "message": "Brown"
+  }
+}

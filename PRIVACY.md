@@ -1,7 +1,5 @@
 # ReStart privacy policy
 
-*Last updated: November 24, 2026*
-
 ReStart is a new tab page that displays your browser bookmarks. It has no server, no account, no analytics and no advertising, and it makes no network requests. The developer receives no data from ReStart.
 
 ## Data ReStart uses

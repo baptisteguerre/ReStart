@@ -20,10 +20,10 @@ First version submitted to the Chrome Web Store and to addons.mozilla.org.
 
 ### Changed
 
-- **Reordering moves your real bookmarks.** Moving a folder's column moves the folder in the bookmarks bar, and dragging a tile of the bar moves that site in the bar, so ReStart, the browser and every synced device show the same order. ReStart only remembers where the columns that are not folders of the bar sit (*Most visited*, *Other bookmarks*, the card of bar sites), and the order of pinned sites. Orders saved by an earlier version are never written to your bookmarks: folder columns and bar sites now follow the bookmarks bar, and a tile order from 1.1 is kept as the order of the pinned sites. The *Original order* button is gone.
+- **Reordering moves your real bookmarks.** Moving a folder's column moves the folder in the bookmarks bar, and dragging a tile of the bar moves that site in the bar, so ReStart, the browser and every synced device show the same order. ReStart only remembers where the columns that are not folders of the bar sit (*Most visited*, *Other bookmarks*, the card of bar sites), and the order of pinned sites.
 - **Calmer, more visible halo and rays.** Fixed colors no longer get deeper in the evening: they are paler at midday and softer at night. The halo has two tones and a smooth falloff with no visible edge, and a faint fixed grain removes banding. Rays take a single powdery tone, have softer edges, and sway slowly from side to side, each set on its own rhythm. Both read better on a light page.
 - **Leaf shadows** sit on a wall that takes the light of the hour when no color is chosen.
-- **Balanced rows of tiles** above the search bar and in Focus mode: up to 6 on one row, then rows of at most 8 (for example 4 + 3, 6 + 6, 7 + 7 + 6) instead of one very long line.
+- **Balanced rows of tiles** above the search bar and in Focus mode: up to 6 on one row, then rows of at most 8 instead of one very long line.
 - **Long folders** keep a fixed height in every layout and scroll inside, with a soft fade at the bottom when more sites follow.
 - *Mosaic* is now the default layout for wide windows, and comes first in the settings. A layout you already chose is kept.
 - *None* and *Color* are merged into *Color*, which starts with the page color that follows the hour; a background set to *None* becomes this one.

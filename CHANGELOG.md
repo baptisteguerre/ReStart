@@ -6,22 +6,23 @@ All notable changes to ReStart. Versions follow [semantic versioning](https://se
 
 ### Added
 
+- **Sky follows the sun and the seasons** (northern hemisphere, no location needed). Its colors now follow the height of the sun, in one continuous arc, the same in mirror morning and evening: slate blue at night, rose then gold as the sun rises, a whitening light, then a clear sky at midday. Sunrise and sunset move with the date, as in Paris: in late November, 10:00 is still the early morning light and night falls around 17:00. In winter the sun stays low and the light is soft and pearl grey, like an overcast day; summer light is clearer and warmer.
 - **Bamboo leaf shadows:** tall culms with nodes and sprays of long, narrow leaves, next to branches and palm fronds.
 - **Motion speed.** A *Motion* slider sets the pace of the halo's breathing, the rays, the leaves and the breeze, from still to twice the normal pace. It replaces the on/off animation switch; an animation turned off before stays still.
 
 ### Changed
 
+- **Light** groups the halo and the rays: the background is now a color, light, leaf shadows or breeze, and *Halo* and *Rays* are the kinds of light, as branches, palm fronds and bamboo are for the leaves. The color and the color underneath are kept when switching from one to the other.
+- **A more natural wind.** Leaf shadows no longer swing back and forth on a fixed rhythm: they follow a wind that changes direction now and then, comes in gusts, and has calmer and livelier moments. Each layer of leaves responds like a branch, a little late and with a slight rebound, the far one a moment after the near one. The breeze follows the same wind.
+- In Focus mode, the time, the date and the site icons stand out a little more, in light and dark mode.
+- The light is stronger by default: the middle of the *Intensity* slider now gives what 60 % used to give for the halo and the rays (the top of the slider is unchanged). Leaf shadows and breeze are unchanged.
+- The page color that follows the hour starts from a neutral base and takes a calm but visible hint of the sky's hue. Leaf shadows now sit on it too, instead of an always-beige wall.
+- Dark mode is a soft charcoal rather than near black (cards included), and the halo and rays glow a little brighter on it.
+- The halo's second tone is only a hint at its edge, instead of a grey-blue band.
 - Olive and monstera shadows are replaced by bamboo (olive was too close to the branches); a page set to one of them shows branches.
-- Leaf shadows sit on the same page color as the other backgrounds, following the hour and the season, instead of an always-beige wall.
 - Airier branch shadows, with fewer leaves on the right, and leaves that sway more slowly by default.
 - **Lighter settings panel.** Explanations no longer sit under every section: a small (i) next to a title shows them in a bubble on hover, keyboard focus or tap.
-- Site tiles have a frosted, slightly translucent background, so the halo, rays or leaves show through.
-- **Sky is a real sky:** a clear blue through the day (aqua at midday, softer in the afternoon), with warm colors kept for dawn and sunset.
-- **Sky follows the seasons** (northern hemisphere, no location needed): sunrise and sunset move with the date, as in Paris, so a late-November 10:00 shows the early morning light and night falls around 17:00; winter light is softer, like an overcast day: pearl grey rather than blue; summer light is clearer and warmer.
-- Dark mode is a soft charcoal rather than near black (cards included), and the halo and rays glow a little brighter on it.
-- The page color that follows the hour starts from a neutral base and takes a calm but visible hint of the hour's hue: bluish at night and at midday, peach at dawn and dusk, pearl grey in winter.
-- **Sky follows the height of the sun:** one continuous arc, the same in mirror morning and evening: slate blue at night, rose then gold as the sun rises, a whitening light, then a clear sky; in winter the sun stays low and the day stays soft and pale. No more jumps between grey, beige and violet.
-- The halo's second tone is only a hint at its edge, instead of a grey-blue band.
+- Site tiles have a frosted, slightly translucent background, so the background shows through.
 
 ## 1.2.0
 

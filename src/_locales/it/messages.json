@@ -76,6 +76,9 @@
   "background": {
     "message": "Sfondo"
   },
+  "bgLight": {
+    "message": "Luce"
+  },
   "bgGlow": {
     "message": "Alone"
   },

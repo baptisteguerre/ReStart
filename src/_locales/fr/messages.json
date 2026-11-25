@@ -76,6 +76,9 @@
   "background": {
     "message": "Fond"
   },
+  "bgLight": {
+    "message": "Lumière"
+  },
   "bgGlow": {
     "message": "Halo"
   },

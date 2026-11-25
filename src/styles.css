@@ -723,18 +723,18 @@ body.focus { overflow: hidden; }
 .fc-time {
   font-size: clamp(72px, 15vw, 190px); font-weight: 200; letter-spacing: -0.045em; line-height: 1;
   font-variant-numeric: tabular-nums;
-  color: color-mix(in srgb, var(--text) 13%, transparent);
+  color: color-mix(in srgb, var(--text) 19%, transparent);
 }
 .fc-date {
   margin-top: 14px; font-size: clamp(15px, 2vw, 20px); letter-spacing: .01em;
-  color: color-mix(in srgb, var(--text) 24%, transparent);
+  color: color-mix(in srgb, var(--text) 34%, transparent);
 }
 .fc-icons { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 56px; max-width: 640px; pointer-events: auto; }
 .fc-icons:empty { display: none; }
 .fc-icon {
   width: 48px; height: 48px; border-radius: 13px; display: grid; place-items: center;
   background: color-mix(in srgb, var(--surface-solid) 55%, transparent); box-shadow: var(--shadow-sm);
-  opacity: .85; transition: opacity .15s, transform .15s;
+  opacity: .92; transition: opacity .15s, transform .15s;
 }
 .fc-icon:hover, .fc-icon:focus-visible { opacity: 1; transform: translateY(-1px); }
 .fc-icon img, .fc-icon .letter { width: 26px; height: 26px; border-radius: 7px; }
@@ -800,7 +800,7 @@ button.swatch-custom { border: 0; padding: 0; }
 /* Focus mode: icons in gray, as soft as the time; they regain their color on hover. */
 .fc-glyph { display: grid; place-items: center; border-radius: 7px; }
 .fc-time[hidden] ~ .fc-icons .fc-glyph { border-radius: 10px; }
-.fc-icons.gray .fc-glyph { filter: grayscale(1); opacity: .6; transition: filter .2s, opacity .2s; }
+.fc-icons.gray .fc-glyph { filter: grayscale(1); opacity: .75; transition: filter .2s, opacity .2s; }
 .fc-icons.gray .fc-icon:hover .fc-glyph, .fc-icons.gray .fc-icon:focus-visible .fc-glyph { filter: none; opacity: 1; }
 .popover.settings { overflow-x: hidden; }
 .bg-preset:not([aria-pressed="true"]) { box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); }
@@ -817,27 +817,15 @@ body.bg-leaves .leaves { display: block; }
   opacity: var(--leaf-alpha, .17);
   filter: blur(4px);
   transform-origin: 88% 0;
-  animation: leaf-sway calc(15s / var(--speed, 1)) ease-in-out infinite alternate;
-  will-change: transform;
+  will-change: transform; /* moved by the wind, in app.js */
 }
 .leaves i:nth-child(2) {
   filter: blur(11px); opacity: calc(var(--leaf-alpha, .17) * .65);
   transform-origin: 12% 0;
-  animation-name: leaf-sway-far; animation-duration: calc(21.5s / var(--speed, 1)); animation-delay: -5s;
+  transform: scaleX(-1) scale(1.12);
 }
 body.leaves-palm .leaves i { background-image: url(img/palms.svg); }
 body.leaves-bamboo .leaves i { background-image: url(img/bamboo.svg); }
-@keyframes leaf-sway {
-  0%   { transform: rotate(-1.1deg) skewX(-.8deg); }
-  60%  { transform: rotate(.6deg) skewX(.4deg); }
-  100% { transform: rotate(1.3deg) skewX(1.2deg) translateY(4px); }
-}
-@keyframes leaf-sway-far {
-  0%   { transform: scaleX(-1) scale(1.12) rotate(.8deg); }
-  100% { transform: scaleX(-1) scale(1.12) rotate(-1.4deg) translateY(6px); }
-}
-body.glow-still .leaves i { animation: none; }
-body.glow-still .leaves i:nth-child(2) { transform: scaleX(-1) scale(1.12); }
 /* Kind of leaves, under the background choice: set apart by a little space and a hairline */
 .set-field .leaf-kind { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
 

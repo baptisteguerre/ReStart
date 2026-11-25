@@ -1228,6 +1228,7 @@ function applyAppearance() {
   if (type === "snow") startSnow(value); else stopSnow();
   document.body.classList.toggle("bg-leaves", type === "leaves");
   for (const kind of LEAF_KINDS) document.body.classList.toggle(`leaves-${kind}`, type === "leaves" && value === kind);
+  updateLeaves();
   root.setProperty("--bg-layer", layer);
   root.setProperty("--glow-layer", glow.halo);
   RAY_LAYERS.forEach((_, i) => root.setProperty(`--rays-${i + 1}`, glow.rays[i] || "none"));
@@ -1391,7 +1392,7 @@ function glowLayer(now, value, rays = false) {
     core = base.map((c) => 255 + (c - 255) * mix);
     fringe = fringeOf(base).map((c) => 255 + (c - 255) * mix);
   }
-  const strength = state.settings.glowStrength ?? 1;
+  const strength = lightStrength(state.settings.glowStrength ?? 1);
   const alpha = (isDark() ? 0.95 : 1) * k * strength;
   const x = sunX(t);
   if (!rays) return { halo: glowGradient(core, fringe, alpha, x, strength), rays: [] };
@@ -1405,6 +1406,13 @@ function glowLayer(now, value, rays = false) {
     // toward white, so the shafts stay calm instead of striping the page in two colors.
     rays: RAY_LAYERS.map((layer) => raysGradient(mixRgb(mixRgb(core, fringe, 0.3), [255, 255, 255], isDark() ? 0.1 : 0.25), alpha, x, layer)),
   };
+}
+
+// The intensity of the light (halo and rays). The setting is shown on a 0-100 scale with 1 in
+// the middle; for the light, that middle is 1.2 (what 60 % used to give), and the top of the
+// scale still gives 2.
+function lightStrength(v) {
+  return v <= 1 ? 1.2 * v : 1.2 + 0.8 * (v - 1);
 }
 
 // Four sets of shafts, each spread across the fan so that the sets interleave.
@@ -1673,14 +1681,77 @@ function drawSnow() {
   ctx.globalAlpha = 1;
 }
 
+// ---- Wind ----
+// One wind for the leaf shadows and the breeze. Not a regular wave: its direction wanders
+// slowly and turns now and then, puffs come at irregular moments, and calm stretches
+// alternate with livelier ones. It is built from smooth noise (the same every time for a
+// given moment), so it changes gently and never jumps.
+function windNoise(x, seed) {
+  const hash = (n) => { const v = Math.sin(n * 127.1 + seed * 311.7) * 43758.5453; return v - Math.floor(v); };
+  const i = Math.floor(x), f = x - i;
+  const u = f * f * (3 - 2 * f);
+  return hash(i) + (hash(i + 1) - hash(i)) * u; // 0 .. 1
+}
+// The wind at time t (in seconds of motion), about -1.5 .. 1.5: the sign is the direction.
+function windAt(t) {
+  const drift = windNoise(t / 14, 1) * 2 - 1;                    // slow direction, turns every half minute or so
+  const mood = windNoise(t / 45, 2);                              // calm or lively, over a minute or two
+  const lively = Math.max(0, Math.min(1, (mood - 0.25) / 0.6));
+  const puff = Math.max(0, (windNoise(t / 3.6, 3) - 0.42) / 0.58); // a gust now and then
+  const flutter = windNoise(t / 1.4, 4) * 2 - 1;                  // small, quick changes
+  return 0.6 * drift + Math.tanh(drift * 4) * (0.25 + 0.75 * lively) * puff * puff * 0.9 + 0.14 * flutter * (0.5 + lively);
+}
+
+// Leaf shadows moved by the wind. Each layer follows it like a branch on a spring, a little
+// late and with a small rebound; the far layer is slower and gets each gust a moment later.
+const leafWind = { raf: 0, last: 0, t: 0, near: { x: 0, v: 0 }, far: { x: 0, v: 0 } };
+function springTo(b, target, k, c, dt) {
+  b.v += (k * (target - b.x) - c * b.v) * dt;
+  b.x += b.v * dt;
+}
+function placeLeaves() {
+  const [near, far] = document.querySelectorAll(".leaves i");
+  const n = leafWind.near.x, f = leafWind.far.x;
+  near.style.transform = `translate(${(n * 3).toFixed(2)}px, ${(Math.abs(n) * 3).toFixed(2)}px) rotate(${(n * 1.2).toFixed(3)}deg) skewX(${(n * 0.9).toFixed(3)}deg)`;
+  // The far layer is mirrored: its rotation is reversed so that it leans the same way.
+  far.style.transform = `scaleX(-1) scale(1.12) translateY(${(Math.abs(f) * 4).toFixed(2)}px) rotate(${(-f * 1.1).toFixed(3)}deg)`;
+}
+function stepLeaves(now) {
+  leafWind.raf = requestAnimationFrame(stepLeaves);
+  // Motion speed scales time. At the default pace, the leaves move about as much as before,
+  // on average, but some minutes are calmer and some livelier.
+  const dt = Math.min(0.05, (now - (leafWind.last || now)) / 1000) * (state.settings.motion ?? 1);
+  leafWind.last = now;
+  leafWind.t += dt;
+  // Several small steps keep the springs steady whatever the frame rate.
+  for (let i = 0; i < 4; i++) {
+    springTo(leafWind.near, windAt(leafWind.t), 3.2, 1.6, dt / 4);
+    springTo(leafWind.far, 0.85 * windAt(leafWind.t - 1.2), 1.6, 1.3, dt / 4);
+  }
+  placeLeaves();
+}
+function updateLeaves() {
+  const on = document.body.classList.contains("bg-leaves");
+  const moving = on && (state.settings.motion ?? 1) > 0 && !motionQuery.matches && !document.hidden;
+  if (moving && !leafWind.raf) {
+    if (!leafWind.t) leafWind.t = (Date.now() / 1000) % 10000; // start somewhere in the wind, not always at the same place
+    leafWind.last = 0;
+    leafWind.raf = requestAnimationFrame(stepLeaves);
+  }
+  if (!moving && leafWind.raf) { cancelAnimationFrame(leafWind.raf); leafWind.raf = 0; }
+  if (on && !moving) { leafWind.near = { x: 0, v: 0 }; leafWind.far = { x: 0, v: 0 }; placeLeaves(); }
+}
+document.addEventListener("visibilitychange", updateLeaves);
+motionQuery.addEventListener("change", updateLeaves);
+
 function stepSnow(now) {
   snow.raf = requestAnimationFrame(stepSnow);
   const dt = Math.min(0.05, (now - (snow.last || now)) / 1000) * (state.settings.motion ?? 1);
   snow.last = now;
   snow.t += dt;
   if (now - snow.rectsAt > 300) snowRects();
-  // A slow wind with gusts: two slow waves, never still for long.
-  const wind = 14 * Math.sin(snow.t / 9) + 8 * Math.sin(snow.t / 3.3 + 1) + 4;
+  // The same wind as the leaf shadows, with a light lean to one side so things keep drifting.
+  const wind = 16 * windAt(snow.t) + 4;
   const fade = BREEZE[snow.kind].fade;
   for (let i = 0; i < snow.flakes.length; i++) {
     const f = snow.flakes[i];
@@ -2302,6 +2373,9 @@ function settingsContent() {
     const tintSwatch = customColorSwatch("tint", bg.tint, "bg-preset");
     const withTint = (value) => (s.bg.tint ? { type: bg.type, value, tint: s.bg.tint } : { type: bg.type, value });
     bgExtra = h("div", {},
+      lit ? h("div", { class: "leaf-kind" }, segmented([["glow", t("bgGlow")], ["rays", t("styleRays")]], bg.type,
+        // Switching between the halo and the rays keeps the color and the color underneath.
+        (v) => { s.bg = { ...s.bg, type: v }; saveSettings(); refreshSettings(); })) : null,
       snowy ? h("div", { class: "leaf-kind" }, segmented(BREEZE_KINDS.map((k) => [k, k === "season" ? [svg(ICONS.sunny, "seg-sun"), t("breeze_season")] : t(`breeze_${k}`)]), BREEZE_KINDS.includes(bg.value) ? bg.value : "season",
         (v) => { s.bg = { ...s.bg, value: v === "season" ? null : v }; saveSettings(); })) : null,
       leaves ? h("div", { class: "leaf-kind" }, segmented([["leaves", t("leafKindLeaves")], ["palm", t("leafKindPalm")], ["bamboo", t("leafKindBamboo")]], LEAF_KINDS.includes(bg.value) ? bg.value : "leaves",
@@ -2425,9 +2499,10 @@ function settingsContent() {
         })),
       h("div", { class: "set-field" },
         h("div", { class: "set-label" }, t("background"), hasUnderColor(bg.type) ? infoBtn("bg", t(bg.type === "leaves" ? "leavesHint" : bg.type === "snow" ? "snowHint" : "glowHint")) : null),
-        segmented([["color", t("bgColor")], ["glow", t("bgGlow")], ["rays", t("styleRays")], ["leaves", t("bgLeaves")], ["snow", t("bgSnow")]], bg.type === "none" ? "color" : bg.type, (v) => {
-          // Switching between the halo and the rays keeps their color; between halo, rays and
-          // leaves, the color underneath is kept too.
+        segmented([["color", t("bgColor")], ["light", t("bgLight")], ["leaves", t("bgLeaves")], ["snow", t("bgSnow")]], bg.type === "none" ? "color" : isLit(bg.type) ? "light" : bg.type, (v) => {
+          // Light opens on the halo, or stays on the kind of light already chosen. Between the
+          // backgrounds that have a color underneath, that color is kept.
+          if (v === "light") v = isLit(bg.type) ? bg.type : "glow";
           const keep = isLit(v) && isLit(bg.type);
           const keepTint = hasUnderColor(v) && hasUnderColor(bg.type) && bg.tint;
           s.bg = { type: v, value: keep ? bg.value : null, ...(keepTint ? { tint: bg.tint } : {}) };

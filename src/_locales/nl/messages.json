@@ -2,6 +2,9 @@
   "appName": {
     "message": "ReStart"
   },
+  "lang": {
+    "message": "nl"
+  },
   "extName": {
     "message": "ReStart - Startpagina voor je bladwijzers"
   },
@@ -73,9 +76,6 @@
   "background": {
     "message": "Achtergrond"
   },
-  "bgNone": {
-    "message": "Geen"
-  },
   "bgGlow": {
     "message": "Gloed"
   },
@@ -86,7 +86,7 @@
     "message": "Kleur van de gloed"
   },
   "glowHint": {
-    "message": "De gloed volgt de zon: 's ochtends links, 's avonds rechts, bleek rond de middag en dieper bij zonsondergang."
+    "message": "Hij volgt de zon, van links in de ochtend naar rechts in de avond. Lucht neemt de kleuren van de dag aan: roze bij dageraad, bleek goud, abrikoos, roze bij zonsondergang, zacht blauw in de nacht. De andere kleuren houden hun tint en worden 's nachts zachter."
   },
   "colOpacity": {
     "message": "Dekking kolommen"
@@ -95,15 +95,7 @@
     "message": "Kolommen"
   },
   "columnsHint": {
-    "message": "Sleep om de volgorde te wijzigen, hier of via de kop van een kolom. De volgorde geldt alleen voor $APP$, niet voor je bladwijzers.",
-    "placeholders": {
-      "app": {
-        "content": "$1"
-      }
-    }
-  },
-  "originalOrder": {
-    "message": "Oorspronkelijke volgorde"
+    "message": "Sleep om te ordenen, hier of via de kop van een kolom. Mappen verplaatsen ook in je bladwijzerbalk."
   },
   "moveUp": {
     "message": "Omhoog"
@@ -138,7 +130,34 @@
     "message": "Bestand niet herkend."
   },
   "dataHint": {
-    "message": "Pictogrammen, kleuren, volgorde, verborgen kolommen en weergave. Mappictogrammen zijn gekoppeld aan de mapnaam."
+    "message": "Bewaart de eigen instellingen van ReStart: kleuren en pictogrammen van mappen, verborgen kolommen, vastgezette sites, de plaats van de extra kolommen en het uiterlijk. Je bladwijzers en hun volgorde horen bij je browser, die ze bewaart met zijn synchronisatie of bladwijzerexport. Mappen worden op naam herkend."
+  },
+  "importAll": {
+    "message": "Import voltooid: alles is hersteld."
+  },
+  "importPartial": {
+    "message": "Import voltooid: hersteld voor $COUNT$ mappen.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "importMissing": {
+    "message": "Niet gevonden in je bladwijzers, dus niet hersteld: $NAME$. Mappen worden op naam herkend.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "importNew": {
+    "message": "Niet in de back-up: $NAME$. Ze houden hun standaarduiterlijk.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
   },
   "layout": {
     "message": "Indeling"
@@ -202,9 +221,6 @@
   },
   "bgTint": {
     "message": "Achtergrondkleur"
-  },
-  "noColor": {
-    "message": "Geen kleur"
   },
   "addBookmark": {
     "message": "Toevoegen aan bladwijzers"
@@ -274,6 +290,12 @@
   "leafKindLeaves": {
     "message": "Takken"
   },
+  "leafKindOlive": {
+    "message": "Olijf"
+  },
+  "leafKindMonstera": {
+    "message": "Monstera"
+  },
   "leafKindPalm": {
     "message": "Palm"
   },
@@ -307,6 +329,9 @@
   "c_red": {
     "message": "Rood"
   },
+  "c_sky": {
+    "message": "Lucht"
+  },
   "c_orange": {
     "message": "Oranje"
   },
@@ -339,5 +364,67 @@
   },
   "c_brown": {
     "message": "Bruin"
+  },
+  "startHintTop": {
+    "message": "Maak deze pagina van jou: klik met de rechtermuisknop op een site om hem aan je bladwijzers toe te voegen."
+  },
+  "startHintEmpty": {
+    "message": "Voeg sites toe aan de bladwijzerbalk van je browser: ze verschijnen hier, in dezelfde volgorde."
+  },
+  "welcomeTitle": {
+    "message": "Welkom bij $APP$",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "welcome1": {
+    "message": "Je bladwijzers, in jouw volgorde."
+  },
+  "welcome2": {
+    "message": "Klik met de rechtermuisknop op een site of map voor snelle acties: vastzetten, hernoemen, verplaatsen, verwijderen."
+  },
+  "welcome3": {
+    "message": "Focus: een rustige pagina met één klik."
+  },
+  "welcomeStart": {
+    "message": "Aan de slag"
+  },
+  "welcomeAgain": {
+    "message": "Introductie opnieuw tonen"
+  },
+  "close": {
+    "message": "Sluiten"
+  },
+  "moveTo": {
+    "message": "Verplaatsen naar…"
+  },
+  "hourColor": {
+    "message": "Volgt het uur"
+  },
+  "bgSnow": {
+    "message": "Bries"
+  },
+  "snowHint": {
+    "message": "Sneeuw, kersenbloesem, paardenbloempluis of herfstbladeren op een trage, wisselende wind; Seizoen kiest op datum. Ze vervagen waar ze je kaarten, tegels en zoekbalk raken."
+  },
+  "animateSnow": {
+    "message": "Laat de bries waaien"
+  },
+  "breeze_season": {
+    "message": "Seizoen"
+  },
+  "breeze_snow": {
+    "message": "Sneeuw"
+  },
+  "breeze_petals": {
+    "message": "Bloesem"
+  },
+  "breeze_leaves": {
+    "message": "Bladeren"
+  },
+  "breeze_seeds": {
+    "message": "Pluizen"
   }
 }

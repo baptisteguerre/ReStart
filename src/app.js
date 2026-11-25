@@ -23,12 +23,13 @@ const PASTELS = [
 ];
 const LETTER_COUNT = PASTELS.length - 1;
 const PASTEL_IDS = new Set(PASTELS.map((p) => p.id));
-// Colors offered for page backgrounds: the folder pastels without gray and brown
-// (dull behind the page), plus a lime used only for backgrounds.
+// Colors offered for page backgrounds: a very light neutral gray, then the folder pastels
+// without brown and pink. With the "follows the hour" swatch first and the color picker
+// last, they fill two rows of six.
 const LIME = { id: "lime", light: "#dcefaa", dark: "#b6cc82" };
-const BG_PASTELS = PASTELS.filter((p) => p.id !== "gray" && p.id !== "brown");
-BG_PASTELS.splice(BG_PASTELS.findIndex((p) => p.id === "green"), 0, LIME);
-const BG_IDS = new Set(BG_PASTELS.map((p) => p.id));
+const BG_PASTELS = PASTELS.filter((p) => !["brown", "pink"].includes(p.id));
+// Still accepted when saved by an earlier version, but no longer offered.
+const BG_IDS = new Set([...BG_PASTELS.map((p) => p.id), "pink", "lime"]);
 
 const STYLE_PREFIX = "folder:"; // storage key prefix for folder styles
 const KEY_OTHER = "__other__";
@@ -46,7 +47,7 @@ const DEFAULT_SETTINGS = {
   animateGlow: true,          // slow "breathing" of the halo
   glowStrength: 1,            // 0 .. 2, shown as 0-100 % with the default (1) at 50 %; multiplies the halo intensity
   colAlpha: 0.5,              // 0 .. 1
-  layout: "board",            // board (horizontal columns) | masonry (Keep-like, wide windows only)
+  layout: "masonry",          // masonry (Mosaic, Keep-like, the default) | board (horizontal columns); wide windows only
   bg: { type: "glow", value: null }, // none | color | glow (halo) | rays (light rays); glow and rays share the color
 };
 
@@ -82,7 +83,7 @@ const state = {
   open: new Set(),           // expanded subfolder ids
   openCols: new Set(),       // expanded columns in stacked layout
   highlighted: [],           // URLs of bookmarks pinned above the search bar (loose or inside folders)
-  tileOrder: [],             // URLs: order of the sites above the search bar, in ReStart only
+  byId: new Map(),           // bookmark id → node, for the bars' and folders' children
   query: "",
   target: null,              // the single remaining link while filtering
 };
@@ -157,7 +158,7 @@ const hasIcon = (name) => typeof name === "string" && Object.hasOwn(ICONS, name)
 // All settings live in the extension's local storage, on this device only.
 // (Moving them to another device is done with Export / Import.)
 const store = ext.storage.local;
-const isPrefKey = (k) => ["settings", "order", "hidden", "highlighted", "tileOrder"].includes(k) || k.startsWith(STYLE_PREFIX);
+const isPrefKey = (k) => ["settings", "order", "hidden", "highlighted"].includes(k) || k.startsWith(STYLE_PREFIX);
 const saveLocal = (items) => store.set(items).catch((e) => console.warn("ReStart: could not save settings", e));
 
 function openUrl(url, { newTab = false } = {}) {
@@ -315,6 +316,10 @@ const sitesGlyph = () => {
   return g;
 };
 const looseSites = () => state.bar.children.filter((c) => c.url);
+// Almost no bookmarks yet: the page leans on the most visited sites and invites the
+// user to build it (see the wide "Most visited" card and the start hint).
+const SPARSE_BELOW = 3;
+const isSparse = () => collectLinks(state.bar).length + collectLinks(state.other || {}).length < SPARSE_BELOW;
 const sitesOverflow = () => looseSites().length > SITES_LIMIT;
 
 // The tiles above the search bar: the loose sites (all of them, or only the pinned
@@ -322,9 +327,11 @@ const sitesOverflow = () => looseSites().length > SITES_LIMIT;
 // subfolders, in the order they appear in the bookmarks. Each URL is shown once.
 function topRowSites() {
   const pinned = new Set(state.highlighted);
-  const loose = sitesOverflow() ? looseSites().filter((c) => pinned.has(c.url)) : looseSites();
+  const overflow = sitesOverflow();
+  const loose = overflow ? [] : looseSites();
   const seen = new Set(loose.map((c) => c.url));
-  const out = [...loose];
+  const out = [];
+  if (overflow) for (const c of looseSites()) if (pinned.has(c.url) && !seen.has(c.url)) { seen.add(c.url); out.push(c); }
   const walk = (node, depth = 0) => {
     if (depth > 64) return; // guard against pathological nesting
     for (const c of node.children || []) {
@@ -335,23 +342,248 @@ function topRowSites() {
   };
   for (const c of state.bar.children) if (!c.url) walk(c);
   if (state.other) walk(state.other);
-  // The order set by dragging tiles (ReStart only); sites not in it keep their natural place at the end.
-  const rank = (c) => { const i = state.tileOrder.indexOf(c.url); return i === -1 ? Infinity : i; };
-  return out.sort((a, b) => rank(a) - rank(b));
+  // Loose sites keep the order of the bookmarks bar; pinned sites follow in the order they were pinned or arranged.
+  const rank = (c) => state.highlighted.indexOf(c.url);
+  return [...loose, ...out.sort((a, b) => rank(a) - rank(b))];
 }
 
-function saveTileOrder(urls) {
-  state.tileOrder = urls;
-  saveLocal({ tileOrder: urls });
+// Loose sites are moved in the bookmarks bar itself; pinned sites only change their order among pins.
+const tileGroup = (c) => (!sitesOverflow() && c.parentId === state.bar.id ? "bar" : "pin");
+
+function placeTile(node, target, after) {
+  if (node === target || tileGroup(node) !== tileGroup(target)) return;
+  if (tileGroup(node) === "bar") { moveBookmark(node, target, after); return; }
+  const urls = topRowSites().filter((c) => tileGroup(c) === "pin").map((c) => c.url).filter((u) => u !== node.url);
+  urls.splice(urls.indexOf(target.url) + (after ? 1 : 0), 0, node.url);
+  state.highlighted = [...urls, ...state.highlighted.filter((u) => !urls.includes(u))];
+  saveLocal({ highlighted: state.highlighted });
   render();
 }
 
-function moveTile(url, delta) {
-  const urls = topRowSites().map((c) => c.url).filter((u) => u !== url);
-  const from = topRowSites().findIndex((c) => c.url === url);
-  urls.splice(Math.max(0, Math.min(urls.length, from + delta)), 0, url);
-  saveTileOrder(urls);
+function moveTile(node, delta) {
+  const sibs = topRowSites().filter((c) => tileGroup(c) === tileGroup(node));
+  const target = sibs[sibs.indexOf(node) + delta];
+  if (target) placeTile(node, target, delta > 0);
 }
+
+/* ----- Moving bookmarks and folders, for real ----- */
+// ReStart presents the bookmarks: reordering moves the browser's own bookmarks and
+// folders, like renaming or deleting them. ReStart keeps no order of its own.
+
+// Reorder a folder's children to `ids`. Moves run from left to right and only ever
+// leftward, where every browser reads the target index the same way.
+async function applyChildOrder(parentId, ids) {
+  const cur = (await ext.bookmarks.getChildren(parentId)).map((c) => c.id);
+  for (let k = 0; k < ids.length; k++) {
+    const i = cur.indexOf(ids[k]);
+    if (i === -1 || i === k) continue;
+    await ext.bookmarks.move(ids[k], { parentId, index: k });
+    cur.splice(i, 1);
+    cur.splice(k, 0, ids[k]);
+  }
+}
+
+// Show the new order at once; the reload after the browser's change events confirms it.
+function showOrder(parent, children) {
+  parent.children = children;
+  render();
+  refreshSettings();
+}
+
+// Put `node` just before or after `target`, in the same folder.
+async function moveBookmark(node, target, after) {
+  if (node === target || !node.parentId || !target.parentId) return;
+  if (node.parentId !== target.parentId) return moveAcross(node, target, after);
+  const parent = state.byId.get(node.parentId);
+  if (parent) {
+    const kids = parent.children.filter((c) => c !== node);
+    kids.splice(kids.indexOf(target) + (after ? 1 : 0), 0, node);
+    showOrder(parent, kids);
+  }
+  try {
+    const ids = (await ext.bookmarks.getChildren(node.parentId)).map((c) => c.id).filter((id) => id !== node.id);
+    const at = ids.indexOf(target.id);
+    if (at === -1) return scheduleReload();
+    ids.splice(at + (after ? 1 : 0), 0, node.id);
+    await applyChildOrder(node.parentId, ids);
+  } catch (e) {
+    console.warn("ReStart: move failed", e);
+    scheduleReload();
+  }
+}
+
+// Into another folder, next to `target`.
+async function moveAcross(node, target, after) {
+  const to = state.byId.get(target.parentId);
+  if (!canMoveInto(node, to)) return;
+  const from = state.byId.get(node.parentId);
+  if (from) from.children = from.children.filter((c) => c !== node);
+  const kids = to.children.filter((c) => c !== node);
+  kids.splice(kids.indexOf(target) + (after ? 1 : 0), 0, node);
+  node.parentId = to.id;
+  showOrder(to, kids);
+  try {
+    const fresh = await ext.bookmarks.getChildren(to.id);
+    const at = fresh.findIndex((c) => c.id === target.id);
+    await ext.bookmarks.move(node.id, at === -1 ? { parentId: to.id } : { parentId: to.id, index: at + (after ? 1 : 0) });
+  } catch (e) {
+    console.warn("ReStart: move failed", e);
+    scheduleReload();
+  }
+}
+
+// At the end of another folder.
+async function moveInto(node, folder) {
+  if (!canMoveInto(node, folder)) return;
+  const from = state.byId.get(node.parentId);
+  if (from) from.children = from.children.filter((c) => c !== node);
+  node.parentId = folder.id;
+  showOrder(folder, [...(folder.children || []).filter((c) => c !== node), node]);
+  try {
+    await ext.bookmarks.move(node.id, { parentId: folder.id });
+  } catch (e) {
+    console.warn("ReStart: move failed", e);
+    scheduleReload();
+  }
+}
+
+// Every folder something can be moved to: the bookmarks bar and its folders, Other bookmarks,
+// with their subfolders; never the thing itself or what it contains.
+function folderTargets(moving) {
+  const out = [];
+  const walk = (f, depth) => {
+    if (!f || f === moving || f.unmodifiable || depth > 12) return;
+    out.push({ f, depth });
+    for (const c of f.children || []) if (isFolder(c)) walk(c, depth + 1);
+  };
+  walk(state.bar, 0);
+  walk(state.other, 0);
+  return out;
+}
+
+// "Move to…": the list of folders, the current one disabled.
+function showMoveTo(node, x, y) {
+  const list = h("div", { class: "menu-scroll" }, ...folderTargets(node).map(({ f, depth }) =>
+    h("button", {
+      class: "menu-item", role: "menuitem",
+      style: `padding-left:${10 + depth * 14}px`,
+      disabled: f.id === node.parentId || null,
+      onclick: () => { closePopover({ restoreFocus: false }); moveInto(node, f); },
+    }, svg(f === state.bar ? UI.bookmarkFill : ICONS.folder), h("span", { class: "menu-label" }, cleanText(f.title) || t("bookmarksBar")))));
+  els.popover.replaceChildren(h("div", { class: "pop-section" }, t("moveTo")), list);
+  els.popover.querySelector(".menu-item:not([disabled])")?.focus();
+  placeAt(x, y);
+}
+
+
+// Columns: the folders of the bookmarks bar move in the bar, in the slots folders
+// already occupy, so loose sites and separators stay where they are.
+const isFolder = (c) => !c.url && c.type !== "separator";
+async function reorderBarFolders(titles) {
+  const bar = state.bar;
+  const byTitle = new Map();
+  for (const c of bar.children) if (!c.url) byTitle.set(c.title, [...(byTitle.get(c.title) || []), c]);
+  const seq = [...new Set(titles)].flatMap((title) => byTitle.get(title) || []);
+  for (const c of bar.children) if (!c.url && !seq.includes(c)) seq.push(c);
+  let j = 0;
+  showOrder(bar, bar.children.map((c) => (c.url ? c : seq[j++])));
+  try {
+    const fresh = await ext.bookmarks.getChildren(bar.id);
+    const freshIds = new Set(fresh.filter(isFolder).map((c) => c.id));
+    const seqIds = seq.map((c) => c.id).filter((id) => freshIds.has(id));
+    for (const c of fresh) if (isFolder(c) && !seqIds.includes(c.id)) seqIds.push(c.id);
+    let k = 0;
+    await applyChildOrder(bar.id, fresh.map((c) => (isFolder(c) ? seqIds[k++] : c.id)));
+  } catch (e) {
+    console.warn("ReStart: move failed", e);
+    scheduleReload();
+  }
+}
+
+let dragItem = null;
+
+// A folder can't go inside itself or one of its subfolders; managed (policy) bookmarks don't move.
+function canMoveInto(node, folder) {
+  if (!node || !folder || node.unmodifiable || folder.unmodifiable || !isFolder(folder)) return false;
+  for (let id = folder.id, d = 0; id && d < 70; id = state.byId.get(id)?.parentId, d++) if (id === node.id) return false;
+  return true;
+}
+
+function clearDropMarks() {
+  document.querySelectorAll(".dragging, .drop-before, .drop-after, .drop-into")
+    .forEach((n) => n.classList.remove("dragging", "drop-before", "drop-after", "drop-into"));
+}
+
+// Drag a bookmark or a subfolder (by its row): above or below another bookmark, in the same
+// folder or another one, or into a subfolder (middle of its row) or a column. It moves in the
+// browser's bookmarks.
+function wireItemDrag(row, node, source = row) {
+  source.draggable = true;
+  source.addEventListener("dragstart", (e) => {
+    if (e.target !== source) return;
+    e.stopPropagation();
+    dragItem = node;
+    e.dataTransfer.effectAllowed = "copyMove";
+    if (node.url) e.dataTransfer.setData("text/uri-list", node.url);
+    e.dataTransfer.setData("text/plain", node.url || node.title || "");
+    requestAnimationFrame(() => source.classList.add("dragging"));
+  });
+  source.addEventListener("dragend", (e) => {
+    if (e.target !== source) return;
+    dragItem = null;
+    clearDropMarks();
+  });
+  const zone = (e) => {
+    if (!dragItem || dragItem === node) return null;
+    const r = row.getBoundingClientRect();
+    const y = (e.clientY - r.top) / r.height;
+    const intoOk = !node.url && canMoveInto(dragItem, node);
+    const sideOk = canMoveInto(dragItem, state.byId.get(node.parentId));
+    if (intoOk && (y > 0.25 && y < 0.75 || !sideOk)) return "into";
+    if (!sideOk) return null;
+    return y < 0.5 ? "before" : "after";
+  };
+  row.addEventListener("dragover", (e) => {
+    const z = zone(e);
+    if (!z) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = "move";
+    row.classList.toggle("drop-before", z === "before");
+    row.classList.toggle("drop-after", z === "after");
+    row.classList.toggle("drop-into", z === "into");
+  });
+  row.addEventListener("dragleave", (e) => { if (!row.contains(e.relatedTarget)) row.classList.remove("drop-before", "drop-after", "drop-into"); });
+  row.addEventListener("drop", (e) => {
+    const z = zone(e);
+    if (!z) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const moving = dragItem;
+    clearDropMarks();
+    if (z === "into") moveInto(moving, node);
+    else moveBookmark(moving, node, z === "after");
+  });
+}
+
+// A column (or the row of tiles) as a drop target: the bookmark goes at the end of that folder.
+function wireDropInto(el, folder) {
+  el.addEventListener("dragover", (e) => {
+    if (!dragItem || !canMoveInto(dragItem, folder)) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    el.classList.add("drop-into");
+  });
+  el.addEventListener("dragleave", (e) => { if (!el.contains(e.relatedTarget)) el.classList.remove("drop-into"); });
+  el.addEventListener("drop", (e) => {
+    if (!dragItem || !canMoveInto(dragItem, folder)) return;
+    e.preventDefault();
+    const moving = dragItem;
+    clearDropMarks();
+    moveInto(moving, folder);
+  });
+}
+
 const topGlyph = () => {
   const g = folderGlyph(null, {});
   g.append(svg(UI.trending, "sym"));
@@ -375,6 +607,7 @@ function bookmarkLink(node, tokens, { cls = "item" } = {}) {
     a.append(favicon(node.url, node.title, 32),
              h("span", { class: "item-title" }, highlighted(node.title || hostOf(node.url) || node.url, tokens)));
   }
+  if (cls === "item" && state.byId.has(node.parentId) && !tokens.length && !node.unmodifiable) wireItemDrag(a, node);
   // Right-click: actions on bookmarks; "Most visited" entries can be added to the bookmarks.
   if (node.id) {
     const topSite = String(node.id).startsWith("top-");
@@ -431,13 +664,14 @@ function renderSubfolder(node, tokens) {
     openFolderMenu(node, toggle, e.clientX, e.clientY);
   });
   wrap.append(toggle, h("div", { class: "sub-children" }, inner));
+  if (state.byId.has(node.parentId) && node.parentId !== state.bar.id && !tokens.length && !node.unmodifiable) wireItemDrag(toggle, node, wrap);
   return wrap;
 }
 
 /* ----- Columns ----- */
 
 function renderColumn(col, tokens) {
-  const { key, title, children, total, customizable, glyph, colorId, kind, node } = col;
+  const { key, title, children, total, customizable, glyph, colorId, kind, node, spotlight } = col;
   const filtering = tokens.length > 0;
 
   const glyphBtn = h("button", {
@@ -449,13 +683,17 @@ function renderColumn(col, tokens) {
   }, glyph);
 
   const body = kind === "sites"
-    ? h("div", { class: "col-body" }, h("div", { class: "tiles-grid" }, children.map((c) => bookmarkLink(c, tokens, { cls: "tile" }))))
+    ? h("div", { class: "col-body" }, h("div", { class: "tiles-grid" },
+      children.map((c) => bookmarkLink(c, tokens, { cls: "tile" }))))
     : h("div", { class: "col-body" },
       children.length ? renderChildren(children, tokens) : h("div", { class: "col-empty" }, t("emptyFolder")));
 
   const stacked = narrowQuery.matches;
-  const expanded = !stacked || filtering || state.openCols.has(key);
-  const el = h("article", { class: `column${expanded ? "" : " collapsed"}${kind === "sites" ? " wide sites" : ""}`, "data-key": key });
+  // The wide Most visited card is the whole page: always open.
+  const expanded = !stacked || filtering || spotlight || state.openCols.has(key);
+  const el = h("article", { class: `column${expanded ? "" : " collapsed"}${kind === "sites" ? " wide sites" : ""}${spotlight ? " spotlight" : ""}`, "data-key": key });
+  if (node && !filtering) wireDropInto(el, node);
+  if (spotlight) el.style.setProperty("--per-row", String(balancedPerRow(children.length, 10)));
   if (colorId) { el.classList.add("tinted"); el.style.setProperty("--tint", pastel(colorId)); }
 
   const toggle = h("button", {
@@ -463,7 +701,7 @@ function renderColumn(col, tokens) {
     tabindex: stacked ? null : "-1",
     "aria-expanded": String(expanded),
     onclick: () => {
-      if (!narrowQuery.matches || filtering) return;
+      if (!narrowQuery.matches || filtering || spotlight) return;
       const open = el.classList.toggle("collapsed") === false;
       toggle.setAttribute("aria-expanded", String(open));
       open ? state.openCols.add(key) : state.openCols.delete(key);
@@ -524,23 +762,44 @@ function columnModels(tokens) {
   if (state.other) pushFolder(state.other, KEY_OTHER);
 
   if (!state.hidden.includes(KEY_TOP) && state.topSites.length) {
-    const all = state.topSites.map((s) => ({ id: `top-${s.url}`, title: s.title, url: s.url }));
+    // When it would be the only column (no folder to show, and the bar's sites fit above the
+    // search bar), the most visited sites take the stage: a wider card, as tiles.
+    const shown = (key, node) => countLinks(node) > 0 && !state.hidden.includes(key);
+    const sparse = !sitesOverflow()
+      && !state.bar.children.some((c) => !c.url && shown(c.title, c))
+      && !(state.other && shown(KEY_OTHER, state.other));
+    const all = state.topSites.slice(0, sparse ? 20 : 10).map((s) => ({ id: `top-${s.url}`, title: s.title, url: s.url }));
     const sites = all.filter((s) => !filtering || matches(s, tokens));
     if (sites.length || !filtering) {
       models.push({
         key: KEY_TOP, title: t("mostVisited"), children: sites, total: sites.length,
-        customizable: false, glyph: topGlyph(), colorId: null,
+        customizable: false, glyph: topGlyph(), colorId: null, kind: sparse ? "sites" : undefined, spotlight: sparse,
       });
     }
   }
 
+  const seq = allColumnKeys();
   const visible = models.filter((m) => !state.hidden.includes(m.key));
-  return visible.sort((a, b) => rankOf(a.key) - rankOf(b.key)); // stable: unknown keys keep natural order
+  return visible.sort((a, b) => seq.indexOf(a.key) - seq.indexOf(b.key));
 }
 
-function rankOf(key) {
-  const i = state.order.indexOf(key);
-  return i === -1 ? Infinity : i;
+// Folder columns follow the bookmarks bar. The other columns (bar sites, Other bookmarks,
+// Most visited) are not folders of the bar: ReStart remembers where they sit, after which folder.
+const SPECIAL_KEYS = new Set([KEY_SITES, KEY_OTHER, KEY_TOP]);
+function orderColumns(keys) {
+  const folders = keys.filter((k) => !SPECIAL_KEYS.has(k));
+  const specials = keys.filter((k) => SPECIAL_KEYS.has(k));
+  const known = new Set(folders);
+  const anchorOf = (s) => {
+    const i = state.order.indexOf(s);
+    if (i === -1) return s === KEY_SITES ? null : undefined; // defaults: bar sites first, the others last
+    for (let j = i - 1; j >= 0; j--) if (known.has(state.order[j])) return state.order[j];
+    return null;
+  };
+  const anchors = new Map(specials.map((s) => [s, anchorOf(s)]));
+  const rank = (s) => { const i = state.order.indexOf(s); return i === -1 ? Infinity : i; };
+  const at = (a) => specials.filter((s) => anchors.get(s) === a).sort((x, y) => rank(x) - rank(y));
+  return [...at(null), ...folders.flatMap((f) => [f, ...at(f)]), ...at(undefined)];
 }
 
 // Every column the user can show, hide or move, in display order (hidden ones included).
@@ -549,13 +808,14 @@ function allColumnKeys() {
   keys.push(...state.bar.children.filter((c) => !c.url).map((c) => c.title));
   if (state.other?.children?.length) keys.push(KEY_OTHER);
   keys.push(KEY_TOP);
-  return [...new Set(keys)].sort((a, b) => rankOf(a) - rankOf(b));
+  return orderColumns([...new Set(keys)]);
 }
 
+// A new column order: folders move in the bookmarks bar, the other columns are remembered.
 function saveOrder(keys) {
   state.order = keys;
   saveLocal({ order: keys });
-  render();
+  reorderBarFolders(keys.filter((k) => !SPECIAL_KEYS.has(k)));
 }
 
 function render() {
@@ -586,6 +846,11 @@ function render() {
   else els.board.replaceChildren(...cols);
   els.board.hidden = !cols.length;
   els.empty.hidden = !(filtering && !cols.length && !loose.length);
+  // An invitation to build the page, while there are almost no bookmarks.
+  const hint = $("start-hint");
+  const topShown = !state.hidden.includes(KEY_TOP) && state.topSites.length > 0;
+  hint.hidden = filtering || !isSparse();
+  if (!hint.hidden) hint.textContent = t(topShown ? "startHintTop" : "startHintEmpty");
 
   // Enter opens the result when only one link is left.
   const links = filtering ? [...document.querySelectorAll(".bar-row a.tile, .board a.item, .board a.tile")] : [];
@@ -594,8 +859,22 @@ function render() {
   els.searchEnter.hidden = !state.target;
 
   renderFocusIcons();
-  requestAnimationFrame(updateBoardChrome);
+  requestAnimationFrame(() => { updateBoardChrome(); updateFades(); });
 }
+
+// Long folders scroll inside their card (the page itself never grows with one big
+// folder); a soft fade at the bottom shows there is more below.
+function updateFades() {
+  for (const body of els.board.querySelectorAll(".col-body")) {
+    const more = body.scrollHeight - body.clientHeight - body.scrollTop > 4;
+    body.classList.toggle("more-below", more);
+  }
+}
+els.board.addEventListener("scroll", (e) => {
+  if (e.target.classList?.contains("col-body")) updateFades();
+}, { capture: true, passive: true });
+els.board.addEventListener("click", () => requestAnimationFrame(updateFades)); // a subfolder or a column was opened or closed
+addEventListener("resize", () => requestAnimationFrame(updateFades));
 
 /* ===================== Focus mode ===================== */
 
@@ -649,6 +928,14 @@ function renderFocusIcons() {
     }
     return a;
   }));
+  // Balanced rows, like the tiles above the search bar (never 10 + 2).
+  row.style.maxWidth = "";
+  const first = row.firstElementChild;
+  if (first) {
+    const per = balancedPerRow(row.children.length, 8);
+    const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+    row.style.maxWidth = `${per * first.offsetWidth + (per - 1) * gap + 1}px`;
+  }
 }
 
 els.focusBtn.addEventListener("click", () => {
@@ -668,36 +955,56 @@ let barCapacityKey = "";
 
 function tilesPerRow(compact) {
   const style = getComputedStyle(els.barRow);
-  const inner = els.barRow.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+  // The room available, not the row's own width (which is narrowed to balance the rows).
+  const room = Math.min(1100, els.barRow.parentElement.clientWidth);
+  const inner = room - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
   const tile = compact ? 68 : (narrowQuery.matches ? 76 : 84);
   return Math.max(1, Math.floor((inner + TILE_GAP) / (tile + TILE_GAP)));
+}
+
+// Tiles per row: up to 6 on one row; beyond, balanced rows of at most `max` tiles,
+// so the block stays compact and easy to scan instead of one very long line.
+function balancedPerRow(n, max) {
+  if (n <= 6) return Math.max(1, n);
+  const rows = Math.max(2, Math.ceil(n / max));
+  return Math.ceil(n / rows);
 }
 
 function renderBar(links, tokens) {
   const normalCap = tilesPerRow(false) * MAX_ROWS;
   barCapacityKey = `${normalCap}/${tilesPerRow(true) * MAX_ROWS}`;
-  els.barRow.classList.toggle("compact", links.length > normalCap);
+  const compact = links.length > normalCap;
+  els.barRow.classList.toggle("compact", compact);
+  els.barRow.style.setProperty("--per-row", String(Math.min(balancedPerRow(links.length, 8), tilesPerRow(compact))));
   const tiles = links.map((c) => bookmarkLink(c, tokens, { cls: "tile" }));
-  if (!tokens.length) tiles.forEach((tile, i) => wireTileDrag(tile, links[i].url));
+  if (!tokens.length) tiles.forEach((tile, i) => { if (!links[i].unmodifiable) wireTileDrag(tile, links[i]); });
   els.barRow.replaceChildren(...tiles);
 }
 
-// Drag a tile to change the order of the sites above the search bar (ReStart only).
-let dragUrl = null;
-function wireTileDrag(tile, url) {
+// Drag a tile to change the order of the sites above the search bar: loose sites move in
+// the bookmarks bar, pinned sites change their order among pins.
+let dragTile = null;
+function wireTileDrag(tile, node) {
   tile.draggable = true;
   tile.addEventListener("dragstart", (e) => {
-    dragUrl = url;
-    e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/uri-list", url);
+    dragTile = node;
+    dragItem = node; // a tile can also go into a folder
+    e.dataTransfer.effectAllowed = "copyMove";
+    e.dataTransfer.setData("text/uri-list", node.url);
     requestAnimationFrame(() => tile.classList.add("dragging"));
   });
   tile.addEventListener("dragend", () => {
-    dragUrl = null;
-    els.barRow.querySelectorAll(".dragging, .drop-before, .drop-after").forEach((n) => n.classList.remove("dragging", "drop-before", "drop-after"));
+    dragTile = null;
+    dragItem = null;
+    clearDropMarks();
   });
+  // A tile takes another tile of its group, or a bookmark from a folder (into the bookmarks bar).
+  const accepts = () => (dragTile
+    ? dragTile !== node && tileGroup(dragTile) === tileGroup(node)
+    : !!dragItem && tileGroup(node) === "bar" && canMoveInto(dragItem, state.bar));
   tile.addEventListener("dragover", (e) => {
-    if (!dragUrl || dragUrl === url) return;
+    if (!accepts()) return;
+    e.stopPropagation();
     e.preventDefault();
     const r = tile.getBoundingClientRect();
     const before = e.clientX < r.left + r.width / 2;
@@ -706,14 +1013,31 @@ function wireTileDrag(tile, url) {
   });
   tile.addEventListener("dragleave", (e) => { if (!tile.contains(e.relatedTarget)) tile.classList.remove("drop-before", "drop-after"); });
   tile.addEventListener("drop", (e) => {
-    if (!dragUrl) return;
+    if (!accepts()) return;
     e.preventDefault();
-    const before = tile.classList.contains("drop-before");
-    const urls = topRowSites().map((c) => c.url).filter((u) => u !== dragUrl);
-    urls.splice(urls.indexOf(url) + (before ? 0 : 1), 0, dragUrl);
-    saveTileOrder(urls);
+    e.stopPropagation();
+    const after = tile.classList.contains("drop-after");
+    const moving = dragTile || dragItem;
+    clearDropMarks();
+    if (dragTile) placeTile(moving, node, after);
+    else moveBookmark(moving, node, after);
   });
 }
+
+// A bookmark dropped on the row of tiles, beside them: at the end of the bookmarks bar.
+els.barRow.addEventListener("dragover", (e) => {
+  if (dragTile || !dragItem || !state.bar || state.query || !canMoveInto(dragItem, state.bar)) return;
+  e.preventDefault();
+  els.barRow.classList.add("drop-into");
+});
+els.barRow.addEventListener("dragleave", (e) => { if (!els.barRow.contains(e.relatedTarget)) els.barRow.classList.remove("drop-into"); });
+els.barRow.addEventListener("drop", (e) => {
+  if (dragTile || !dragItem || !canMoveInto(dragItem, state.bar)) return;
+  e.preventDefault();
+  const moving = dragItem;
+  clearDropMarks();
+  moveInto(moving, state.bar);
+});
 
 // Recompute when the window width changes how many tiles fit.
 new ResizeObserver(() => {
@@ -863,6 +1187,7 @@ els.next.addEventListener("click", () => pageBoard(1));
 // with the time of day: only the halo and the rays do.
 function plainColor(id) {
   if (HEX_COLOR.test(id)) return id;
+  if (id === "gray" && !isDark()) return "#f5f5f5"; // a neutral, very light gray
   const c = pastel(id);
   return isDark() ? `color-mix(in srgb, ${c} 22%, #1c1c1e)` : `color-mix(in srgb, ${c} 45%, #f7f6f4)`;
 }
@@ -871,7 +1196,9 @@ const plainBackground = (id) => `linear-gradient(${plainColor(id)}, ${plainColor
 // Backgrounds drawn from the halo color: the halo itself and the light rays.
 const isLit = (type) => type === "glow" || type === "rays";
 // Backgrounds that can have a plain color underneath: the halo, the rays and the leaf shadows.
-const hasUnderColor = (type) => isLit(type) || type === "leaves";
+const hasUnderColor = (type) => isLit(type) || type === "leaves" || type === "snow";
+// The page color that follows the hour, used when no color is chosen.
+const pageBase = () => (isDark() ? "#1c1c1e" : "#f7f6f4");
 
 function applyAppearance() {
   const s = state.settings;
@@ -885,21 +1212,27 @@ function applyAppearance() {
   const lit = isLit(type);
   if (lit) {
     glow = glowLayer(new Date(), value, type === "rays");
-    // Optional plain color under the halo or the rays.
-    if (s.bg.tint) layer = plainBackground(s.bg.tint);
+    // Optional plain color under the halo or the rays; otherwise the page takes the hue of the hour.
+    layer = s.bg.tint ? plainBackground(s.bg.tint) : hourWall(new Date(), pageBase());
   } else if (type === "leaves") {
     // Leaf shadows on a wall softly lit by the sun: a warm, very light tint by default.
-    layer = s.bg.tint ? plainBackground(s.bg.tint) : `linear-gradient(${isDark() ? "#24211e" : "#f4efe6"}, ${isDark() ? "#24211e" : "#f4efe6"})`;
+    layer = s.bg.tint ? plainBackground(s.bg.tint) : hourWall(new Date(), isDark() ? "#24211e" : "#f4efe6");
     root.setProperty("--leaf-alpha", String(Math.min(1, (isDark() ? 0.5 : 0.17) * (s.glowStrength ?? 1))));
-  } else if (type === "color") {
-    layer = plainBackground(value || "blue");
+  } else if (type === "snow") {
+    layer = s.bg.tint ? plainBackground(s.bg.tint) : hourWall(new Date(), pageBase());
+  } else {
+    // Color: a chosen color, or (none chosen) the page color that follows the hour.
+    layer = type === "color" && value ? plainBackground(value) : hourWall(new Date(), pageBase());
   }
+  document.body.classList.toggle("bg-snow", type === "snow");
+  if (type === "snow") startSnow(value); else stopSnow();
   document.body.classList.toggle("bg-leaves", type === "leaves");
-  document.body.classList.toggle("leaves-palm", type === "leaves" && value === "palm");
+  for (const kind of LEAF_KINDS) document.body.classList.toggle(`leaves-${kind}`, type === "leaves" && value === kind);
   root.setProperty("--bg-layer", layer);
   root.setProperty("--glow-layer", glow.halo);
   RAY_LAYERS.forEach((_, i) => root.setProperty(`--rays-${i + 1}`, glow.rays[i] || "none"));
   document.body.classList.toggle("glow-rays", type === "rays");
+  document.body.classList.toggle("bg-grain", lit);
   if (lit) {
     const x = sunX(hourOf(new Date()));
     root.setProperty("--sun-x", `${x.toFixed(1)}%`);
@@ -917,6 +1250,7 @@ function applyAppearance() {
 // animation makes it "breathe" very slowly.
 // Swatch shown in settings (pastel) → base color of the halo (stronger, it gets washed out).
 const GLOW_COLORS = [
+  { id: "sky",    swatch: "linear-gradient(135deg, #ffd39a, #ffa9a4 50%, #aab4f0)", base: "#ffb08a" },
   { id: "orange", swatch: "#ffcf9e", base: "#ff8c46" },
   { id: "red",    swatch: "#ffb3ad", base: "#ff6b62" },
   { id: "pink",   swatch: "#f7bfd8", base: "#ff7eb6" },
@@ -928,21 +1262,55 @@ const GLOW_COLORS = [
   { id: "green",  swatch: "#bde5b4", base: "#7bd36a" },
   { id: "yellow", swatch: "#fbe49a", base: "#ffc93c" },
 ];
-const GLOW_KEYS = [ // [hour, depth 0..1, alpha light, alpha dark]
-  // Depth: how saturated the color is (low = washed toward white). Pale around
-  // midday, warming through the afternoon, deepest at dusk. Alphas stay at or below 1
-  // so the color never looks burnt; a stronger halo spreads further instead.
-  [ 0, 0.85, 0.77, 0.84],
-  [ 5, 0.75, 0.70, 0.77],
-  [ 7, 0.45, 0.84, 0.77],
-  [10, 0.20, 0.91, 0.70],
-  [14, 0.12, 0.91, 0.67],
-  [17, 0.40, 0.91, 0.77],
-  [19, 0.75, 0.95, 0.87],
-  [21, 1.00, 0.91, 0.91],
-  [24, 0.85, 0.77, 0.84],
+// Sky: the colors of the sky through the day. [hour, core, fringe, intensity]
+// Dawn pink, pale gold in the morning, almost white at midday, apricot in the late
+// afternoon, rose then lavender at sunset, a soft indigo at night, fainter.
+const SKY_KEYS = [
+  [ 0,   "#93a6ee", "#b0a3e6", 0.55],
+  [ 5,   "#a7a9e4", "#d9b2d6", 0.6],
+  [ 6.5, "#ffb59c", "#f5a9c4", 0.85],
+  [ 8,   "#ffd09a", "#ffc0aa", 0.85],
+  [11,   "#ffe3b2", "#c6dbff", 0.85],
+  [14,   "#ffdfaa", "#cadcff", 0.85],
+  [17,   "#ffc28e", "#ffb3a2", 0.9],
+  [19.5, "#ffa39c", "#c8a7f0", 0.95],
+  [21,   "#c7a2e8", "#94a3f0", 0.8],
+  [22.5, "#97a8ef", "#a89de2", 0.6],
+  [24,   "#93a6ee", "#b0a3e6", 0.55],
 ];
-const DEFAULT_GLOW = "orange";
+// Fixed colors keep their hue; they are paler at midday and softer at night.
+// [hour, depth 0..1 (low = washed toward white), intensity]
+const FIXED_KEYS = [
+  [ 0, 0.55, 0.6],
+  [ 6, 0.6,  0.75],
+  [10, 0.3,  0.9],
+  [14, 0.25, 0.9],
+  [18, 0.6,  0.95],
+  [21, 0.7,  0.85],
+  [23, 0.6,  0.65],
+  [24, 0.55, 0.6],
+];
+const rgbOf = (hex) => { const n = parseInt(hex.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+const mixRgb = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
+function keyAt(keys, t) {
+  let i = 0;
+  while (keys[i + 1][0] <= t) i++;
+  const k = (t - keys[i][0]) / (keys[i + 1][0] - keys[i][0]);
+  return [keys[i], keys[i + 1], k];
+}
+// A second, neighbouring tone for the fringe of a fixed color: a sky is never one color.
+function fringeOf(rgb) {
+  const [r, g, b] = rgb.map((v) => v / 255);
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), l = (max + min) / 2, d = max - min;
+  let hue = 0;
+  if (d) hue = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  hue = (hue * 60 + 360 - 32) % 360;
+  const sat = d ? d / (1 - Math.abs(2 * l - 1)) : 0;
+  const c = (1 - Math.abs(2 * l - 1)) * sat, x = c * (1 - Math.abs(((hue / 60) % 2) - 1)), m = l - c / 2;
+  const [r1, g1, b1] = hue < 60 ? [c, x, 0] : hue < 120 ? [x, c, 0] : hue < 180 ? [0, c, x] : hue < 240 ? [0, x, c] : hue < 300 ? [x, 0, c] : [c, 0, x];
+  return [r1 + m, g1 + m, b1 + m].map((v) => Math.round(v * 255));
+}
+const DEFAULT_GLOW = "sky";
 const HEX_COLOR = /^#[0-9a-f]{6}$/i;
 // The halo is one of the presets, or a custom color picked by the user.
 function glowOf(v) {
@@ -951,29 +1319,42 @@ function glowOf(v) {
 }
 
 function glowLayer(now, value, rays = false) {
-  const n = parseInt(glowOf(value).base.slice(1), 16);
-  const base = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
   const t = hourOf(now);
-  let i = 0;
-  while (GLOW_KEYS[i + 1][0] <= t) i++;
-  const [h0, ...a] = GLOW_KEYS[i];
-  const [h1, ...b] = GLOW_KEYS[i + 1];
-  const k = (t - h0) / (h1 - h0);
-  const [depth, al, ad] = a.map((v, j) => v + (b[j] - v) * k);
-  // Low depth = the color washed toward white (paler, less warm).
-  // In dark mode a washed-out color turns grey on the dark background: keep it saturated.
-  const mix = isDark() ? 0.85 + 0.15 * depth : 0.45 + 0.55 * depth;
-  const [r, g, bl] = base.map((c) => 255 + (c - 255) * mix);
+  const glow = glowOf(value);
+  let core, fringe, k;
+  if (glow.id === "sky") {
+    const [a, b, f] = keyAt(SKY_KEYS, t);
+    core = mixRgb(rgbOf(a[1]), rgbOf(b[1]), f);
+    fringe = mixRgb(rgbOf(a[2]), rgbOf(b[2]), f);
+    k = a[3] + (b[3] - a[3]) * f;
+    // The keys are pastels: deepen them so they read on the page. On a light page they
+    // need more depth (a pastel on white barely shows); on a dark page, pale tints read as grey fog.
+    const deepen = isDark() ? 1.6 : 1.9;
+    [core, fringe] = [core, fringe].map((c) => c.map((v) => Math.max(0, 255 - (255 - v) * deepen)));
+  } else {
+    const [a, b, f] = keyAt(FIXED_KEYS, t);
+    const depth = a[1] + (b[1] - a[1]) * f;
+    k = a[2] + (b[2] - a[2]) * f;
+    // Low depth = the color washed toward white. In dark mode a washed-out color turns
+    // grey on the dark background: keep it more saturated.
+    const mix = isDark() ? 0.8 + 0.2 * depth : 0.6 + 0.4 * depth;
+    const base = rgbOf(glow.base);
+    core = base.map((c) => 255 + (c - 255) * mix);
+    fringe = fringeOf(base).map((c) => 255 + (c - 255) * mix);
+  }
   const strength = state.settings.glowStrength ?? 1;
-  const alpha = (isDark() ? ad : al) * strength;
+  const alpha = (isDark() ? 0.75 : 1) * k * strength;
   const x = sunX(t);
-  if (!rays) return { halo: glowGradient(r, g, bl, alpha, x, strength), rays: [] };
+  if (!rays) return { halo: glowGradient(core, fringe, alpha, x, strength), rays: [] };
   // Light rays: a faint halo as the light source, and several sets of shafts.
   // Each set fades in and out on its own rhythm (see .ray in styles.css), so
   // shafts appear and vanish one after another, like sunlight under water.
   return {
-    halo: glowGradient(r, g, bl, alpha * 0.45, x, strength),
-    rays: RAY_LAYERS.map((layer) => raysGradient(r, g, bl, alpha, x, layer)),
+    // Under the rays, only a faint glow (fainter on a light page, where it would hide them).
+    halo: glowGradient(core, fringe, alpha * (isDark() ? 0.45 : 0.3), x, strength),
+    // One powdery tone for every shaft: the core, nudged toward the fringe and softened
+    // toward white, so the shafts stay calm instead of striping the page in two colors.
+    rays: RAY_LAYERS.map((layer) => raysGradient(mixRgb(mixRgb(core, fringe, 0.3), [255, 255, 255], isDark() ? 0.1 : 0.25), alpha, x, layer)),
   };
 }
 
@@ -986,15 +1367,17 @@ const RAY_LAYERS = [
   [[-23, 7, 0.9], [-6, 4, 0.6], [11, 6, 0.8], [26, 5, 0.7]],
 ];
 
-function raysGradient(r, g, bl, alpha, x, layer) {
+function raysGradient([r, g, bl], alpha, x, layer) {
   const c = (m) => `rgba(${Math.round(r)},${Math.round(g)},${Math.round(bl)},${Math.min(1, alpha * m).toFixed(3)})`;
   // Shafts of light coming from far above, almost parallel, slanting away from the sun.
   const { ox, tilt } = raysSource(x);
-  const k = isDark() ? 0.8 : 0.65;
+  const k = isDark() ? 0.7 : 1.15; // on a light page, soft shafts need more contrast to show
   const stops = [];
   for (const [at, w, m] of layer) {
     const mid = 180 + tilt + at;
-    stops.push(`transparent ${(mid - w / 2).toFixed(2)}deg`, `${c(m * k)} ${mid.toFixed(2)}deg`, `transparent ${(mid + w / 2).toFixed(2)}deg`);
+    // Soft edges: each shaft fades in and out instead of starting at a hard line.
+    stops.push(`transparent ${(mid - w / 2).toFixed(2)}deg`, `${c(m * k * 0.45)} ${(mid - w / 4).toFixed(2)}deg`, `${c(m * k)} ${mid.toFixed(2)}deg`,
+      `${c(m * k * 0.45)} ${(mid + w / 4).toFixed(2)}deg`, `transparent ${(mid + w / 2).toFixed(2)}deg`);
   }
   return `conic-gradient(from 0deg at ${ox.toFixed(1)}% ${RAYS_DEPTH}px, transparent 0deg, ${stops.join(", ")}, transparent 360deg)`;
 }
@@ -1024,11 +1407,275 @@ function sunX(t) {
   return right - (right - left) * p;
 }
 
-function glowGradient(r, g, bl, alpha, x, strength = 1) {
-  const c = (m) => `rgba(${Math.round(r)},${Math.round(g)},${Math.round(bl)},${Math.min(1, alpha * m).toFixed(3)})`; // each stop capped, so a stronger halo still spreads further
-  // A stronger halo is also slightly larger.
-  const size = Math.round(270 * (0.7 + 0.3 * strength));
-  return `radial-gradient(ellipse 55% ${size}px at ${x.toFixed(1)}% -30px, ${c(1)}, ${c(0.55)} 40%, ${c(0.15)} 70%, transparent 100%)`;
+// A soft, atmospheric halo: many stops on a smooth curve (no visible edge), from the
+// core color to the fringe color. Each stop is capped, so a stronger halo spreads further.
+function glowGradient(core, fringe, alpha, x, strength = 1) {
+  const stops = [];
+  for (let i = 0; i <= 10; i++) {
+    const p = i / 10;
+    const fade = 1 - p * p * (3 - 2 * p); // smoothstep: a calm center, a long soft tail
+    const [r, g, b] = mixRgb(core, fringe, Math.min(1, p / 0.75));
+    const a = Math.min(1, alpha * fade);
+    stops.push(`rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${a.toFixed(3)}) ${Math.round(p * 100)}%`);
+  }
+  const size = Math.round(330 * (0.7 + 0.3 * strength));
+  return `radial-gradient(ellipse 62% ${size}px at ${x.toFixed(1)}% -30px, ${stops.join(", ")})`;
+}
+
+// The page behind the halo, the rays or the leaves, when no color is chosen: the light of the hour, barely there.
+// It takes a whisper of the Sky color of the moment (pink at dawn, warm white at midday,
+// honey in the afternoon, rose at sunset, a cool blue-grey at night), and is a little
+// brighter on the sun's side.
+function hourWall(now, base) {
+  const t = hourOf(now);
+  const [a, b, f] = keyAt(SKY_KEYS, t);
+  const sky = mixRgb(rgbOf(a[1]), rgbOf(b[1]), f);
+  const dark = isDark();
+  const wall = rgbOf(base);
+  // Only the hue of the hour, never its brightness: the wall keeps its calm lightness.
+  const grey = (sky[0] + sky[1] + sky[2]) / 3;
+  const tint = wall.map((v, i) => Math.max(0, Math.min(255, v + (sky[i] - grey) * (dark ? 0.12 : 0.2))));
+  const lit = tint.map((v) => Math.min(255, v + (dark ? 4 : 5)));
+  const css = (c) => `rgb(${c.map(Math.round).join(",")})`;
+  const side = sunX(t) < 50 ? "to right" : "to left";
+  return `linear-gradient(${side}, ${css(lit)}, ${css(tint)} 70%)`;
+}
+
+/* ===================== Breeze: snow, petals, seeds ===================== */
+// Light things drifting in a slow, gusting wind: snowflakes, cherry petals or dandelion
+// seeds ("Season" picks them by the date). What lands on a card, a tile or the search bar
+// fades away where it touched. Drawn on one canvas behind the page; paused when the tab
+// is hidden; still when animations are off.
+// Leaf shadows: branches (the default, no value), palm fronds, olive twigs or monstera leaves.
+const LEAF_KINDS = ["palm", "olive", "monstera"];
+const BREEZE_KINDS = ["season", "snow", "petals", "seeds", "leaves"];
+const snow = { canvas: null, ctx: null, flakes: [], raf: 0, rects: [], rectsAt: 0, last: 0, w: 0, h: 0, sprites: null, spriteKey: "", kind: "snow", t: 0 };
+const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
+
+// Season (northern hemisphere): petals in spring, seeds in summer, leaves in autumn, snow in winter.
+function breezeKind(value, now = new Date()) {
+  if (value && value !== "season") return value;
+  const md = (now.getMonth() + 1) * 100 + now.getDate();
+  if (md >= 320 && md < 621) return "petals";
+  if (md >= 621 && md < 923) return "seeds";
+  if (md >= 923 && md < 1221) return "leaves";
+  return "snow";
+}
+
+const BREEZE = { // per kind: how many (per 100,000 px²), how fast, how long a landing takes to fade
+  snow:   { density: 5.9, fade: 0.9 },
+  petals: { density: 2.4, fade: 1.8 },
+  seeds:  { density: 0.7, fade: 2.2 },
+  leaves: { density: 1.7, fade: 1.8 },
+};
+
+function sprite(size, draw) {
+  const c = document.createElement("canvas");
+  c.width = c.height = size;
+  draw(c.getContext("2d"), size);
+  return c;
+}
+
+function breezeSprites(kind, dark) {
+  if (kind === "snow") {
+    // On a light page, white flakes would vanish: a soft blue-grey instead.
+    const rgb = dark ? "255,255,255" : "150,168,198";
+    return [sprite(32, (g) => {
+      const grad = g.createRadialGradient(16, 16, 0, 16, 16, 16);
+      grad.addColorStop(0, `rgba(${rgb},1)`);
+      grad.addColorStop(0.45, `rgba(${rgb},.75)`);
+      grad.addColorStop(1, `rgba(${rgb},0)`);
+      g.fillStyle = grad;
+      g.fillRect(0, 0, 32, 32);
+    })];
+  }
+  if (kind === "petals") {
+    // Cherry petals: a rounded drop with a small notch, powdery pink, lighter at the base.
+    const tones = dark ? [["#f4c9d6", "#e9a9bd"], ["#f7d6df", "#eab3c4"]] : [["#fbd3de", "#f1aec2"], ["#fde0e7", "#f4bccb"]];
+    return tones.map(([a, b]) => sprite(48, (g, n) => {
+      g.translate(n / 2, n / 2);
+      const grad = g.createLinearGradient(0, -18, 0, 18);
+      grad.addColorStop(0, b);
+      grad.addColorStop(1, a);
+      g.fillStyle = grad;
+      g.beginPath();
+      g.moveTo(0, 18);
+      g.bezierCurveTo(-15, 8, -14, -12, -4, -17);
+      g.lineTo(0, -13); // the notch
+      g.lineTo(4, -17);
+      g.bezierCurveTo(14, -12, 15, 8, 0, 18);
+      g.fill();
+    }));
+  }
+  if (kind === "leaves") {
+    // Autumn leaves: a pointed oval with a fine midrib, in muted ochre, rust and gold.
+    const tones = dark ? ["#c99d6c", "#bf8670", "#b3a46e"] : ["#e7c193", "#e0a991", "#d4c38f"];
+    return tones.map((tone) => sprite(48, (g, n) => {
+      g.translate(n / 2, n / 2);
+      g.fillStyle = tone;
+      g.beginPath();
+      g.moveTo(0, 20);
+      g.quadraticCurveTo(-15, 2, 0, -20);
+      g.quadraticCurveTo(15, 2, 0, 20);
+      g.fill();
+      g.strokeStyle = "rgba(255,255,255,.35)";
+      g.lineWidth = 1;
+      g.beginPath(); g.moveTo(0, 22); g.lineTo(0, -16); g.stroke();
+    }));
+  }
+  // Dandelion seeds: a fine stem, the seed below, and an open dome of fine hairs, each
+  // ending in a tiny bead of light.
+  const ink = dark ? "rgba(244,242,236," : "rgba(118,110,100,";
+  return [sprite(96, (g, n) => {
+    g.translate(n / 2, n / 2);
+    g.lineCap = "round";
+    const top = -8;
+    g.strokeStyle = `${ink}.55)`;
+    g.lineWidth = 1.1;
+    g.beginPath(); g.moveTo(0, top); g.lineTo(0, 26); g.stroke(); // stem
+    g.fillStyle = `${ink}.75)`;
+    g.beginPath(); g.ellipse(0, 30, 2, 4.2, 0, 0, Math.PI * 2); g.fill(); // seed
+    for (let k = 0; k <= 22; k++) { // hairs, from almost flat to almost upright
+      const a = Math.PI * (1.06 + 0.88 * (k / 22));
+      const len = 26 + 4 * Math.sin(k * 1.7);
+      const x = Math.cos(a) * len, y = top + Math.sin(a) * len * 0.8;
+      g.strokeStyle = `${ink}.32)`;
+      g.lineWidth = 0.8;
+      g.beginPath(); g.moveTo(0, top); g.quadraticCurveTo(x * 0.5, top + (y - top) * 0.62, x, y); g.stroke();
+      g.fillStyle = `${ink}.45)`;
+      g.beginPath(); g.arc(x, y, 0.9, 0, Math.PI * 2); g.fill();
+    }
+  })];
+}
+
+function newFlake(top) {
+  const kind = snow.kind;
+  const f = { x: Math.random() * (snow.w + 200) - 100, y: top ? -20 - Math.random() * 40 : Math.random() * snow.h, phase: Math.random() * Math.PI * 2, melt: 0 };
+  if (kind === "snow") {
+    const r = 1 + Math.random() * 1.9; // bigger flakes are nearer: faster, more opaque
+    return Object.assign(f, { r, size: r * 4, vy: 10 + r * 9 + Math.random() * 6, sway: 6 + Math.random() * 14, swaySpeed: 0.4 + Math.random() * 0.7, alpha: 0.35 + r * 0.18, drift: 0.5 + r / 3 });
+  }
+  if (kind === "petals" || kind === "leaves") {
+    const near = Math.random();
+    const big = kind === "leaves" ? 1.25 : 1;
+    return Object.assign(f, {
+      size: (18 + near * 12) * big, vy: 16 + near * 16, sway: 18 + Math.random() * 24, swaySpeed: 0.5 + Math.random() * 0.5,
+      alpha: (isDark() ? 0.55 : 0.7) + near * 0.25, drift: 0.7 + near * 0.6,
+      rot: Math.random() * Math.PI * 2, spin: (Math.random() - 0.5) * 1.6, flip: Math.random() * Math.PI * 2, flipSpeed: 0.8 + Math.random() * 1.4,
+      variant: Math.floor(Math.random() * (kind === "leaves" ? 3 : 2)),
+    });
+  }
+  const near = Math.random(); // seeds: float, drift with the wind, sometimes rise a little
+  return Object.assign(f, {
+    size: 24 + near * 12, vy: 5 + near * 7, sway: 10 + Math.random() * 14, swaySpeed: 0.25 + Math.random() * 0.3,
+    alpha: 0.55 + near * 0.35, drift: 1.3 + near * 0.8, rot: 0, bob: 0.3 + Math.random() * 0.4,
+  });
+}
+
+function sizeSnow() {
+  const dpr = Math.min(2, devicePixelRatio || 1);
+  snow.w = innerWidth;
+  snow.h = innerHeight;
+  snow.canvas.width = Math.round(snow.w * dpr);
+  snow.canvas.height = Math.round(snow.h * dpr);
+  snow.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const count = Math.min(180, Math.round((snow.w * snow.h) / 100000 * BREEZE[snow.kind].density * (state.settings.glowStrength ?? 1)));
+  while (snow.flakes.length < count) snow.flakes.push(newFlake(false));
+  snow.flakes.length = count;
+}
+
+// Where things land: the visible cards, tiles and search bar (in Focus mode: the clock and the icons).
+function snowRects() {
+  // In Focus mode the board is hidden (but still laid out): only the clock and the icons count.
+  const sel = state.settings.focus ? ".fc-time:not([hidden]), .fc-date, .fc-icons a" : ".column, .bar-row .tile, .search";
+  snow.rects = [...document.querySelectorAll(sel)]
+    .map((el) => {
+      if (!el.matches(".fc-time, .fc-date")) return el.getBoundingClientRect();
+      const range = document.createRange(); // the text itself, not its full-width box
+      range.selectNodeContents(el);
+      return range.getBoundingClientRect();
+    })
+    .filter((r) => r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < snow.h);
+  snow.rectsAt = performance.now();
+}
+
+function drawSnow() {
+  const { ctx } = snow;
+  ctx.clearRect(0, 0, snow.w, snow.h);
+  for (const f of snow.flakes) {
+    const a = f.alpha * (f.melt ? Math.max(0, 1 - f.melt) : 1);
+    if (a <= 0.01) continue;
+    ctx.globalAlpha = a;
+    const img = snow.sprites[f.variant || 0];
+    if (snow.kind === "snow") { ctx.drawImage(img, f.x - f.size / 2, f.y - f.size / 2, f.size, f.size); continue; }
+    ctx.save();
+    ctx.translate(f.x, f.y);
+    ctx.rotate(f.rot);
+    // Petals tumble: seen edge-on now and then.
+    if (snow.kind === "petals" || snow.kind === "leaves") ctx.scale(1, 0.25 + 0.75 * Math.abs(Math.cos(f.flip)));
+    ctx.drawImage(img, -f.size / 2, -f.size / 2, f.size, f.size);
+    ctx.restore();
+  }
+  ctx.globalAlpha = 1;
+}
+
+function stepSnow(now) {
+  snow.raf = requestAnimationFrame(stepSnow);
+  const dt = Math.min(0.05, (now - (snow.last || now)) / 1000);
+  snow.last = now;
+  snow.t += dt;
+  if (now - snow.rectsAt > 300) snowRects();
+  // A slow wind with gusts: two slow waves, never still for long.
+  const wind = 14 * Math.sin(snow.t / 9) + 8 * Math.sin(snow.t / 3.3 + 1) + 4;
+  const fade = BREEZE[snow.kind].fade;
+  for (let i = 0; i < snow.flakes.length; i++) {
+    const f = snow.flakes[i];
+    if (f.melt) {
+      f.melt += dt / fade; // fades where it landed
+      if (f.melt >= 1) snow.flakes[i] = newFlake(true);
+      continue;
+    }
+    f.phase += f.swaySpeed * dt;
+    f.x += (wind * f.drift + Math.cos(f.phase) * f.sway) * dt;
+    f.y += f.vy * dt;
+    if (snow.kind === "petals" || snow.kind === "leaves") { f.rot += f.spin * dt; f.flip += f.flipSpeed * dt; }
+    if (snow.kind === "seeds") {
+      f.y += Math.sin(f.phase * 1.7) * f.sway * f.bob * dt; // lifted now and then
+      f.rot = Math.max(-0.5, Math.min(0.5, (wind * f.drift) / 80)); // leaning with the wind
+    }
+    if (f.y > snow.h + 30 || f.x < -140 || f.x > snow.w + 140) { snow.flakes[i] = newFlake(true); continue; }
+    for (const r of snow.rects) {
+      if (f.x >= r.left && f.x <= r.right && f.y >= r.top && f.y <= r.bottom) { f.melt = 0.001; f.y = Math.max(r.top, f.y - 2); break; }
+    }
+  }
+  drawSnow();
+}
+
+function startSnow(value) {
+  if (!snow.canvas) {
+    snow.canvas = h("canvas", { class: "snow", "aria-hidden": "true" });
+    snow.ctx = snow.canvas.getContext("2d");
+    document.body.prepend(snow.canvas);
+    addEventListener("resize", () => { if (document.body.classList.contains("bg-snow")) { sizeSnow(); snowRects(); if (!snow.raf) drawSnow(); } });
+    document.addEventListener("visibilitychange", () => { if (document.body.classList.contains("bg-snow")) startSnow(state.settings.bg?.value); });
+    motionQuery.addEventListener("change", () => { if (document.body.classList.contains("bg-snow")) startSnow(state.settings.bg?.value); });
+  }
+  const kind = breezeKind(value);
+  const dark = isDark();
+  if (kind !== snow.kind) { snow.kind = kind; snow.flakes = []; }
+  if (snow.spriteKey !== `${kind}/${dark}`) { snow.sprites = breezeSprites(kind, dark); snow.spriteKey = `${kind}/${dark}`; }
+  sizeSnow();
+  snowRects();
+  const moving = state.settings.animateGlow !== false && !motionQuery.matches && !document.hidden;
+  if (moving && !snow.raf) { snow.last = 0; snow.raf = requestAnimationFrame(stepSnow); }
+  if (!moving) { cancelAnimationFrame(snow.raf); snow.raf = 0; drawSnow(); }
+}
+
+function stopSnow() {
+  if (!snow.canvas) return;
+  cancelAnimationFrame(snow.raf);
+  snow.raf = 0;
+  snow.ctx.clearRect(0, 0, snow.w, snow.h);
 }
 
 function scheduleClock() {
@@ -1080,9 +1727,9 @@ function openBookmarkMenu(node, anchor, x, y) {
 
   const tileMoves = () => {
     if (!anchor.closest?.(".bar-row") || state.query) return [];
-    const urls = topRowSites().map((c) => c.url);
+    const urls = topRowSites().filter((c) => tileGroup(c) === tileGroup(node)).map((c) => c.url);
     const i = urls.indexOf(node.url);
-    const move = (d) => () => { closePopover({ restoreFocus: false }); moveTile(node.url, d); };
+    const move = (d) => () => { closePopover({ restoreFocus: false }); moveTile(node, d); };
     return [
       i > 0 ? item(t("moveLeft"), null, move(-1)) : null,
       i !== -1 && i < urls.length - 1 ? item(t("moveRight"), null, move(1)) : null,
@@ -1113,6 +1760,7 @@ function openBookmarkMenu(node, anchor, x, y) {
         : null,
       // Tiles above the search bar: move left or right (order kept in ReStart only).
       ...tileMoves(),
+      editable && !state.query && state.byId.has(node.parentId) ? item(t("moveTo"), UI.subfolder, () => showMoveTo(node, x, y)) : null,
       editable ? h("div", { class: "menu-sep" }) : null,
       editable ? item(t("rename"), UI.edit, showRename) : null,
       editable ? del : null,
@@ -1169,7 +1817,8 @@ function openFolderMenu(node, anchor, x, y) {
       closePopover({ restoreFocus: false });
       ext.bookmarks.removeTree(node.id).catch((e) => console.warn("ReStart: delete failed", e));
     }, "danger");
-    els.popover.replaceChildren(item(t("rename"), UI.edit, showRename), del);
+    const moveTo = !state.query && state.byId.has(node.parentId) ? item(t("moveTo"), UI.subfolder, () => showMoveTo(node, x, y)) : null;
+    els.popover.replaceChildren(...[moveTo, h("div", { class: "menu-sep" }), item(t("rename"), UI.edit, showRename), del].filter(Boolean));
   };
 
   const showRename = () => {
@@ -1552,13 +2201,15 @@ function colorPickerPanel(key, current, fallback, onPick) {
 
 function settingsContent() {
   const s = state.settings;
-  const bg = s.bg || { type: "none" };
+  const bg = s.bg || { type: "color", value: null };
 
   // Background choices
   let bgExtra = null;
   if (hasUnderColor(bg.type)) {
     const lit = isLit(bg.type);
     const leaves = bg.type === "leaves";
+    const snowy = bg.type === "snow";
+    const plainUnder = leaves || snowy; // no halo color to pick
     const glow = glowOf(bg.value);
     const selected = glow.id;
     const customGlow = glow.id === "custom" ? glow.base : null;
@@ -1566,25 +2217,28 @@ function settingsContent() {
     const tintSwatch = customColorSwatch("tint", bg.tint, "bg-preset");
     const withTint = (value) => (s.bg.tint ? { type: bg.type, value, tint: s.bg.tint } : { type: bg.type, value });
     bgExtra = h("div", {},
-      leaves ? h("div", { class: "leaf-kind" }, segmented([["leaves", t("leafKindLeaves")], ["palm", t("leafKindPalm")]], bg.value === "palm" ? "palm" : "leaves",
-        (v) => { s.bg = { ...s.bg, value: v === "palm" ? "palm" : null }; saveSettings(); })) : null,
-      leaves ? null : h("div", { class: "swatches", role: "group", "aria-label": t("glowColor") },
+      snowy ? h("div", { class: "leaf-kind" }, segmented(BREEZE_KINDS.map((k) => [k, k === "season" ? [svg(ICONS.sunny, "seg-sun"), t("breeze_season")] : t(`breeze_${k}`)]), BREEZE_KINDS.includes(bg.value) ? bg.value : "season",
+        (v) => { s.bg = { ...s.bg, value: v === "season" ? null : v }; saveSettings(); })) : null,
+      leaves ? h("div", { class: "leaf-kind" }, segmented([["leaves", t("leafKindLeaves")], ["palm", t("leafKindPalm")], ["olive", t("leafKindOlive")], ["monstera", t("leafKindMonstera")]], LEAF_KINDS.includes(bg.value) ? bg.value : "leaves",
+        (v) => { s.bg = { ...s.bg, value: LEAF_KINDS.includes(v) ? v : null }; saveSettings(); })) : null,
+      plainUnder ? null : h("div", { class: "swatches", role: "group", "aria-label": t("glowColor") },
         GLOW_COLORS.map((c) => h("button", {
         class: "swatch", title: colorName(c.id), "aria-label": colorName(c.id),
         style: `background:${c.swatch}`,
         "aria-pressed": String(c.id === selected),
         onclick: () => { s.bg = { type: bg.type, value: { color: c.id, custom: bg.value?.custom }, tint: bg.tint }; saveSettings(); refreshSettings(); },
-      })), customSwatch),
-      leaves ? null : colorPickerPanel("glow", customGlow || (HEX_COLOR.test(bg.value?.custom) ? bg.value.custom : null), "#ff8c46",
+      }, c.id === "sky" ? svg(ICONS.sunny, "swatch-sun") : null)), customSwatch),
+      plainUnder ? null : colorPickerPanel("glow", customGlow || (HEX_COLOR.test(bg.value?.custom) ? bg.value.custom : null), "#ff8c46",
         (v) => { s.bg = withTint({ color: "custom", custom: v }); }),
-      h("p", { class: "setting-hint" }, t(leaves ? "leavesHint" : "glowHint")),
+      h("p", { class: "setting-hint" }, t(leaves ? "leavesHint" : snowy ? "snowHint" : "glowHint")),
       h("div", { class: "set-label tint-label" }, t("bgTint")),
       h("div", { class: "bg-presets tint-presets" },
+        // No chosen color: the background follows the hour (marked with a small sun, like Sky).
         h("button", {
-          class: "bg-preset bg-preset-none", title: t("noColor"), "aria-label": t("noColor"),
+          class: "bg-preset bg-preset-auto", title: t("hourColor"), "aria-label": t("hourColor"),
           "aria-pressed": String(!bg.tint),
           onclick: () => { delete s.bg.tint; saveSettings(); refreshSettings(); },
-        }),
+        }, svg(ICONS.sunny, "swatch-sun")),
         BG_PASTELS.map((p) => h("button", {
           class: "bg-preset", title: colorName(p.id), "aria-label": colorName(p.id),
           style: `background:${plainColor(p.id)}`,
@@ -1596,14 +2250,20 @@ function settingsContent() {
       // Shown on a 0-100 scale, the default intensity sitting in the middle.
       rangeRow(t("intensity"), 0, 100, 5, Math.round((s.glowStrength ?? 1) * 50), (v) => { s.glowStrength = v / 50; saveSettingsSoon(); },
         (v) => percent.format(v / 100)),
-      switchRow("set-breathe", t(bg.type === "rays" ? "animateRays" : leaves ? "animateLeaves" : "animateGlow"), s.animateGlow !== false, (v) => { s.animateGlow = v; saveSettings(); }));
+      switchRow("set-breathe", t(bg.type === "rays" ? "animateRays" : leaves ? "animateLeaves" : snowy ? "animateSnow" : "animateGlow"), s.animateGlow !== false, (v) => { s.animateGlow = v; saveSettings(); }));
   } else if (bg.type === "color") {
     const colorSwatch = customColorSwatch("color", bg.value, "bg-preset");
     bgExtra = h("div", {}, h("div", { class: "bg-presets" },
+      // First: no chosen color, the page follows the hour (a small sun, like elsewhere).
+      h("button", {
+        class: "bg-preset bg-preset-auto", title: t("hourColor"), "aria-label": t("hourColor"),
+        "aria-pressed": String(!bg.value),
+        onclick: () => { s.bg = { type: "color", value: null }; saveSettings(); refreshSettings(); },
+      }, svg(ICONS.sunny, "swatch-sun")),
       BG_PASTELS.map((p) => h("button", {
         class: "bg-preset", title: colorName(p.id), "aria-label": colorName(p.id),
         style: `background:${plainColor(p.id)}`,
-        "aria-pressed": String((bg.value || "blue") === p.id),
+        "aria-pressed": String(bg.value === p.id),
         onclick: () => { s.bg = { type: "color", value: p.id }; saveSettings(); refreshSettings(); },
       })),
       colorSwatch),
@@ -1679,12 +2339,12 @@ function settingsContent() {
         })),
       h("div", { class: "set-field" },
         h("div", { class: "set-label" }, t("background")),
-        segmented([["none", t("bgNone")], ["color", t("bgColor")], ["glow", t("bgGlow")], ["rays", t("styleRays")], ["leaves", t("bgLeaves")]], bg.type, (v) => {
+        segmented([["color", t("bgColor")], ["glow", t("bgGlow")], ["rays", t("styleRays")], ["leaves", t("bgLeaves")], ["snow", t("bgSnow")]], bg.type === "none" ? "color" : bg.type, (v) => {
           // Switching between the halo and the rays keeps their color; between halo, rays and
           // leaves, the color underneath is kept too.
           const keep = isLit(v) && isLit(bg.type);
           const keepTint = hasUnderColor(v) && hasUnderColor(bg.type) && bg.tint;
-          s.bg = { type: v, value: v === "color" ? "blue" : keep ? bg.value : null, ...(keepTint ? { tint: bg.tint } : {}) };
+          s.bg = { type: v, value: keep ? bg.value : null, ...(keepTint ? { tint: bg.tint } : {}) };
           saveSettings();
           refreshSettings();
         }),
@@ -1694,7 +2354,7 @@ function settingsContent() {
           (v) => percent.format(v))),
       h("div", { class: "set-field" },
         h("div", { class: "set-label" }, t("layout")),
-        segmented([["board", t("layoutBoard")], ["masonry", t("layoutMasonry")]], s.layout, (v) => { s.layout = v; saveSettings(); render(); }),
+        segmented([["masonry", t("layoutMasonry")], ["board", t("layoutBoard")]], s.layout, (v) => { s.layout = v; saveSettings(); render(); }),
         narrowQuery.matches ? h("p", { class: "setting-hint" }, t("layoutNarrowHint")) : null),
     ),
 
@@ -1712,10 +2372,7 @@ function settingsContent() {
 
     h("div", { class: "set-section" }, t("columns")),
     group(colList),
-    h("p", { class: "group-hint" }, t("columnsHint", t("appName"))),
-    h("div", { class: "btn-row" },
-      h("button", { class: "text-btn", onclick: () => { saveOrder([]); refreshSettings(); } },
-        svg(UI.restart), t("originalOrder"))),
+    h("p", { class: "group-hint" }, t("columnsHint")),
 
     h("div", { class: "set-section" }, t("data")),
     group(
@@ -1725,6 +2382,9 @@ function settingsContent() {
       settingsMsg ? h("p", { class: "set-msg", role: "status" }, settingsMsg) : null,
     ),
     h("p", { class: "group-hint" }, t("dataHint")),
+    h("div", { class: "btn-row" },
+      h("button", { class: "text-btn", onclick: () => { closePopover({ restoreFocus: false }); showWelcome(); } },
+        svg(UI.restart), t("welcomeAgain"))),
   ].filter(Boolean);
 }
 
@@ -1763,6 +2423,8 @@ els.settingsBtn.addEventListener("click", () =>
 async function exportData() {
   const all = await store.get(null);
   const prefs = Object.fromEntries(Object.entries(all).filter(([k]) => isPrefKey(k)));
+  // Save the column order as shown, so the backup knows every folder that exists now.
+  if (state.bar) prefs.order = allColumnKeys();
   // "sync" is kept as the field name so files exported by pre-release builds stay compatible.
   const data = { app: "restart", version: 1, exportedAt: new Date().toISOString(), sync: prefs };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
@@ -1771,6 +2433,29 @@ async function exportData() {
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+// What the import could apply: folder customizations are matched by folder name, so
+// say which named folders were not found, and which current folders the file doesn't know.
+function importSummary(prefs) {
+  const special = new Set([KEY_TOP, KEY_SITES, KEY_OTHER]);
+  const named = new Set();
+  for (const k of [...(prefs.order || []), ...(prefs.hidden || [])]) if (!special.has(k)) named.add(k);
+  for (const k of Object.keys(prefs)) if (k.startsWith(STYLE_PREFIX)) named.add(k.slice(STYLE_PREFIX.length));
+  const present = new Set(state.bar.children.filter((c) => !c.url).map((c) => c.title));
+  const missing = [...named].filter((k) => !present.has(k));
+  const found = [...named].filter((k) => present.has(k) && !isEmptyKey(k)).length;
+  const list = (names) => {
+    const shown = names.slice(0, 6).map((n) => cleanText(n) || "?");
+    if (names.length > 6) shown.push(`+${names.length - 6}`);
+    try { return new Intl.ListFormat(t("lang"), { type: "conjunction" }).format(shown); }
+    catch { return shown.join(", "); }
+  };
+  const lines = [!missing.length ? t("importAll") : found ? t("importPartial", found) : t("importDone")];
+  if (missing.length) lines.push(t("importMissing", list(missing)));
+  const unknown = [...present].filter((k) => !named.has(k) && !isEmptyKey(k));
+  if (prefs.order?.length && unknown.length) lines.push(t("importNew", list(unknown)));
+  return lines.join("\n");
 }
 
 els.fileImport.addEventListener("change", async () => {
@@ -1794,7 +2479,7 @@ els.fileImport.addEventListener("change", async () => {
     await loadStorage();
     applyAppearance();
     render();
-    settingsMsg = t("importDone");
+    settingsMsg = importSummary(clean);
   } catch {
     settingsMsg = t("importFailed");
   }
@@ -1823,6 +2508,7 @@ els.search.addEventListener("keydown", (e) => {
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     if (!els.popover.hidden) { closePopover(); return; }
+    if ($("welcome")) { closeWelcome(); return; }
     if (els.search.value) { els.search.value = ""; els.search.dispatchEvent(new Event("input")); }
     els.search.blur();
     return;
@@ -1833,6 +2519,31 @@ document.addEventListener("keydown", (e) => {
     els.search.focus();
   }
 });
+
+/* ===================== Welcome ===================== */
+
+// Shown once, on the first new tab: three lines, dismissed in one click or with Esc.
+// "welcomed" is a device flag, not a preference: it is not exported nor imported.
+function closeWelcome() {
+  const card = $("welcome");
+  if (card) card.remove();
+  if (!state.welcomed) { state.welcomed = true; saveLocal({ welcomed: true }); }
+}
+
+function showWelcome() {
+  $("welcome")?.remove();
+  const line = (icon, text) => h("li", {}, svg(icon), h("span", {}, text));
+  const card = h("section", { class: "welcome", id: "welcome", role: "dialog", "aria-modal": "false", "aria-labelledby": "welcome-title" },
+    h("button", { class: "icon-btn welcome-close", title: t("close"), "aria-label": t("close"), onclick: closeWelcome }, svg(UI.close)),
+    h("h2", { id: "welcome-title" }, t("welcomeTitle", t("appName"))),
+    h("ul", {},
+      line(UI.bookmarkFill, t("welcome1")),
+      line(UI.leftClick, t("welcome2")),
+      line(UI.focus, t("welcome3"))),
+    h("div", { class: "welcome-actions" },
+      h("button", { class: "text-btn primary", onclick: closeWelcome }, t("welcomeStart"))));
+  document.body.append(card);
+}
 
 /* ===================== Data ===================== */
 
@@ -1852,10 +2563,18 @@ async function loadBookmarks() {
   // Chromium: folderType (recent versions) or ids "1" and "2". Firefox: fixed root ids.
   state.bar = kids.find((n) => n.folderType === "bookmarks-bar") || kids.find((n) => n.id === "1" || n.id === "toolbar_____") || kids[0];
   state.other = kids.find((n) => n.folderType === "other") || kids.find((n) => n.id === "2" || n.id === "unfiled_____") || null;
+  state.byId = new Map();
+  const index = (node, depth = 0) => {
+    if (depth > 64 || !node?.children) return;
+    state.byId.set(node.id, node);
+    for (const c of node.children) index(c, depth + 1);
+  };
+  index(state.bar);
+  index(state.other);
 }
 
 async function loadTopSites() {
-  try { state.topSites = (await ext.topSites.get()).slice(0, 10); }
+  try { state.topSites = (await ext.topSites.get()).slice(0, 20); }
   catch { state.topSites = []; }
 }
 
@@ -1877,7 +2596,8 @@ function sanitizeSettings(raw) {
   if (Number.isFinite(raw.colAlpha)) s.colAlpha = Math.min(1, Math.max(0, raw.colAlpha));
   if (["board", "masonry"].includes(raw.layout)) s.layout = raw.layout;
   const bg = raw.bg;
-  if (bg?.type === "none") s.bg = { type: "none", value: null };
+  // "None" was merged into Color: no chosen color is the page color that follows the hour.
+  if (bg?.type === "none") s.bg = { type: "color", value: null };
   if (isLit(bg?.type)) {
     // Pre-release builds stored the rays as a separate "glowStyle" setting.
     const type = bg.type === "glow" && raw.glowStyle === "rays" ? "rays" : bg.type;
@@ -1887,14 +2607,16 @@ function sanitizeSettings(raw) {
     if (BG_IDS.has(bg.tint)) s.bg.tint = bg.tint;
     else if (HEX_COLOR.test(bg.tint)) s.bg.tint = bg.tint.toLowerCase();
   }
-  if (bg?.type === "leaves") {
-    s.bg = { type: "leaves", value: bg.value === "palm" ? "palm" : null };
+  if (bg?.type === "leaves" || bg?.type === "snow") {
+    s.bg = bg.type === "snow"
+      ? { type: "snow", value: ["snow", "petals", "seeds"].includes(bg.value) ? bg.value : null }
+      : { type: "leaves", value: LEAF_KINDS.includes(bg.value) ? bg.value : null };
     if (BG_IDS.has(bg.tint)) s.bg.tint = bg.tint;
     else if (HEX_COLOR.test(bg.tint)) s.bg.tint = bg.tint.toLowerCase();
   }
   if (bg?.type === "color") {
     const v = bg.value;
-    s.bg = { type: "color", value: BG_IDS.has(v) ? v : HEX_COLOR.test(v) ? v.toLowerCase() : "blue" };
+    s.bg = { type: "color", value: BG_IDS.has(v) ? v : HEX_COLOR.test(v) ? v.toLowerCase() : null };
   }
   if ("showTopSites" in raw) s.showTopSites = raw.showTopSites === true; // migrated below
   return s;
@@ -1912,7 +2634,13 @@ function sanitizeFolderStyle(raw) {
 function sanitizeImport(prefs) {
   const out = { settings: sanitizeSettings(prefs.settings) };
   delete out.settings.showTopSites;
-  for (const key of ["order", "hidden", "highlighted", "tileOrder"]) if (key in prefs) out[key] = stringList(prefs[key]);
+  for (const key of ["order", "hidden", "highlighted"]) if (key in prefs) out[key] = stringList(prefs[key]);
+  // A file exported by 1.1 may hold an order of the tiles: keep it as the order of the pinned sites.
+  const tiles = stringList(prefs.tileOrder);
+  if (tiles.length && out.highlighted) {
+    const rank = (u) => { const i = tiles.indexOf(u); return i === -1 ? Infinity : i; };
+    out.highlighted.sort((a, b) => rank(a) - rank(b));
+  }
   for (const [k, v] of Object.entries(prefs)) {
     if (!k.startsWith(STYLE_PREFIX) || k.length > 512) continue;
     const style = sanitizeFolderStyle(v);
@@ -1950,7 +2678,19 @@ async function loadStorage() {
   state.order = stringList(data.order);
   state.hidden = stringList(data.hidden);
   state.highlighted = stringList(data.highlighted);
-  state.tileOrder = stringList(data.tileOrder);
+  // 1.1 kept its own order of the tiles ("tileOrder"; test builds also had "itemOrder"). Bookmarks
+  // now move for real: the bar's sites follow the bookmarks bar, and the tile order is kept as the
+  // order of the pinned sites. Nothing is written to the bookmarks.
+  if ("tileOrder" in data || "itemOrder" in data) {
+    const old = stringList(data.tileOrder);
+    if (old.length) {
+      const rank = (u) => { const i = old.indexOf(u); return i === -1 ? Infinity : i; };
+      state.highlighted = [...state.highlighted].sort((a, b) => rank(a) - rank(b));
+      saveLocal({ highlighted: state.highlighted });
+    }
+    store.remove(["tileOrder", "itemOrder"]).catch(() => {});
+  }
+  state.welcomed = data.welcomed === true;
   // Pre-release builds stored a boolean for the Most visited column: migrate it once, then drop it,
   // otherwise it would hide the column again on every load.
   if ("showTopSites" in saved) {
@@ -2014,6 +2754,7 @@ $("enter-path").setAttribute("d", UI.enter);
   await Promise.all([loadBookmarks(), loadSiteIcons(), state.hidden.includes(KEY_TOP) ? null : loadTopSites()]);
   render();
   scheduleClock();
+  if (!state.welcomed && !state.settings.focus) showWelcome();
   requestAnimationFrame(() => document.body.classList.add("ready"));
   els.search.focus();
 })();

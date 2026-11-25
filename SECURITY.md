@@ -14,6 +14,7 @@ ReStart treats everything it displays as untrusted: bookmark titles and URLs (th
 | Imported settings file | Injection, prototype pollution, quota abuse, data loss | Limited to 1 MB; every value is validated against an allow-list (known keys, known colors and icons, custom colors only as `#rrggbb`, numbers clamped, lists of short strings); unknown keys are dropped. If writing fails, the previous settings are restored. |
 | Remembered theme (page local storage) | Tampered value | Only compared with `"dark"` and `"light"`; any other value falls back to the system theme. |
 | Rename (bookmark or folder) | Injection | Saved through the bookmarks API and displayed as text; limited to 1,000 characters. |
+| Moving bookmarks and folders (drag and drop, *Move to…*) | Data loss, loops, managed bookmarks | Only on an explicit user action, through the bookmarks API; a folder can't be moved into itself or one of its subfolders; bookmarks and folders managed by a policy are never moved; dropped data from other pages is ignored (only items dragged inside ReStart are moved). |
 | New folder name, title of a most visited site added to bookmarks | Injection, disguised text | Cleaned like titles (control and bidi characters stripped, length capped), saved through the bookmarks API and displayed as text. Script URLs can't be added. |
 
 ## Platform protections

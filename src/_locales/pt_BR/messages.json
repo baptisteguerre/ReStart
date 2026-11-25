@@ -2,6 +2,9 @@
   "appName": {
     "message": "ReStart"
   },
+  "lang": {
+    "message": "pt-BR"
+  },
   "extName": {
     "message": "ReStart - Página inicial de favoritos"
   },
@@ -73,9 +76,6 @@
   "background": {
     "message": "Fundo"
   },
-  "bgNone": {
-    "message": "Nenhum"
-  },
   "bgGlow": {
     "message": "Halo"
   },
@@ -86,7 +86,7 @@
     "message": "Cor do halo"
   },
   "glowHint": {
-    "message": "Ele acompanha o sol: à esquerda de manhã, à direita à noite, pálido ao meio-dia e mais intenso ao entardecer."
+    "message": "Ele acompanha o sol, da esquerda de manhã à direita à tarde. Céu assume as cores do dia: rosa ao amanhecer, dourado claro, damasco, rosa no pôr do sol, azul suave à noite. As outras cores mantêm o tom e ficam mais suaves à noite."
   },
   "colOpacity": {
     "message": "Opacidade colunas"
@@ -95,15 +95,7 @@
     "message": "Colunas"
   },
   "columnsHint": {
-    "message": "Arraste para reordenar, aqui ou pelo cabeçalho de uma coluna. A ordem só afeta o $APP$, não seus favoritos.",
-    "placeholders": {
-      "app": {
-        "content": "$1"
-      }
-    }
-  },
-  "originalOrder": {
-    "message": "Ordem original"
+    "message": "Arraste para reordenar, aqui ou pelo cabeçalho de uma coluna. As pastas também mudam de lugar na sua barra de favoritos."
   },
   "moveUp": {
     "message": "Mover para cima"
@@ -138,7 +130,34 @@
     "message": "Arquivo não reconhecido."
   },
   "dataHint": {
-    "message": "Ícones, cores, ordem, colunas ocultas e aparência. Os ícones das pastas estão vinculados ao nome da pasta."
+    "message": "Salva as configurações próprias do ReStart: cores e ícones das pastas, colunas ocultas, sites destacados, o lugar das colunas extras e a aparência. Seus favoritos e a ordem deles pertencem ao navegador, que os salva com a sincronização ou a exportação de favoritos. As pastas são reconhecidas pelo nome."
+  },
+  "importAll": {
+    "message": "Importação concluída: tudo foi restaurado."
+  },
+  "importPartial": {
+    "message": "Importação concluída: restaurado para $COUNT$ pastas.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "importMissing": {
+    "message": "Não encontradas nos seus favoritos, por isso não restauradas: $NAME$. As pastas são reconhecidas pelo nome.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "importNew": {
+    "message": "Não estão no backup: $NAME$. Mantêm a aparência padrão.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
   },
   "layout": {
     "message": "Disposição"
@@ -202,9 +221,6 @@
   },
   "bgTint": {
     "message": "Cor de fundo"
-  },
-  "noColor": {
-    "message": "Sem cor"
   },
   "addBookmark": {
     "message": "Adicionar aos favoritos"
@@ -274,6 +290,12 @@
   "leafKindLeaves": {
     "message": "Ramos"
   },
+  "leafKindOlive": {
+    "message": "Oliveira"
+  },
+  "leafKindMonstera": {
+    "message": "Monstera"
+  },
   "leafKindPalm": {
     "message": "Palmas"
   },
@@ -307,6 +329,9 @@
   "c_red": {
     "message": "Vermelho"
   },
+  "c_sky": {
+    "message": "Céu"
+  },
   "c_orange": {
     "message": "Laranja"
   },
@@ -339,5 +364,67 @@
   },
   "c_brown": {
     "message": "Marrom"
+  },
+  "startHintTop": {
+    "message": "Deixe esta página do seu jeito: clique com o botão direito num site para adicioná-lo aos favoritos."
+  },
+  "startHintEmpty": {
+    "message": "Adicione sites à barra de favoritos do navegador: eles aparecem aqui, na mesma ordem."
+  },
+  "welcomeTitle": {
+    "message": "Boas-vindas ao $APP$",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "welcome1": {
+    "message": "Seus favoritos, na sua ordem."
+  },
+  "welcome2": {
+    "message": "Clique com o botão direito num site ou pasta para ações rápidas: fixar, renomear, mover, excluir."
+  },
+  "welcome3": {
+    "message": "Foco: uma página calma em um clique."
+  },
+  "welcomeStart": {
+    "message": "Começar"
+  },
+  "welcomeAgain": {
+    "message": "Ver a apresentação de novo"
+  },
+  "close": {
+    "message": "Fechar"
+  },
+  "moveTo": {
+    "message": "Mover para…"
+  },
+  "hourColor": {
+    "message": "Conforme a hora"
+  },
+  "bgSnow": {
+    "message": "Brisa"
+  },
+  "snowHint": {
+    "message": "Neve, pétalas de cerejeira, sementes de dente-de-leão ou folhas de outono levadas por um vento lento e variável; Estação escolhe conforme a data. Elas somem onde tocam seus cartões, ícones e a barra de busca."
+  },
+  "animateSnow": {
+    "message": "Deixar a brisa soprar"
+  },
+  "breeze_season": {
+    "message": "Estação"
+  },
+  "breeze_snow": {
+    "message": "Neve"
+  },
+  "breeze_petals": {
+    "message": "Pétalas"
+  },
+  "breeze_leaves": {
+    "message": "Folhas"
+  },
+  "breeze_seeds": {
+    "message": "Dente-de-leão"
   }
 }

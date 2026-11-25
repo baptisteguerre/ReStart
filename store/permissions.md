@@ -7,13 +7,13 @@ ReStart replaces the browser's new tab page with a start page that displays the 
 ## Permission justifications
 
 **bookmarks**
-ReStart's single purpose is to display the user's bookmarks on the new tab page. It reads the bookmark tree to build the page, and changes bookmarks only when the user explicitly asks from the right-click menu: "Rename" or "Delete" on a bookmark or a folder, or "Add to bookmarks" on a Most visited site (which creates the bookmark, and a new folder if the user names one).
+ReStart's single purpose is to display the user's bookmarks on the new tab page. It reads the bookmark tree to build the page, and changes bookmarks only when the user explicitly asks: "Rename", "Delete" or "Move to…" on a bookmark or a folder in the right-click menu, dragging a bookmark, a folder or a column to reorder it (which moves it in the user's bookmarks), or "Add to bookmarks" on a Most visited site (which creates the bookmark, and a new folder if the user names one).
 
 **favicon**
 Used to display each bookmarked site's icon from the browser's favicon cache, next to the bookmark title.
 
 **storage**
-Stores, in local extension storage on the user's device only, the user's preferences: folder icons and colors, column and tile order, hidden columns, pinned sites, layout, appearance and focus mode. The theme choice (auto, light or dark) is also kept in the page's local storage so the page opens in the right theme.
+Stores, in local extension storage on the user's device only, the user's preferences: folder icons and colors, hidden columns, pinned sites and their order, the place of the columns that are not folders, layout, appearance and focus mode. The theme choice (auto, light or dark) is also kept in the page's local storage so the page opens in the right theme.
 
 **topSites**
 Used to display the optional "Most visited" column on the new tab page. The user can hide it in the settings.

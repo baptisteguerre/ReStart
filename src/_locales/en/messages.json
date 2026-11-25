@@ -2,6 +2,9 @@
   "appName": {
     "message": "ReStart"
   },
+  "lang": {
+    "message": "en"
+  },
   "extName": {
     "message": "ReStart - Bookmarks Start Page"
   },
@@ -73,9 +76,6 @@
   "background": {
     "message": "Background"
   },
-  "bgNone": {
-    "message": "None"
-  },
   "bgGlow": {
     "message": "Halo"
   },
@@ -86,7 +86,7 @@
     "message": "Halo color"
   },
   "glowHint": {
-    "message": "It follows the sun: from the left in the morning to the right in the evening, pale at midday and deeper at dusk."
+    "message": "It follows the sun, from the left in the morning to the right in the evening. Sky takes the colors of the day: dawn pink, pale gold, apricot, rose at sunset, soft blue at night. The other colors keep their hue and soften at night."
   },
   "colOpacity": {
     "message": "Column opacity"
@@ -95,15 +95,7 @@
     "message": "Columns"
   },
   "columnsHint": {
-    "message": "Drag to reorder, here or by a column's header. The order only affects $APP$, not your bookmarks.",
-    "placeholders": {
-      "app": {
-        "content": "$1"
-      }
-    }
-  },
-  "originalOrder": {
-    "message": "Original order"
+    "message": "Drag to reorder, here or by a column's header. Folders move in your bookmarks bar too."
   },
   "moveUp": {
     "message": "Move up"
@@ -138,7 +130,34 @@
     "message": "File not recognized."
   },
   "dataHint": {
-    "message": "Icons, colors, order, hidden columns and appearance. Folder icons are linked to the folder name."
+    "message": "Saves ReStart's own settings: folder colors and icons, hidden columns, pinned sites, the place of the extra columns, and appearance. Your bookmarks and their order belong to your browser, which saves them with its sync or its bookmark export. Folders are matched by name."
+  },
+  "importAll": {
+    "message": "Import complete: everything was restored."
+  },
+  "importPartial": {
+    "message": "Import complete: restored for $COUNT$ folders.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "importMissing": {
+    "message": "Not found in your bookmarks, so not restored: $NAME$. Folders are matched by name.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "importNew": {
+    "message": "Not in the backup: $NAME$. They keep their default look.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
   },
   "layout": {
     "message": "Layout"
@@ -202,9 +221,6 @@
   },
   "bgTint": {
     "message": "Background color"
-  },
-  "noColor": {
-    "message": "No color"
   },
   "addBookmark": {
     "message": "Add to bookmarks"
@@ -274,6 +290,12 @@
   "leafKindLeaves": {
     "message": "Branches"
   },
+  "leafKindOlive": {
+    "message": "Olive"
+  },
+  "leafKindMonstera": {
+    "message": "Monstera"
+  },
   "leafKindPalm": {
     "message": "Palm"
   },
@@ -307,6 +329,9 @@
   "c_red": {
     "message": "Red"
   },
+  "c_sky": {
+    "message": "Sky"
+  },
   "c_orange": {
     "message": "Orange"
   },
@@ -339,5 +364,67 @@
   },
   "c_brown": {
     "message": "Brown"
+  },
+  "startHintTop": {
+    "message": "Make this page yours: right-click a site to add it to your bookmarks."
+  },
+  "startHintEmpty": {
+    "message": "Add sites to your bookmarks bar in your browser: they appear here, in the same order."
+  },
+  "welcomeTitle": {
+    "message": "Welcome to $APP$",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "welcome1": {
+    "message": "Your bookmarks, in your order."
+  },
+  "welcome2": {
+    "message": "Right-click a site or a folder for quick actions: pin, rename, move, delete."
+  },
+  "welcome3": {
+    "message": "Focus: a calm page in one click."
+  },
+  "welcomeStart": {
+    "message": "Get started"
+  },
+  "welcomeAgain": {
+    "message": "Show the introduction again"
+  },
+  "close": {
+    "message": "Close"
+  },
+  "moveTo": {
+    "message": "Move to…"
+  },
+  "hourColor": {
+    "message": "Follows the hour"
+  },
+  "bgSnow": {
+    "message": "Breeze"
+  },
+  "snowHint": {
+    "message": "Snow, cherry petals, dandelion seeds or autumn leaves drifting in a slow, gusting wind; Season picks them by the date. They fade where they land on your cards, tiles and search bar."
+  },
+  "animateSnow": {
+    "message": "Let the breeze blow"
+  },
+  "breeze_season": {
+    "message": "Season"
+  },
+  "breeze_snow": {
+    "message": "Snow"
+  },
+  "breeze_petals": {
+    "message": "Petals"
+  },
+  "breeze_leaves": {
+    "message": "Leaves"
+  },
+  "breeze_seeds": {
+    "message": "Dandelion"
   }
 }

@@ -2,6 +2,9 @@
   "appName": {
     "message": "ReStart"
   },
+  "lang": {
+    "message": "it"
+  },
   "extName": {
     "message": "ReStart - Pagina iniziale dei preferiti"
   },
@@ -73,9 +76,6 @@
   "background": {
     "message": "Sfondo"
   },
-  "bgNone": {
-    "message": "Nessuno"
-  },
   "bgGlow": {
     "message": "Alone"
   },
@@ -86,7 +86,7 @@
     "message": "Colore dell'alone"
   },
   "glowHint": {
-    "message": "Segue il sole: a sinistra al mattino, a destra la sera, pallido a mezzogiorno e più intenso al tramonto."
+    "message": "Segue il sole, da sinistra al mattino a destra la sera. Cielo prende i colori del giorno: rosa all'alba, oro pallido, albicocca, rosa al tramonto, blu tenue di notte. Gli altri colori mantengono la loro tinta e si addolciscono di notte."
   },
   "colOpacity": {
     "message": "Opacità colonne"
@@ -95,15 +95,7 @@
     "message": "Colonne"
   },
   "columnsHint": {
-    "message": "Trascina per riordinare, qui o dall'intestazione di una colonna. L'ordine vale solo per $APP$, non per i tuoi preferiti.",
-    "placeholders": {
-      "app": {
-        "content": "$1"
-      }
-    }
-  },
-  "originalOrder": {
-    "message": "Ordine originale"
+    "message": "Trascina per riordinare, qui o dall'intestazione di una colonna. Le cartelle si spostano anche nella barra dei preferiti."
   },
   "moveUp": {
     "message": "Sposta su"
@@ -138,7 +130,34 @@
     "message": "File non riconosciuto."
   },
   "dataHint": {
-    "message": "Icone, colori, ordine, colonne nascoste e aspetto. Le icone delle cartelle sono legate al nome della cartella."
+    "message": "Salva le impostazioni proprie di ReStart: colori e icone delle cartelle, colonne nascoste, siti in evidenza, la posizione delle colonne aggiuntive e l'aspetto. I preferiti e il loro ordine appartengono al browser, che li salva con la sua sincronizzazione o la sua esportazione dei preferiti. Le cartelle vengono riconosciute dal nome."
+  },
+  "importAll": {
+    "message": "Importazione completata: è stato ripristinato tutto."
+  },
+  "importPartial": {
+    "message": "Importazione completata: ripristinato per $COUNT$ cartelle.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "importMissing": {
+    "message": "Non trovate nei preferiti, quindi non ripristinate: $NAME$. Le cartelle vengono riconosciute dal nome.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "importNew": {
+    "message": "Non presenti nel backup: $NAME$. Mantengono l'aspetto predefinito.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
   },
   "layout": {
     "message": "Disposizione"
@@ -202,9 +221,6 @@
   },
   "bgTint": {
     "message": "Colore di sfondo"
-  },
-  "noColor": {
-    "message": "Nessun colore"
   },
   "addBookmark": {
     "message": "Aggiungi ai preferiti"
@@ -274,6 +290,12 @@
   "leafKindLeaves": {
     "message": "Rami"
   },
+  "leafKindOlive": {
+    "message": "Ulivo"
+  },
+  "leafKindMonstera": {
+    "message": "Monstera"
+  },
   "leafKindPalm": {
     "message": "Palme"
   },
@@ -307,6 +329,9 @@
   "c_red": {
     "message": "Rosso"
   },
+  "c_sky": {
+    "message": "Cielo"
+  },
   "c_orange": {
     "message": "Arancione"
   },
@@ -339,5 +364,67 @@
   },
   "c_brown": {
     "message": "Marrone"
+  },
+  "startHintTop": {
+    "message": "Rendi tua questa pagina: fai clic destro su un sito per aggiungerlo ai preferiti."
+  },
+  "startHintEmpty": {
+    "message": "Aggiungi siti alla barra dei preferiti del browser: compaiono qui, nello stesso ordine."
+  },
+  "welcomeTitle": {
+    "message": "Benvenuto in $APP$",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "welcome1": {
+    "message": "I tuoi preferiti, nel tuo ordine."
+  },
+  "welcome2": {
+    "message": "Fai clic destro su un sito o una cartella per le azioni rapide: fissa, rinomina, sposta, elimina."
+  },
+  "welcome3": {
+    "message": "Focus: una pagina calma con un clic."
+  },
+  "welcomeStart": {
+    "message": "Iniziamo"
+  },
+  "welcomeAgain": {
+    "message": "Rivedi la presentazione"
+  },
+  "close": {
+    "message": "Chiudi"
+  },
+  "moveTo": {
+    "message": "Sposta in…"
+  },
+  "hourColor": {
+    "message": "Segue l'ora"
+  },
+  "bgSnow": {
+    "message": "Brezza"
+  },
+  "snowHint": {
+    "message": "Neve, petali di ciliegio, soffioni o foglie d'autunno portati da un vento lento e mutevole; Stagione li sceglie in base alla data. Svaniscono dove toccano le schede, le icone e la barra di ricerca."
+  },
+  "animateSnow": {
+    "message": "Lascia soffiare la brezza"
+  },
+  "breeze_season": {
+    "message": "Stagione"
+  },
+  "breeze_snow": {
+    "message": "Neve"
+  },
+  "breeze_petals": {
+    "message": "Petali"
+  },
+  "breeze_leaves": {
+    "message": "Foglie"
+  },
+  "breeze_seeds": {
+    "message": "Soffioni"
   }
 }

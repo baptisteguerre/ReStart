@@ -25,5 +25,5 @@ The manifest declares `"data_collection_permissions": { "required": ["none"] }`:
 ## Notes to reviewer
 
 > ReStart replaces the new tab page with the user's bookmarks, organized by the folders of the bookmarks toolbar. It makes no network requests and loads no remote code; all files are plain, unminified source.
-> Permissions: bookmarks (display them, and rename, delete or add a bookmark or folder only when the user asks from the right-click menu), storage (preferences, local only), topSites (optional "Most visited" column, and the data: icons Firefox returns for those sites, used next to matching bookmarks since extensions can't read the favicon cache).
+> Permissions: bookmarks (display them, and rename, move, delete or add a bookmark or folder only when the user asks, from the right-click menu or by dragging to reorder), storage (preferences, local only), topSites (optional "Most visited" column, and the data: icons Firefox returns for those sites, used next to matching bookmarks since extensions can't read the favicon cache).
 > Source and documentation: <GitHub repository URL>

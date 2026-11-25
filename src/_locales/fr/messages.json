@@ -2,6 +2,9 @@
   "appName": {
     "message": "ReStart"
   },
+  "lang": {
+    "message": "fr"
+  },
   "extName": {
     "message": "ReStart - Page de démarrage pour vos favoris"
   },
@@ -73,9 +76,6 @@
   "background": {
     "message": "Fond"
   },
-  "bgNone": {
-    "message": "Aucun"
-  },
   "bgGlow": {
     "message": "Halo"
   },
@@ -86,7 +86,7 @@
     "message": "Couleur du halo"
   },
   "glowHint": {
-    "message": "Il suit le soleil : à gauche le matin, à droite le soir, pâle à midi et plus profond au crépuscule."
+    "message": "Il suit le soleil, de la gauche le matin à la droite le soir. Ciel prend les couleurs de la journée : rose à l'aube, or pâle, abricot, rose au coucher, bleu doux la nuit. Les autres couleurs gardent leur teinte et s'adoucissent la nuit."
   },
   "colOpacity": {
     "message": "Opacité colonnes"
@@ -95,15 +95,7 @@
     "message": "Colonnes"
   },
   "columnsHint": {
-    "message": "Glissez pour réordonner, ici ou par l'en-tête d'une colonne. L'ordre n'affecte que $APP$, pas vos favoris.",
-    "placeholders": {
-      "app": {
-        "content": "$1"
-      }
-    }
-  },
-  "originalOrder": {
-    "message": "Ordre d'origine"
+    "message": "Glissez pour réordonner, ici ou par l'en-tête d'une colonne. Les dossiers bougent aussi dans votre barre de favoris."
   },
   "moveUp": {
     "message": "Monter"
@@ -138,7 +130,34 @@
     "message": "Fichier non reconnu."
   },
   "dataHint": {
-    "message": "Icônes, couleurs, ordre, colonnes masquées et apparence. Les icônes de dossiers sont liées au nom du dossier."
+    "message": "Sauvegarde les réglages propres à ReStart : couleurs et icônes des dossiers, colonnes masquées, sites mis en avant, place des colonnes annexes et apparence. Vos favoris et leur ordre appartiennent à votre navigateur, qui les sauvegarde avec sa synchronisation ou son export des favoris. Les dossiers sont retrouvés par leur nom."
+  },
+  "importAll": {
+    "message": "Import terminé : tout a été restauré."
+  },
+  "importPartial": {
+    "message": "Import terminé : restauré pour $COUNT$ dossiers.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "importMissing": {
+    "message": "Introuvables dans vos favoris, donc non restaurés : $NAME$. Les dossiers sont retrouvés par leur nom.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "importNew": {
+    "message": "Absents de la sauvegarde : $NAME$. Ils gardent leur apparence par défaut.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
   },
   "layout": {
     "message": "Disposition"
@@ -202,9 +221,6 @@
   },
   "bgTint": {
     "message": "Couleur de fond"
-  },
-  "noColor": {
-    "message": "Aucune couleur"
   },
   "addBookmark": {
     "message": "Ajouter aux favoris"
@@ -274,6 +290,12 @@
   "leafKindLeaves": {
     "message": "Branches"
   },
+  "leafKindOlive": {
+    "message": "Olivier"
+  },
+  "leafKindMonstera": {
+    "message": "Monstera"
+  },
   "leafKindPalm": {
     "message": "Palmes"
   },
@@ -307,6 +329,9 @@
   "c_red": {
     "message": "Rouge"
   },
+  "c_sky": {
+    "message": "Ciel"
+  },
   "c_orange": {
     "message": "Orange"
   },
@@ -339,5 +364,67 @@
   },
   "c_brown": {
     "message": "Marron"
+  },
+  "startHintTop": {
+    "message": "Faites de cette page la vôtre : clic droit sur un site pour l'ajouter à vos favoris."
+  },
+  "startHintEmpty": {
+    "message": "Ajoutez des sites à la barre de favoris de votre navigateur : ils apparaissent ici, dans le même ordre."
+  },
+  "welcomeTitle": {
+    "message": "Bienvenue dans $APP$",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "welcome1": {
+    "message": "Vos favoris, dans votre ordre."
+  },
+  "welcome2": {
+    "message": "Clic droit sur un site ou un dossier pour agir : épingler, renommer, déplacer, supprimer."
+  },
+  "welcome3": {
+    "message": "Focus : une page calme en un clic."
+  },
+  "welcomeStart": {
+    "message": "C'est parti"
+  },
+  "welcomeAgain": {
+    "message": "Revoir la présentation"
+  },
+  "close": {
+    "message": "Fermer"
+  },
+  "moveTo": {
+    "message": "Déplacer vers…"
+  },
+  "hourColor": {
+    "message": "Selon l'heure"
+  },
+  "bgSnow": {
+    "message": "Brise"
+  },
+  "snowHint": {
+    "message": "De la neige, des pétales de cerisier, des aigrettes de pissenlit ou des feuilles d'automne portés par un vent lent et changeant ; Saison les choisit selon la date. Ils s'effacent là où ils touchent vos cartes, vos tuiles et la barre de recherche."
+  },
+  "animateSnow": {
+    "message": "Laisser souffler la brise"
+  },
+  "breeze_season": {
+    "message": "Saison"
+  },
+  "breeze_snow": {
+    "message": "Neige"
+  },
+  "breeze_petals": {
+    "message": "Pétales"
+  },
+  "breeze_leaves": {
+    "message": "Feuilles"
+  },
+  "breeze_seeds": {
+    "message": "Aigrettes"
   }
 }

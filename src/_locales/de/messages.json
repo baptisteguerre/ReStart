@@ -2,6 +2,9 @@
   "appName": {
     "message": "ReStart"
   },
+  "lang": {
+    "message": "de"
+  },
   "extName": {
     "message": "ReStart - Lesezeichen-Startseite"
   },
@@ -73,9 +76,6 @@
   "background": {
     "message": "Hintergrund"
   },
-  "bgNone": {
-    "message": "Keiner"
-  },
   "bgGlow": {
     "message": "Schein"
   },
@@ -86,7 +86,7 @@
     "message": "Farbe des Scheins"
   },
   "glowHint": {
-    "message": "Er folgt der Sonne: morgens links, abends rechts, mittags blass und in der Dämmerung kräftiger."
+    "message": "Er folgt der Sonne, morgens links, abends rechts. Himmel nimmt die Farben des Tages an: Rosa im Morgengrauen, blasses Gold, Aprikose, Rosé bei Sonnenuntergang, sanftes Blau in der Nacht. Die anderen Farben behalten ihren Ton und werden nachts sanfter."
   },
   "colOpacity": {
     "message": "Spaltendeckkraft"
@@ -95,15 +95,7 @@
     "message": "Spalten"
   },
   "columnsHint": {
-    "message": "Zum Umsortieren ziehen, hier oder am Kopf einer Spalte. Die Reihenfolge gilt nur für $APP$, nicht für deine Lesezeichen.",
-    "placeholders": {
-      "app": {
-        "content": "$1"
-      }
-    }
-  },
-  "originalOrder": {
-    "message": "Ursprüngliche Reihenfolge"
+    "message": "Zum Sortieren ziehen, hier oder an der Spaltenüberschrift. Ordner wandern auch in deiner Lesezeichenleiste mit."
   },
   "moveUp": {
     "message": "Nach oben"
@@ -138,7 +130,34 @@
     "message": "Datei nicht erkannt."
   },
   "dataHint": {
-    "message": "Symbole, Farben, Reihenfolge, ausgeblendete Spalten und Darstellung. Ordnersymbole sind an den Ordnernamen gebunden."
+    "message": "Speichert die eigenen Einstellungen von ReStart: Farben und Symbole der Ordner, ausgeblendete Spalten, angeheftete Seiten, die Position der zusätzlichen Spalten und das Aussehen. Deine Lesezeichen und ihre Reihenfolge gehören deinem Browser, der sie mit seiner Synchronisierung oder seinem Lesezeichen-Export sichert. Ordner werden am Namen erkannt."
+  },
+  "importAll": {
+    "message": "Import abgeschlossen: Alles wurde wiederhergestellt."
+  },
+  "importPartial": {
+    "message": "Import abgeschlossen: für $COUNT$ Ordner wiederhergestellt.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "importMissing": {
+    "message": "Nicht in deinen Lesezeichen gefunden, daher nicht wiederhergestellt: $NAME$. Ordner werden am Namen erkannt.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "importNew": {
+    "message": "Nicht in der Sicherung: $NAME$. Sie behalten ihr Standardaussehen.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
   },
   "layout": {
     "message": "Anordnung"
@@ -202,9 +221,6 @@
   },
   "bgTint": {
     "message": "Hintergrundfarbe"
-  },
-  "noColor": {
-    "message": "Keine Farbe"
   },
   "addBookmark": {
     "message": "Zu Lesezeichen hinzufügen"
@@ -274,6 +290,12 @@
   "leafKindLeaves": {
     "message": "Zweige"
   },
+  "leafKindOlive": {
+    "message": "Olive"
+  },
+  "leafKindMonstera": {
+    "message": "Monstera"
+  },
   "leafKindPalm": {
     "message": "Palmen"
   },
@@ -307,6 +329,9 @@
   "c_red": {
     "message": "Rot"
   },
+  "c_sky": {
+    "message": "Himmel"
+  },
   "c_orange": {
     "message": "Orange"
   },
@@ -339,5 +364,67 @@
   },
   "c_brown": {
     "message": "Braun"
+  },
+  "startHintTop": {
+    "message": "Mach diese Seite zu deiner: Rechtsklick auf eine Seite, um sie zu deinen Lesezeichen hinzuzufügen."
+  },
+  "startHintEmpty": {
+    "message": "Füge Seiten zur Lesezeichenleiste deines Browsers hinzu: Sie erscheinen hier, in derselben Reihenfolge."
+  },
+  "welcomeTitle": {
+    "message": "Willkommen bei $APP$",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "welcome1": {
+    "message": "Deine Lesezeichen, in deiner Reihenfolge."
+  },
+  "welcome2": {
+    "message": "Rechtsklick auf eine Seite oder einen Ordner für schnelle Aktionen: anheften, umbenennen, verschieben, löschen."
+  },
+  "welcome3": {
+    "message": "Fokus: eine ruhige Seite mit einem Klick."
+  },
+  "welcomeStart": {
+    "message": "Los geht's"
+  },
+  "welcomeAgain": {
+    "message": "Einführung erneut zeigen"
+  },
+  "close": {
+    "message": "Schließen"
+  },
+  "moveTo": {
+    "message": "Verschieben nach…"
+  },
+  "hourColor": {
+    "message": "Folgt der Tageszeit"
+  },
+  "bgSnow": {
+    "message": "Brise"
+  },
+  "snowHint": {
+    "message": "Schnee, Kirschblüten, Pusteblumensamen oder Herbstlaub in einem langsamen, böigen Wind; Jahreszeit wählt sie nach dem Datum. Sie verblassen dort, wo sie deine Karten, Kacheln und die Suchleiste berühren."
+  },
+  "animateSnow": {
+    "message": "Die Brise wehen lassen"
+  },
+  "breeze_season": {
+    "message": "Jahreszeit"
+  },
+  "breeze_snow": {
+    "message": "Schnee"
+  },
+  "breeze_petals": {
+    "message": "Blüten"
+  },
+  "breeze_leaves": {
+    "message": "Blätter"
+  },
+  "breeze_seeds": {
+    "message": "Pusteblume"
   }
 }

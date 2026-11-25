@@ -2,6 +2,9 @@
   "appName": {
     "message": "ReStart"
   },
+  "lang": {
+    "message": "es"
+  },
   "extName": {
     "message": "ReStart - Página de inicio de marcadores"
   },
@@ -73,9 +76,6 @@
   "background": {
     "message": "Fondo"
   },
-  "bgNone": {
-    "message": "Ninguno"
-  },
   "bgGlow": {
     "message": "Halo"
   },
@@ -86,7 +86,7 @@
     "message": "Color del halo"
   },
   "glowHint": {
-    "message": "Sigue al sol: a la izquierda por la mañana, a la derecha por la tarde, pálido al mediodía y más intenso al atardecer."
+    "message": "Sigue al sol, de la izquierda por la mañana a la derecha por la tarde. Cielo toma los colores del día: rosa al amanecer, oro pálido, albaricoque, rosa al atardecer, azul suave de noche. Los demás colores mantienen su tono y se suavizan de noche."
   },
   "colOpacity": {
     "message": "Opacidad columnas"
@@ -95,15 +95,7 @@
     "message": "Columnas"
   },
   "columnsHint": {
-    "message": "Arrastra para reordenar, aquí o desde el encabezado de una columna. El orden solo afecta a $APP$, no a tus marcadores.",
-    "placeholders": {
-      "app": {
-        "content": "$1"
-      }
-    }
-  },
-  "originalOrder": {
-    "message": "Orden original"
+    "message": "Arrastra para reordenar, aquí o por la cabecera de una columna. Las carpetas también se mueven en tu barra de marcadores."
   },
   "moveUp": {
     "message": "Subir"
@@ -138,7 +130,34 @@
     "message": "Archivo no reconocido."
   },
   "dataHint": {
-    "message": "Iconos, colores, orden, columnas ocultas y apariencia. Los iconos de carpeta están vinculados al nombre de la carpeta."
+    "message": "Guarda los ajustes propios de ReStart: colores e iconos de las carpetas, columnas ocultas, sitios destacados, el lugar de las columnas adicionales y la apariencia. Tus marcadores y su orden pertenecen a tu navegador, que los guarda con su sincronización o su exportación de marcadores. Las carpetas se reconocen por su nombre."
+  },
+  "importAll": {
+    "message": "Importación completada: se restauró todo."
+  },
+  "importPartial": {
+    "message": "Importación completada: restaurado para $COUNT$ carpetas.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "importMissing": {
+    "message": "No encontradas en tus marcadores, así que no se restauraron: $NAME$. Las carpetas se reconocen por su nombre.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "importNew": {
+    "message": "No están en la copia: $NAME$. Mantienen su aspecto por defecto.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
   },
   "layout": {
     "message": "Disposición"
@@ -202,9 +221,6 @@
   },
   "bgTint": {
     "message": "Color de fondo"
-  },
-  "noColor": {
-    "message": "Sin color"
   },
   "addBookmark": {
     "message": "Añadir a marcadores"
@@ -274,6 +290,12 @@
   "leafKindLeaves": {
     "message": "Ramas"
   },
+  "leafKindOlive": {
+    "message": "Olivo"
+  },
+  "leafKindMonstera": {
+    "message": "Monstera"
+  },
   "leafKindPalm": {
     "message": "Palmas"
   },
@@ -307,6 +329,9 @@
   "c_red": {
     "message": "Rojo"
   },
+  "c_sky": {
+    "message": "Cielo"
+  },
   "c_orange": {
     "message": "Naranja"
   },
@@ -339,5 +364,67 @@
   },
   "c_brown": {
     "message": "Marrón"
+  },
+  "startHintTop": {
+    "message": "Haz tuya esta página: haz clic derecho en un sitio para añadirlo a tus marcadores."
+  },
+  "startHintEmpty": {
+    "message": "Añade sitios a la barra de marcadores de tu navegador: aparecen aquí, en el mismo orden."
+  },
+  "welcomeTitle": {
+    "message": "Te damos la bienvenida a $APP$",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "welcome1": {
+    "message": "Tus marcadores, en tu orden."
+  },
+  "welcome2": {
+    "message": "Haz clic derecho en un sitio o una carpeta para acciones rápidas: fijar, renombrar, mover, eliminar."
+  },
+  "welcome3": {
+    "message": "Enfoque: una página tranquila en un clic."
+  },
+  "welcomeStart": {
+    "message": "Empezar"
+  },
+  "welcomeAgain": {
+    "message": "Ver de nuevo la presentación"
+  },
+  "close": {
+    "message": "Cerrar"
+  },
+  "moveTo": {
+    "message": "Mover a…"
+  },
+  "hourColor": {
+    "message": "Según la hora"
+  },
+  "bgSnow": {
+    "message": "Brisa"
+  },
+  "snowHint": {
+    "message": "Nieve, pétalos de cerezo, vilanos de diente de león u hojas de otoño llevados por un viento lento y cambiante; Estación los elige según la fecha. Se desvanecen donde tocan tus tarjetas, tus iconos y la barra de búsqueda."
+  },
+  "animateSnow": {
+    "message": "Dejar soplar la brisa"
+  },
+  "breeze_season": {
+    "message": "Estación"
+  },
+  "breeze_snow": {
+    "message": "Nieve"
+  },
+  "breeze_petals": {
+    "message": "Pétalos"
+  },
+  "breeze_leaves": {
+    "message": "Hojas"
+  },
+  "breeze_seeds": {
+    "message": "Vilanos"
   }
 }

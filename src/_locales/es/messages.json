@@ -86,7 +86,7 @@
     "message": "Color del halo"
   },
   "glowHint": {
-    "message": "Sigue al sol, de la izquierda por la mañana a la derecha por la tarde. Cielo toma los colores del día: rosa al amanecer, oro pálido, albaricoque, rosa al atardecer, azul suave de noche. Los demás colores mantienen su tono y se suavizan de noche."
+    "message": "Sigue al sol, de la izquierda por la mañana a la derecha por la tarde. Cielo toma los colores del día: rosa al amanecer, un azul claro durante el día, dorado y luego rosa al atardecer, azul suave de noche. También sigue la estación: días más largos en verano, más suaves y grises en invierno. Los demás colores mantienen su tono y se suavizan de noche."
   },
   "colOpacity": {
     "message": "Opacidad columnas"
@@ -216,8 +216,11 @@
   "intensity": {
     "message": "Intensidad"
   },
-  "animateRays": {
-    "message": "Mover suavemente los rayos"
+  "motion": {
+    "message": "Movimiento"
+  },
+  "motionStill": {
+    "message": "Quieto"
   },
   "bgTint": {
     "message": "Color de fondo"
@@ -290,20 +293,14 @@
   "leafKindLeaves": {
     "message": "Ramas"
   },
-  "leafKindOlive": {
-    "message": "Olivo"
-  },
-  "leafKindMonstera": {
-    "message": "Monstera"
-  },
   "leafKindPalm": {
     "message": "Palmas"
   },
+  "leafKindBamboo": {
+    "message": "Bambú"
+  },
   "leavesHint": {
     "message": "Sombras suaves de hojas sobre una pared soleada, que se mecen despacio con el viento."
-  },
-  "animateLeaves": {
-    "message": "Mover las hojas con el viento"
   },
   "clockFormat": {
     "message": "Reloj"
@@ -316,9 +313,6 @@
   },
   "clock24": {
     "message": "24 h"
-  },
-  "animateGlow": {
-    "message": "Hacer respirar suavemente el halo"
   },
   "customColor": {
     "message": "Color personalizado"
@@ -409,9 +403,6 @@
   "snowHint": {
     "message": "Nieve, pétalos de cerezo, vilanos de diente de león u hojas de otoño llevados por un viento lento y cambiante; Estación los elige según la fecha. Se desvanecen donde tocan tus tarjetas, tus iconos y la barra de búsqueda."
   },
-  "animateSnow": {
-    "message": "Dejar soplar la brisa"
-  },
   "breeze_season": {
     "message": "Estación"
   },
@@ -426,5 +417,8 @@
   },
   "breeze_seeds": {
     "message": "Vilanos"
+  },
+  "moreInfo": {
+    "message": "Más información"
   }
 }

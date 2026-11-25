@@ -86,7 +86,7 @@
     "message": "Halo color"
   },
   "glowHint": {
-    "message": "It follows the sun, from the left in the morning to the right in the evening. Sky takes the colors of the day: dawn pink, pale gold, apricot, rose at sunset, soft blue at night. The other colors keep their hue and soften at night."
+    "message": "It follows the sun, from the left in the morning to the right in the evening. Sky takes the colors of the day: dawn pink, a clear blue through the day, gold then rose at sunset, a soft blue at night. It follows the season too: longer days in summer, softer and greyer in winter. The other colors keep their hue and soften at night."
   },
   "colOpacity": {
     "message": "Column opacity"
@@ -216,8 +216,11 @@
   "intensity": {
     "message": "Intensity"
   },
-  "animateRays": {
-    "message": "Let the rays move gently"
+  "motion": {
+    "message": "Motion"
+  },
+  "motionStill": {
+    "message": "Still"
   },
   "bgTint": {
     "message": "Background color"
@@ -290,20 +293,14 @@
   "leafKindLeaves": {
     "message": "Branches"
   },
-  "leafKindOlive": {
-    "message": "Olive"
-  },
-  "leafKindMonstera": {
-    "message": "Monstera"
-  },
   "leafKindPalm": {
     "message": "Palm"
   },
+  "leafKindBamboo": {
+    "message": "Bamboo"
+  },
   "leavesHint": {
     "message": "Soft shadows of leaves on a sunlit wall, swaying slowly in the wind."
-  },
-  "animateLeaves": {
-    "message": "Let the leaves move in the wind"
   },
   "clockFormat": {
     "message": "Clock"
@@ -316,9 +313,6 @@
   },
   "clock24": {
     "message": "24-hour"
-  },
-  "animateGlow": {
-    "message": "Let the halo breathe gently"
   },
   "customColor": {
     "message": "Custom color"
@@ -409,9 +403,6 @@
   "snowHint": {
     "message": "Snow, cherry petals, dandelion seeds or autumn leaves drifting in a slow, gusting wind; Season picks them by the date. They fade where they land on your cards, tiles and search bar."
   },
-  "animateSnow": {
-    "message": "Let the breeze blow"
-  },
   "breeze_season": {
     "message": "Season"
   },
@@ -426,5 +417,8 @@
   },
   "breeze_seeds": {
     "message": "Dandelion"
+  },
+  "moreInfo": {
+    "message": "More information"
   }
 }

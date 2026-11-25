@@ -86,7 +86,7 @@
     "message": "Colore dell'alone"
   },
   "glowHint": {
-    "message": "Segue il sole, da sinistra al mattino a destra la sera. Cielo prende i colori del giorno: rosa all'alba, oro pallido, albicocca, rosa al tramonto, blu tenue di notte. Gli altri colori mantengono la loro tinta e si addolciscono di notte."
+    "message": "Segue il sole, da sinistra al mattino a destra la sera. Cielo prende i colori del giorno: rosa all'alba, un azzurro limpido di giorno, oro e poi rosa al tramonto, blu tenue di notte. Segue anche la stagione: giornate più lunghe d'estate, più morbide e grigie d'inverno. Gli altri colori mantengono la loro tinta e si addolciscono di notte."
   },
   "colOpacity": {
     "message": "Opacità colonne"
@@ -216,8 +216,11 @@
   "intensity": {
     "message": "Intensità"
   },
-  "animateRays": {
-    "message": "Fai muovere dolcemente i raggi"
+  "motion": {
+    "message": "Movimento"
+  },
+  "motionStill": {
+    "message": "Fermo"
   },
   "bgTint": {
     "message": "Colore di sfondo"
@@ -290,20 +293,14 @@
   "leafKindLeaves": {
     "message": "Rami"
   },
-  "leafKindOlive": {
-    "message": "Ulivo"
-  },
-  "leafKindMonstera": {
-    "message": "Monstera"
-  },
   "leafKindPalm": {
     "message": "Palme"
   },
+  "leafKindBamboo": {
+    "message": "Bambù"
+  },
   "leavesHint": {
     "message": "Ombre morbide di foglie su un muro al sole, che ondeggiano lentamente al vento."
-  },
-  "animateLeaves": {
-    "message": "Fai muovere le foglie al vento"
   },
   "clockFormat": {
     "message": "Orologio"
@@ -316,9 +313,6 @@
   },
   "clock24": {
     "message": "24 ore"
-  },
-  "animateGlow": {
-    "message": "Fai respirare dolcemente l'alone"
   },
   "customColor": {
     "message": "Colore personalizzato"
@@ -409,9 +403,6 @@
   "snowHint": {
     "message": "Neve, petali di ciliegio, soffioni o foglie d'autunno portati da un vento lento e mutevole; Stagione li sceglie in base alla data. Svaniscono dove toccano le schede, le icone e la barra di ricerca."
   },
-  "animateSnow": {
-    "message": "Lascia soffiare la brezza"
-  },
   "breeze_season": {
     "message": "Stagione"
   },
@@ -426,5 +417,8 @@
   },
   "breeze_seeds": {
     "message": "Soffioni"
+  },
+  "moreInfo": {
+    "message": "Altre informazioni"
   }
 }

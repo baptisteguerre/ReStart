@@ -86,7 +86,7 @@
     "message": "Farbe des Scheins"
   },
   "glowHint": {
-    "message": "Er folgt der Sonne, morgens links, abends rechts. Himmel nimmt die Farben des Tages an: Rosa im Morgengrauen, blasses Gold, Aprikose, Rosé bei Sonnenuntergang, sanftes Blau in der Nacht. Die anderen Farben behalten ihren Ton und werden nachts sanfter."
+    "message": "Er folgt der Sonne, morgens links, abends rechts. Himmel nimmt die Farben des Tages an: Rosa im Morgengrauen, klares Blau am Tag, Gold und dann Rosé bei Sonnenuntergang, sanftes Blau in der Nacht. Er folgt auch der Jahreszeit: längere Tage im Sommer, sanfter und grauer im Winter. Die anderen Farben behalten ihren Ton und werden nachts sanfter."
   },
   "colOpacity": {
     "message": "Spaltendeckkraft"
@@ -216,8 +216,11 @@
   "intensity": {
     "message": "Stärke"
   },
-  "animateRays": {
-    "message": "Strahlen sanft bewegen lassen"
+  "motion": {
+    "message": "Bewegung"
+  },
+  "motionStill": {
+    "message": "Still"
   },
   "bgTint": {
     "message": "Hintergrundfarbe"
@@ -290,20 +293,14 @@
   "leafKindLeaves": {
     "message": "Zweige"
   },
-  "leafKindOlive": {
-    "message": "Olive"
-  },
-  "leafKindMonstera": {
-    "message": "Monstera"
-  },
   "leafKindPalm": {
     "message": "Palmen"
   },
+  "leafKindBamboo": {
+    "message": "Bambus"
+  },
   "leavesHint": {
     "message": "Sanfte Blätterschatten auf einer sonnigen Wand, die sich langsam im Wind wiegen."
-  },
-  "animateLeaves": {
-    "message": "Blätter im Wind bewegen lassen"
   },
   "clockFormat": {
     "message": "Uhr"
@@ -316,9 +313,6 @@
   },
   "clock24": {
     "message": "24 Std."
-  },
-  "animateGlow": {
-    "message": "Schein sanft atmen lassen"
   },
   "customColor": {
     "message": "Eigene Farbe"
@@ -409,9 +403,6 @@
   "snowHint": {
     "message": "Schnee, Kirschblüten, Pusteblumensamen oder Herbstlaub in einem langsamen, böigen Wind; Jahreszeit wählt sie nach dem Datum. Sie verblassen dort, wo sie deine Karten, Kacheln und die Suchleiste berühren."
   },
-  "animateSnow": {
-    "message": "Die Brise wehen lassen"
-  },
   "breeze_season": {
     "message": "Jahreszeit"
   },
@@ -426,5 +417,8 @@
   },
   "breeze_seeds": {
     "message": "Pusteblume"
+  },
+  "moreInfo": {
+    "message": "Weitere Informationen"
   }
 }

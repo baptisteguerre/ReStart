@@ -86,7 +86,7 @@
     "message": "Cor do halo"
   },
   "glowHint": {
-    "message": "Acompanha o sol, da esquerda de manhã à direita ao fim do dia. Céu assume as cores do dia: rosa ao amanhecer, dourado claro, alperce, rosa ao pôr do sol, azul suave à noite. As outras cores mantêm o tom e ficam mais suaves à noite."
+    "message": "Acompanha o sol, da esquerda de manhã à direita ao fim do dia. Céu assume as cores do dia: rosa ao amanhecer, um azul claro durante o dia, dourado e depois rosa ao pôr do sol, azul suave à noite. Também acompanha a estação: dias mais longos no verão, mais suaves e cinzentos no inverno. As outras cores mantêm o tom e ficam mais suaves à noite."
   },
   "colOpacity": {
     "message": "Opacidade colunas"
@@ -216,8 +216,11 @@
   "intensity": {
     "message": "Intensidade"
   },
-  "animateRays": {
-    "message": "Mover suavemente os raios"
+  "motion": {
+    "message": "Movimento"
+  },
+  "motionStill": {
+    "message": "Parado"
   },
   "bgTint": {
     "message": "Cor de fundo"
@@ -290,20 +293,14 @@
   "leafKindLeaves": {
     "message": "Ramos"
   },
-  "leafKindOlive": {
-    "message": "Oliveira"
-  },
-  "leafKindMonstera": {
-    "message": "Monstera"
-  },
   "leafKindPalm": {
     "message": "Palmas"
   },
+  "leafKindBamboo": {
+    "message": "Bambu"
+  },
   "leavesHint": {
     "message": "Sombras suaves de folhas numa parede ao sol, balançando devagar ao vento."
-  },
-  "animateLeaves": {
-    "message": "Mover as folhas ao vento"
   },
   "clockFormat": {
     "message": "Relógio"
@@ -316,9 +313,6 @@
   },
   "clock24": {
     "message": "24 h"
-  },
-  "animateGlow": {
-    "message": "Fazer o halo respirar suavemente"
   },
   "customColor": {
     "message": "Cor personalizada"
@@ -409,9 +403,6 @@
   "snowHint": {
     "message": "Neve, pétalas de cerejeira, sementes de dente-de-leão ou folhas de outono levadas por um vento lento e variável; Estação escolhe-as conforme a data. Desaparecem onde tocam os seus cartões, ícones e a barra de pesquisa."
   },
-  "animateSnow": {
-    "message": "Deixar a brisa soprar"
-  },
   "breeze_season": {
     "message": "Estação"
   },
@@ -426,5 +417,8 @@
   },
   "breeze_seeds": {
     "message": "Dente-de-leão"
+  },
+  "moreInfo": {
+    "message": "Mais informações"
   }
 }

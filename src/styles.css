@@ -24,9 +24,9 @@
 }
 
 :root[data-theme="dark"] {
-  --bg: #1c1c1e;
-  --surface: rgba(44, 44, 46, 0.72);
-  --surface-solid: #2c2c2e;
+  --bg: #28282c;
+  --surface: rgba(54, 54, 58, 0.72);
+  --surface-solid: #36363a;
   --border: rgba(255, 255, 255, 0.07);
   --border-strong: rgba(255, 255, 255, 0.14);
   --text: #f5f5f7;
@@ -646,7 +646,7 @@ body.layout-masonry .board-nav { display: none; }
   position: fixed; inset: 0; z-index: -2; pointer-events: none;
   background: var(--glow-layer, none);
   transform-origin: var(--sun-x, 50%) 0;
-  animation: glow-breathe 11s ease-in-out infinite;
+  animation: glow-breathe calc(11s / var(--speed, 1)) ease-in-out infinite;
   will-change: opacity, transform;
 }
 /* Very slow: the halo fades and swells a little, like a breath. */
@@ -667,13 +667,13 @@ body.glow-still .glow { animation: none; }
   -webkit-mask-image: linear-gradient(to bottom, #000, rgba(0,0,0,.55) 35%, transparent 80%);
           mask-image: linear-gradient(to bottom, #000, rgba(0,0,0,.55) 35%, transparent 80%);
   transform-origin: var(--rays-origin, 50% -700px);
-  animation: ray-pulse 15s ease-in-out infinite, ray-sway 23s ease-in-out infinite alternate;
+  animation: ray-pulse calc(15s / var(--speed, 1)) ease-in-out infinite, ray-sway calc(23s / var(--speed, 1)) ease-in-out infinite alternate;
   will-change: opacity, transform;
 }
-.ray:nth-child(1) { background: var(--rays-1, none); animation-duration: 13s, 21s; animation-delay: 0s, -4s; }
-.ray:nth-child(2) { background: var(--rays-2, none); animation-duration: 17s, 26s; animation-delay: -5.5s, -15s; }
-.ray:nth-child(3) { background: var(--rays-3, none); animation-duration: 15s, 23s; animation-delay: -10s, -9s; }
-.ray:nth-child(4) { background: var(--rays-4, none); animation-duration: 19s, 29s; animation-delay: -2.5s, -20s; }
+.ray:nth-child(1) { background: var(--rays-1, none); animation-duration: calc(13s / var(--speed, 1)), calc(21s / var(--speed, 1)); animation-delay: 0s, -4s; }
+.ray:nth-child(2) { background: var(--rays-2, none); animation-duration: calc(17s / var(--speed, 1)), calc(26s / var(--speed, 1)); animation-delay: -5.5s, -15s; }
+.ray:nth-child(3) { background: var(--rays-3, none); animation-duration: calc(15s / var(--speed, 1)), calc(23s / var(--speed, 1)); animation-delay: -10s, -9s; }
+.ray:nth-child(4) { background: var(--rays-4, none); animation-duration: calc(19s / var(--speed, 1)), calc(29s / var(--speed, 1)); animation-delay: -2.5s, -20s; }
 body.glow-rays .ray { display: block; }
 /* Two motions per set: its light fades in and out, and, on a slower rhythm of its own,
    it sways from side to side around the source far above the page, like shafts of
@@ -817,17 +817,16 @@ body.bg-leaves .leaves { display: block; }
   opacity: var(--leaf-alpha, .17);
   filter: blur(4px);
   transform-origin: 88% 0;
-  animation: leaf-sway 9s ease-in-out infinite alternate;
+  animation: leaf-sway calc(15s / var(--speed, 1)) ease-in-out infinite alternate;
   will-change: transform;
 }
 .leaves i:nth-child(2) {
   filter: blur(11px); opacity: calc(var(--leaf-alpha, .17) * .65);
   transform-origin: 12% 0;
-  animation-name: leaf-sway-far; animation-duration: 13s; animation-delay: -5s;
+  animation-name: leaf-sway-far; animation-duration: calc(21.5s / var(--speed, 1)); animation-delay: -5s;
 }
 body.leaves-palm .leaves i { background-image: url(img/palms.svg); }
-body.leaves-olive .leaves i { background-image: url(img/olive.svg); }
-body.leaves-monstera .leaves i { background-image: url(img/monstera.svg); }
+body.leaves-bamboo .leaves i { background-image: url(img/bamboo.svg); }
 @keyframes leaf-sway {
   0%   { transform: rotate(-1.1deg) skewX(-.8deg); }
   60%  { transform: rotate(.6deg) skewX(.4deg); }
@@ -939,9 +938,32 @@ body.bg-grain .grain { display: block; }
 /* Sky: the color that changes through the day, marked with a small sun. */
 .swatch { position: relative; }
 .swatch .swatch-sun { position: absolute; inset: 3px; width: calc(100% - 6px); height: calc(100% - 6px); fill: #fff; filter: drop-shadow(0 0 1px rgba(120, 70, 40, .45)); pointer-events: none; }
-.bg-preset-auto { position: relative; background: linear-gradient(135deg, #f7e3cf, #f3d9dc 50%, #dcdff3); }
+.bg-preset-auto { position: relative; background: linear-gradient(135deg, #f7e3cf, #d9e8f5 50%, #dcdff3); }
 .bg-preset-auto .swatch-sun { position: absolute; inset: 2px; width: calc(100% - 4px); height: calc(100% - 4px); fill: #fff; filter: drop-shadow(0 0 1px rgba(120, 70, 40, .5)); pointer-events: none; }
 /* Snow: one canvas behind the page (see startSnow in app.js). */
 .snow { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; display: none; }
 body.bg-snow .snow { display: block; }
 .segmented .seg-sun { width: 14px; height: 14px; fill: currentColor; vertical-align: -2px; margin-right: 3px; }
+/* (i) next to a settings title: explanation on hover, or opened in place on click. */
+.info-btn {
+  display: inline-grid; place-items: center; width: 18px; height: 18px; margin-left: 4px; padding: 0;
+  border: 0; border-radius: 50%; background: none; color: var(--text-3); cursor: pointer; vertical-align: -3px;
+}
+.info-btn svg { width: 15px; height: 15px; fill: currentColor; }
+.info-btn:hover, .info-btn[aria-expanded="true"] { color: var(--text-2); }
+.info-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+/* Icon tiles: frosted glass, so the background shows through a little. */
+.tile .fav-box, .fc-icon {
+  background: color-mix(in srgb, var(--surface-solid) 58%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+          backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--border);
+}
+/* The bubble of an (i) explanation. */
+.info-tip {
+  position: fixed; z-index: 30; max-width: 260px; padding: 9px 11px;
+  font-size: 12px; line-height: 1.45; color: var(--text-2);
+  background: var(--surface-solid); border-radius: 10px; box-shadow: var(--shadow-lg);
+  pointer-events: none; animation: pop .12s ease-out;
+}
+.info-tip[hidden] { display: none; }

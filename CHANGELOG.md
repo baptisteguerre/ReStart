@@ -2,6 +2,27 @@
 
 All notable changes to ReStart. Versions follow [semantic versioning](https://semver.org).
 
+## 1.2.1
+
+### Added
+
+- **Bamboo leaf shadows:** tall culms with nodes and sprays of long, narrow leaves, next to branches and palm fronds.
+- **Motion speed.** A *Motion* slider sets the pace of the halo's breathing, the rays, the leaves and the breeze, from still to twice the normal pace. It replaces the on/off animation switch; an animation turned off before stays still.
+
+### Changed
+
+- Olive and monstera shadows are replaced by bamboo (olive was too close to the branches); a page set to one of them shows branches.
+- Leaf shadows sit on the same page color as the other backgrounds, following the hour and the season, instead of an always-beige wall.
+- Airier branch shadows, with fewer leaves on the right, and leaves that sway more slowly by default.
+- **Lighter settings panel.** Explanations no longer sit under every section: a small (i) next to a title shows them in a bubble on hover, keyboard focus or tap.
+- Site tiles have a frosted, slightly translucent background, so the halo, rays or leaves show through.
+- **Sky is a real sky:** a clear blue through the day (aqua at midday, softer in the afternoon), with warm colors kept for dawn and sunset.
+- **Sky follows the seasons** (northern hemisphere, no location needed): sunrise and sunset move with the date, as in Paris, so a late-November 10:00 shows the early morning light and night falls around 17:00; winter light is softer, like an overcast day: pearl grey rather than blue; summer light is clearer and warmer.
+- Dark mode is a soft charcoal rather than near black (cards included), and the halo and rays glow a little brighter on it.
+- The page color that follows the hour starts from a neutral base and takes a calm but visible hint of the hour's hue: bluish at night and at midday, peach at dawn and dusk, pearl grey in winter.
+- **Sky follows the height of the sun:** one continuous arc, the same in mirror morning and evening: slate blue at night, rose then gold as the sun rises, a whitening light, then a clear sky; in winter the sun stays low and the day stays soft and pale. No more jumps between grey, beige and violet.
+- The halo's second tone is only a hint at its edge, instead of a grey-blue band.
+
 ## 1.2.0
 
 First version submitted to the Chrome Web Store and to addons.mozilla.org.
@@ -20,10 +41,10 @@ First version submitted to the Chrome Web Store and to addons.mozilla.org.
 
 ### Changed
 
-- **Reordering moves your real bookmarks.** Moving a folder's column moves the folder in the bookmarks bar, and dragging a tile of the bar moves that site in the bar, so ReStart, the browser and every synced device show the same order. ReStart only remembers where the columns that are not folders of the bar sit (*Most visited*, *Other bookmarks*, the card of bar sites), and the order of pinned sites.
+- **Reordering moves your real bookmarks.** Moving a folder's column moves the folder in the bookmarks bar, and dragging a tile of the bar moves that site in the bar, so ReStart, the browser and every synced device show the same order. ReStart only remembers where the columns that are not folders of the bar sit (*Most visited*, *Other bookmarks*, the card of bar sites), and the order of pinned sites. Orders saved by an earlier version are never written to your bookmarks: folder columns and bar sites now follow the bookmarks bar, and a tile order from 1.1 is kept as the order of the pinned sites. The *Original order* button is gone.
 - **Calmer, more visible halo and rays.** Fixed colors no longer get deeper in the evening: they are paler at midday and softer at night. The halo has two tones and a smooth falloff with no visible edge, and a faint fixed grain removes banding. Rays take a single powdery tone, have softer edges, and sway slowly from side to side, each set on its own rhythm. Both read better on a light page.
 - **Leaf shadows** sit on a wall that takes the light of the hour when no color is chosen.
-- **Balanced rows of tiles** above the search bar and in Focus mode: up to 6 on one row, then rows of at most 8 instead of one very long line.
+- **Balanced rows of tiles** above the search bar and in Focus mode: up to 6 on one row, then rows of at most 8 (for example 4 + 3, 6 + 6, 7 + 7 + 6) instead of one very long line.
 - **Long folders** keep a fixed height in every layout and scroll inside, with a soft fade at the bottom when more sites follow.
 - *Mosaic* is now the default layout for wide windows, and comes first in the settings. A layout you already chose is kept.
 - *None* and *Color* are merged into *Color*, which starts with the page color that follows the hour; a background set to *None* becomes this one.

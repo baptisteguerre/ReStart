@@ -86,7 +86,7 @@
     "message": "Kleur van de gloed"
   },
   "glowHint": {
-    "message": "Hij volgt de zon, van links in de ochtend naar rechts in de avond. Lucht neemt de kleuren van de dag aan: roze bij dageraad, bleek goud, abrikoos, roze bij zonsondergang, zacht blauw in de nacht. De andere kleuren houden hun tint en worden 's nachts zachter."
+    "message": "Hij volgt de zon, van links in de ochtend naar rechts in de avond. Lucht neemt de kleuren van de dag aan: roze bij dageraad, helder blauw overdag, goud en dan roze bij zonsondergang, zacht blauw in de nacht. Hij volgt ook het seizoen: langere dagen in de zomer, zachter en grijzer in de winter. De andere kleuren houden hun tint en worden 's nachts zachter."
   },
   "colOpacity": {
     "message": "Dekking kolommen"
@@ -216,8 +216,11 @@
   "intensity": {
     "message": "Sterkte"
   },
-  "animateRays": {
-    "message": "Laat de stralen zacht bewegen"
+  "motion": {
+    "message": "Beweging"
+  },
+  "motionStill": {
+    "message": "Stil"
   },
   "bgTint": {
     "message": "Achtergrondkleur"
@@ -290,20 +293,14 @@
   "leafKindLeaves": {
     "message": "Takken"
   },
-  "leafKindOlive": {
-    "message": "Olijf"
-  },
-  "leafKindMonstera": {
-    "message": "Monstera"
-  },
   "leafKindPalm": {
     "message": "Palm"
   },
+  "leafKindBamboo": {
+    "message": "Bamboe"
+  },
   "leavesHint": {
     "message": "Zachte schaduwen van bladeren op een zonnige muur, die langzaam wiegen in de wind."
-  },
-  "animateLeaves": {
-    "message": "Laat de bladeren bewegen in de wind"
   },
   "clockFormat": {
     "message": "Klok"
@@ -316,9 +313,6 @@
   },
   "clock24": {
     "message": "24-uurs"
-  },
-  "animateGlow": {
-    "message": "Laat de gloed zacht ademen"
   },
   "customColor": {
     "message": "Aangepaste kleur"
@@ -409,9 +403,6 @@
   "snowHint": {
     "message": "Sneeuw, kersenbloesem, paardenbloempluis of herfstbladeren op een trage, wisselende wind; Seizoen kiest op datum. Ze vervagen waar ze je kaarten, tegels en zoekbalk raken."
   },
-  "animateSnow": {
-    "message": "Laat de bries waaien"
-  },
   "breeze_season": {
     "message": "Seizoen"
   },
@@ -426,5 +417,8 @@
   },
   "breeze_seeds": {
     "message": "Pluizen"
+  },
+  "moreInfo": {
+    "message": "Meer informatie"
   }
 }

@@ -86,7 +86,7 @@
     "message": "Couleur du halo"
   },
   "glowHint": {
-    "message": "Il suit le soleil, de la gauche le matin à la droite le soir. Ciel prend les couleurs de la journée : rose à l'aube, or pâle, abricot, rose au coucher, bleu doux la nuit. Les autres couleurs gardent leur teinte et s'adoucissent la nuit."
+    "message": "Il suit le soleil, de la gauche le matin à la droite le soir. Ciel prend les couleurs de la journée : rose à l'aube, un bleu clair en journée, doré puis rose au coucher, bleu doux la nuit. Il suit aussi la saison : des jours plus longs en été, plus doux et plus gris en hiver. Les autres couleurs gardent leur teinte et s'adoucissent la nuit."
   },
   "colOpacity": {
     "message": "Opacité colonnes"
@@ -216,8 +216,11 @@
   "intensity": {
     "message": "Intensité"
   },
-  "animateRays": {
-    "message": "Faire bouger doucement les rayons"
+  "motion": {
+    "message": "Mouvement"
+  },
+  "motionStill": {
+    "message": "Immobile"
   },
   "bgTint": {
     "message": "Couleur de fond"
@@ -290,20 +293,14 @@
   "leafKindLeaves": {
     "message": "Branches"
   },
-  "leafKindOlive": {
-    "message": "Olivier"
-  },
-  "leafKindMonstera": {
-    "message": "Monstera"
-  },
   "leafKindPalm": {
     "message": "Palmes"
   },
+  "leafKindBamboo": {
+    "message": "Bambou"
+  },
   "leavesHint": {
     "message": "Les ombres douces de feuillages sur un mur au soleil, qui bougent lentement dans le vent."
-  },
-  "animateLeaves": {
-    "message": "Faire bouger les feuilles dans le vent"
   },
   "clockFormat": {
     "message": "Horloge"
@@ -316,9 +313,6 @@
   },
   "clock24": {
     "message": "24 h"
-  },
-  "animateGlow": {
-    "message": "Faire respirer doucement le halo"
   },
   "customColor": {
     "message": "Couleur personnalisée"
@@ -409,9 +403,6 @@
   "snowHint": {
     "message": "De la neige, des pétales de cerisier, des aigrettes de pissenlit ou des feuilles d'automne portés par un vent lent et changeant ; Saison les choisit selon la date. Ils s'effacent là où ils touchent vos cartes, vos tuiles et la barre de recherche."
   },
-  "animateSnow": {
-    "message": "Laisser souffler la brise"
-  },
   "breeze_season": {
     "message": "Saison"
   },
@@ -426,5 +417,8 @@
   },
   "breeze_seeds": {
     "message": "Aigrettes"
+  },
+  "moreInfo": {
+    "message": "Plus d'informations"
   }
 }

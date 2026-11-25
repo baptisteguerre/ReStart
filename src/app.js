@@ -44,7 +44,7 @@ const DEFAULT_SETTINGS = {
   clockFormat: "auto",        // auto (the language's usual format) | 12 | 24
   focusIcons: false,          // in focus mode, also show the sites above the search bar, as icons
   focusGray: true,            // ...in gray, as soft as the time (on by default)
-  animateGlow: true,          // slow "breathing" of the halo
+  motion: 1,                  // speed of every movement (halo, rays, leaves, breeze): 0 still, 1 normal, 2 twice as fast
   glowStrength: 1,            // 0 .. 2, shown as 0-100 % with the default (1) at 50 %; multiplies the halo intensity
   colAlpha: 0.5,              // 0 .. 1
   layout: "masonry",          // masonry (Mosaic, Keep-like, the default) | board (horizontal columns); wide windows only
@@ -1189,7 +1189,7 @@ function plainColor(id) {
   if (HEX_COLOR.test(id)) return id;
   if (id === "gray" && !isDark()) return "#f5f5f5"; // a neutral, very light gray
   const c = pastel(id);
-  return isDark() ? `color-mix(in srgb, ${c} 22%, #1c1c1e)` : `color-mix(in srgb, ${c} 45%, #f7f6f4)`;
+  return isDark() ? `color-mix(in srgb, ${c} 22%, #28282c)` : `color-mix(in srgb, ${c} 45%, #f7f6f4)`;
 }
 const plainBackground = (id) => `linear-gradient(${plainColor(id)}, ${plainColor(id)})`;
 
@@ -1198,7 +1198,7 @@ const isLit = (type) => type === "glow" || type === "rays";
 // Backgrounds that can have a plain color underneath: the halo, the rays and the leaf shadows.
 const hasUnderColor = (type) => isLit(type) || type === "leaves" || type === "snow";
 // The page color that follows the hour, used when no color is chosen.
-const pageBase = () => (isDark() ? "#1c1c1e" : "#f7f6f4");
+const pageBase = () => (isDark() ? "#2a2a2e" : "#f6f6f7"); // dark: a soft charcoal, never black
 
 function applyAppearance() {
   const s = state.settings;
@@ -1216,7 +1216,7 @@ function applyAppearance() {
     layer = s.bg.tint ? plainBackground(s.bg.tint) : hourWall(new Date(), pageBase());
   } else if (type === "leaves") {
     // Leaf shadows on a wall softly lit by the sun: a warm, very light tint by default.
-    layer = s.bg.tint ? plainBackground(s.bg.tint) : hourWall(new Date(), isDark() ? "#24211e" : "#f4efe6");
+    layer = s.bg.tint ? plainBackground(s.bg.tint) : hourWall(new Date(), pageBase());
     root.setProperty("--leaf-alpha", String(Math.min(1, (isDark() ? 0.5 : 0.17) * (s.glowStrength ?? 1))));
   } else if (type === "snow") {
     layer = s.bg.tint ? plainBackground(s.bg.tint) : hourWall(new Date(), pageBase());
@@ -1234,11 +1234,13 @@ function applyAppearance() {
   document.body.classList.toggle("glow-rays", type === "rays");
   document.body.classList.toggle("bg-grain", lit);
   if (lit) {
-    const x = sunX(hourOf(new Date()));
+    const x = sunX(solarHour(new Date()));
     root.setProperty("--sun-x", `${x.toFixed(1)}%`);
     root.setProperty("--rays-origin", `${raysSource(x).ox.toFixed(1)}% ${RAYS_DEPTH}px`);
   }
-  document.body.classList.toggle("glow-still", !s.animateGlow);
+  const motion = s.motion ?? 1;
+  document.body.classList.toggle("glow-still", motion === 0);
+  root.setProperty("--speed", String(Math.max(0.05, motion)));
 
   applyFocus();
 }
@@ -1250,7 +1252,7 @@ function applyAppearance() {
 // animation makes it "breathe" very slowly.
 // Swatch shown in settings (pastel) → base color of the halo (stronger, it gets washed out).
 const GLOW_COLORS = [
-  { id: "sky",    swatch: "linear-gradient(135deg, #ffd39a, #ffa9a4 50%, #aab4f0)", base: "#ffb08a" },
+  { id: "sky",    swatch: "linear-gradient(135deg, #ffc9a0, #a9d3f2 50%, #b6b0ee)", base: "#ffb08a" },
   { id: "orange", swatch: "#ffcf9e", base: "#ff8c46" },
   { id: "red",    swatch: "#ffb3ad", base: "#ff6b62" },
   { id: "pink",   swatch: "#f7bfd8", base: "#ff7eb6" },
@@ -1262,21 +1264,19 @@ const GLOW_COLORS = [
   { id: "green",  swatch: "#bde5b4", base: "#7bd36a" },
   { id: "yellow", swatch: "#fbe49a", base: "#ffc93c" },
 ];
-// Sky: the colors of the sky through the day. [hour, core, fringe, intensity]
-// Dawn pink, pale gold in the morning, almost white at midday, apricot in the late
-// afternoon, rose then lavender at sunset, a soft indigo at night, fainter.
-const SKY_KEYS = [
-  [ 0,   "#93a6ee", "#b0a3e6", 0.55],
-  [ 5,   "#a7a9e4", "#d9b2d6", 0.6],
-  [ 6.5, "#ffb59c", "#f5a9c4", 0.85],
-  [ 8,   "#ffd09a", "#ffc0aa", 0.85],
-  [11,   "#ffe3b2", "#c6dbff", 0.85],
-  [14,   "#ffdfaa", "#cadcff", 0.85],
-  [17,   "#ffc28e", "#ffb3a2", 0.9],
-  [19.5, "#ffa39c", "#c8a7f0", 0.95],
-  [21,   "#c7a2e8", "#94a3f0", 0.8],
-  [22.5, "#97a8ef", "#a89de2", 0.6],
-  [24,   "#93a6ee", "#b0a3e6", 0.55],
+// Sky follows one simple thing: how high the sun is. Night is a soft slate blue; the sun near
+// the horizon (dawn, dusk) brings rose then gold; as it climbs the light whitens, then turns
+// to a clear sky. Morning and evening go through the same colors, in mirror. In winter the
+// sun stays low and the season mutes everything (see seasonal), so days stay soft and pale.
+// [elevation -1 (deep night) .. 1 (high noon in summer), core, fringe, intensity]
+const SKY_STOPS = [
+  [-1,    "#a3add6", "#b4b2dc", 0.5],
+  [-0.3,  "#a3add6", "#b8b0da", 0.6],
+  [-0.05, "#f0b8c0", "#d9b8de", 0.85],
+  [ 0.1,  "#ffd3aa", "#f6c6c6", 0.85],
+  [ 0.28, "#f3ebe3", "#e6e9f3", 0.8],
+  [ 0.55, "#c4dcf2", "#e2ecf8", 0.8],
+  [ 1,    "#b6def0", "#d8ecfb", 0.75],
 ];
 // Fixed colors keep their hue; they are paler at midday and softer at night.
 // [hour, depth 0..1 (low = washed toward white), intensity]
@@ -1318,18 +1318,67 @@ function glowOf(v) {
   return GLOW_COLORS.find((c) => c.id === (v?.color || DEFAULT_GLOW)) || GLOW_COLORS[0];
 }
 
+/* ----- Seasons (northern hemisphere, no location needed) ----- */
+// The sky's colors are written for a long day (sunrise 6:30, sunset 20:30). The clock hour is
+// mapped onto that day with the season's real sunrise and sunset (about those of Paris, in local
+// time): in late November, 10:00 is still the early morning light, and night falls at 17:00.
+const dayOfYear = (d) => Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5);
+function sunTimes(d) {
+  const c = Math.cos((2 * Math.PI * (dayOfYear(d) - 172)) / 365); // 1 at the June solstice, -1 in December
+  return [7.25 - 1.45 * c, 19.4 + 2.5 * c];
+}
+function solarHour(d) {
+  const t = hourOf(d);
+  const [rise, set] = sunTimes(d);
+  if (t < rise) return (t / rise) * 6.5;
+  if (t <= set) return 6.5 + ((t - rise) / (set - rise)) * 14;
+  return 20.5 + ((t - set) / (24 - set)) * 3.5;
+}
+// How warm the season's light is: 1 in high summer, 0 in deep winter.
+const seasonWarmth = (d) => 0.5 + 0.5 * Math.cos((2 * Math.PI * (dayOfYear(d) - 200)) / 365);
+// Winter light is softer and greyer: the colors lose some saturation and lean toward a
+// pearl grey (neither blue nor warm), like an overcast day.
+function seasonal(rgb, w) {
+  const grey = 0.3 * rgb[0] + 0.59 * rgb[1] + 0.11 * rgb[2];
+  const sat = 0.35 + 0.65 * w;
+  const muted = rgb.map((v) => grey + (v - grey) * sat);
+  return mixRgb(muted, rgbOf("#dedad3"), (1 - w) * 0.5);
+}
+
+// How high the sun is, from the clock and the season: -1 deep night, 0 at sunrise and
+// sunset, 1 at noon in summer (lower in winter). Twilight lasts about 2 h 30.
+function sunElevation(d) {
+  const t = solarHour(d);
+  if (t >= 6.5 && t <= 20.5) return Math.sin((Math.PI * (t - 6.5)) / 14) * (0.6 + 0.4 * seasonWarmth(d));
+  const fromEdge = t < 6.5 ? 6.5 - t : t - 20.5;
+  return -Math.min(1, fromEdge / 2.5);
+}
+
+// The Sky color of a moment, before it is deepened for the page: [core, fringe, intensity].
+function skyAt(d) {
+  const e = sunElevation(d);
+  let i = 0;
+  while (i < SKY_STOPS.length - 2 && SKY_STOPS[i + 1][0] <= e) i++;
+  const [a, b] = [SKY_STOPS[i], SKY_STOPS[i + 1]];
+  const f = Math.max(0, Math.min(1, (e - a[0]) / (b[0] - a[0])));
+  const w = seasonWarmth(d);
+  return [
+    seasonal(mixRgb(rgbOf(a[1]), rgbOf(b[1]), f), w),
+    seasonal(mixRgb(rgbOf(a[2]), rgbOf(b[2]), f), w),
+    (a[3] + (b[3] - a[3]) * f) * (0.8 + 0.2 * w),
+  ];
+}
+
 function glowLayer(now, value, rays = false) {
-  const t = hourOf(now);
+  const t = solarHour(now);
+  const warmth = seasonWarmth(now);
   const glow = glowOf(value);
   let core, fringe, k;
   if (glow.id === "sky") {
-    const [a, b, f] = keyAt(SKY_KEYS, t);
-    core = mixRgb(rgbOf(a[1]), rgbOf(b[1]), f);
-    fringe = mixRgb(rgbOf(a[2]), rgbOf(b[2]), f);
-    k = a[3] + (b[3] - a[3]) * f;
+    [core, fringe, k] = skyAt(now);
     // The keys are pastels: deepen them so they read on the page. On a light page they
     // need more depth (a pastel on white barely shows); on a dark page, pale tints read as grey fog.
-    const deepen = isDark() ? 1.6 : 1.9;
+    const deepen = isDark() ? 1.25 : 1.9; // on a dark page, keep the light bright enough to glow
     [core, fringe] = [core, fringe].map((c) => c.map((v) => Math.max(0, 255 - (255 - v) * deepen)));
   } else {
     const [a, b, f] = keyAt(FIXED_KEYS, t);
@@ -1343,7 +1392,7 @@ function glowLayer(now, value, rays = false) {
     fringe = fringeOf(base).map((c) => 255 + (c - 255) * mix);
   }
   const strength = state.settings.glowStrength ?? 1;
-  const alpha = (isDark() ? 0.75 : 1) * k * strength;
+  const alpha = (isDark() ? 0.95 : 1) * k * strength;
   const x = sunX(t);
   if (!rays) return { halo: glowGradient(core, fringe, alpha, x, strength), rays: [] };
   // Light rays: a faint halo as the light source, and several sets of shafts.
@@ -1414,7 +1463,9 @@ function glowGradient(core, fringe, alpha, x, strength = 1) {
   for (let i = 0; i <= 10; i++) {
     const p = i / 10;
     const fade = 1 - p * p * (3 - 2 * p); // smoothstep: a calm center, a long soft tail
-    const [r, g, b] = mixRgb(core, fringe, Math.min(1, p / 0.75));
+    // The fringe tone only tints the outer part, and only halfway: a hint, never a band.
+    const q = Math.max(0, Math.min(1, (p - 0.3) / 0.7));
+    const [r, g, b] = mixRgb(core, fringe, 0.5 * q * q * (3 - 2 * q));
     const a = Math.min(1, alpha * fade);
     stops.push(`rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${a.toFixed(3)}) ${Math.round(p * 100)}%`);
   }
@@ -1426,15 +1477,17 @@ function glowGradient(core, fringe, alpha, x, strength = 1) {
 // It takes a whisper of the Sky color of the moment (pink at dawn, warm white at midday,
 // honey in the afternoon, rose at sunset, a cool blue-grey at night), and is a little
 // brighter on the sun's side.
-function hourWall(now, base) {
-  const t = hourOf(now);
-  const [a, b, f] = keyAt(SKY_KEYS, t);
-  const sky = mixRgb(rgbOf(a[1]), rgbOf(b[1]), f);
+// The page behind every background (a color, the halo, the rays, the leaves, the breeze): a
+// neutral base with a calm hint of the hour's and the season's hue. ("wall" is kept for a
+// warmer variant, unused for now.)
+function hourWall(now, base, kind = "page") {
+  const t = solarHour(now);
+  const sky = skyAt(now)[0];
   const dark = isDark();
   const wall = rgbOf(base);
   // Only the hue of the hour, never its brightness: the wall keeps its calm lightness.
   const grey = (sky[0] + sky[1] + sky[2]) / 3;
-  const tint = wall.map((v, i) => Math.max(0, Math.min(255, v + (sky[i] - grey) * (dark ? 0.12 : 0.2))));
+  const tint = wall.map((v, i) => Math.max(0, Math.min(255, v + (sky[i] - grey) * (kind === "page" ? (dark ? 0.2 : 0.3) : (dark ? 0.1 : 0.16)))));
   const lit = tint.map((v) => Math.min(255, v + (dark ? 4 : 5)));
   const css = (c) => `rgb(${c.map(Math.round).join(",")})`;
   const side = sunX(t) < 50 ? "to right" : "to left";
@@ -1446,8 +1499,9 @@ function hourWall(now, base) {
 // seeds ("Season" picks them by the date). What lands on a card, a tile or the search bar
 // fades away where it touched. Drawn on one canvas behind the page; paused when the tab
 // is hidden; still when animations are off.
-// Leaf shadows: branches (the default, no value), palm fronds, olive twigs or monstera leaves.
-const LEAF_KINDS = ["palm", "olive", "monstera"];
+// Leaf shadows: branches (the default, no value), palm fronds or bamboo. Kinds from 1.2.0
+// (olive, monstera) fall back to branches.
+const LEAF_KINDS = ["palm", "bamboo"];
 const BREEZE_KINDS = ["season", "snow", "petals", "seeds", "leaves"];
 const snow = { canvas: null, ctx: null, flakes: [], raf: 0, rects: [], rectsAt: 0, last: 0, w: 0, h: 0, sprites: null, spriteKey: "", kind: "snow", t: 0 };
 const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
@@ -1621,7 +1675,7 @@ function drawSnow() {
 
 function stepSnow(now) {
   snow.raf = requestAnimationFrame(stepSnow);
-  const dt = Math.min(0.05, (now - (snow.last || now)) / 1000);
+  const dt = Math.min(0.05, (now - (snow.last || now)) / 1000) * (state.settings.motion ?? 1);
   snow.last = now;
   snow.t += dt;
   if (now - snow.rectsAt > 300) snowRects();
@@ -1666,7 +1720,7 @@ function startSnow(value) {
   if (snow.spriteKey !== `${kind}/${dark}`) { snow.sprites = breezeSprites(kind, dark); snow.spriteKey = `${kind}/${dark}`; }
   sizeSnow();
   snowRects();
-  const moving = state.settings.animateGlow !== false && !motionQuery.matches && !document.hidden;
+  const moving = (state.settings.motion ?? 1) > 0 && !motionQuery.matches && !document.hidden;
   if (moving && !snow.raf) { snow.last = 0; snow.raf = requestAnimationFrame(stepSnow); }
   if (!moving) { cancelAnimationFrame(snow.raf); snow.raf = 0; drawSnow(); }
 }
@@ -1953,6 +2007,7 @@ function openTopSiteMenu(node, anchor, x, y) {
 }
 
 function closePopover({ restoreFocus = true } = {}) {
+  hideTip();
   if (els.popover.hidden) return;
   els.popover.hidden = true;
   els.popover.setAttribute("role", "dialog");
@@ -2071,6 +2126,36 @@ function switchRow(id, label, checked, onChange) {
   sw.addEventListener("change", () => onChange(sw.checked));
   return h("label", { class: "setting-row", for: id }, h("span", { class: "set-label" }, label), sw);
 }
+
+// Explanations stay out of the way: a small (i) next to a title shows them in a small
+// bubble on hover or keyboard focus (and on tap). The bubble lives on <body>, so the
+// scrolling settings panel never clips it.
+const INFO_ICON = "M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z";
+const tip = h("div", { class: "info-tip", id: "info-tip", role: "tooltip", hidden: true });
+document.body.append(tip);
+let tipFor = null;
+function showTip(btn, text) {
+  tip.textContent = text;
+  tip.hidden = false;
+  tipFor = btn;
+  const r = btn.getBoundingClientRect();
+  const w = tip.offsetWidth, hgt = tip.offsetHeight;
+  const left = Math.max(8, Math.min(r.left + r.width / 2 - w / 2, innerWidth - w - 8));
+  const below = r.bottom + 8 + hgt < innerHeight - 8;
+  tip.style.left = `${left}px`;
+  tip.style.top = `${below ? r.bottom + 8 : r.top - hgt - 8}px`;
+}
+function hideTip() { tip.hidden = true; tipFor = null; }
+const infoBtn = (key, text) => {
+  const btn = h("button", { class: "info-btn", type: "button", "aria-label": t("moreInfo"), "aria-describedby": "info-tip", "data-key": key }, svg(INFO_ICON));
+  btn.addEventListener("mouseenter", () => showTip(btn, text));
+  btn.addEventListener("mouseleave", hideTip);
+  btn.addEventListener("focus", () => showTip(btn, text));
+  btn.addEventListener("blur", hideTip);
+  btn.addEventListener("click", () => (tipFor === btn && !tip.hidden ? hideTip() : showTip(btn, text)));
+  return btn;
+};
+els.popover.addEventListener("scroll", hideTip, { passive: true });
 
 function rangeRow(label, min, max, step, value, onInput, format) {
   const input = h("input", { type: "range", min, max, step, value, "aria-label": label });
@@ -2219,7 +2304,7 @@ function settingsContent() {
     bgExtra = h("div", {},
       snowy ? h("div", { class: "leaf-kind" }, segmented(BREEZE_KINDS.map((k) => [k, k === "season" ? [svg(ICONS.sunny, "seg-sun"), t("breeze_season")] : t(`breeze_${k}`)]), BREEZE_KINDS.includes(bg.value) ? bg.value : "season",
         (v) => { s.bg = { ...s.bg, value: v === "season" ? null : v }; saveSettings(); })) : null,
-      leaves ? h("div", { class: "leaf-kind" }, segmented([["leaves", t("leafKindLeaves")], ["palm", t("leafKindPalm")], ["olive", t("leafKindOlive")], ["monstera", t("leafKindMonstera")]], LEAF_KINDS.includes(bg.value) ? bg.value : "leaves",
+      leaves ? h("div", { class: "leaf-kind" }, segmented([["leaves", t("leafKindLeaves")], ["palm", t("leafKindPalm")], ["bamboo", t("leafKindBamboo")]], LEAF_KINDS.includes(bg.value) ? bg.value : "leaves",
         (v) => { s.bg = { ...s.bg, value: LEAF_KINDS.includes(v) ? v : null }; saveSettings(); })) : null,
       plainUnder ? null : h("div", { class: "swatches", role: "group", "aria-label": t("glowColor") },
         GLOW_COLORS.map((c) => h("button", {
@@ -2230,7 +2315,6 @@ function settingsContent() {
       }, c.id === "sky" ? svg(ICONS.sunny, "swatch-sun") : null)), customSwatch),
       plainUnder ? null : colorPickerPanel("glow", customGlow || (HEX_COLOR.test(bg.value?.custom) ? bg.value.custom : null), "#ff8c46",
         (v) => { s.bg = withTint({ color: "custom", custom: v }); }),
-      h("p", { class: "setting-hint" }, t(leaves ? "leavesHint" : snowy ? "snowHint" : "glowHint")),
       h("div", { class: "set-label tint-label" }, t("bgTint")),
       h("div", { class: "bg-presets tint-presets" },
         // No chosen color: the background follows the hour (marked with a small sun, like Sky).
@@ -2250,7 +2334,9 @@ function settingsContent() {
       // Shown on a 0-100 scale, the default intensity sitting in the middle.
       rangeRow(t("intensity"), 0, 100, 5, Math.round((s.glowStrength ?? 1) * 50), (v) => { s.glowStrength = v / 50; saveSettingsSoon(); },
         (v) => percent.format(v / 100)),
-      switchRow("set-breathe", t(bg.type === "rays" ? "animateRays" : leaves ? "animateLeaves" : snowy ? "animateSnow" : "animateGlow"), s.animateGlow !== false, (v) => { s.animateGlow = v; saveSettings(); }));
+      // Speed of the movement, on the same 0-100 scale: 0 is still, the middle is the normal pace.
+      rangeRow(t("motion"), 0, 100, 5, Math.round((s.motion ?? 1) * 50), (v) => { s.motion = v / 50; saveSettingsSoon(); },
+        (v) => (v === 0 ? t("motionStill") : percent.format(v / 100))));
   } else if (bg.type === "color") {
     const colorSwatch = customColorSwatch("color", bg.value, "bg-preset");
     bgExtra = h("div", {}, h("div", { class: "bg-presets" },
@@ -2338,7 +2424,7 @@ function settingsContent() {
           s.theme = v; saveSettings(); render(); refreshSettings();
         })),
       h("div", { class: "set-field" },
-        h("div", { class: "set-label" }, t("background")),
+        h("div", { class: "set-label" }, t("background"), hasUnderColor(bg.type) ? infoBtn("bg", t(bg.type === "leaves" ? "leavesHint" : bg.type === "snow" ? "snowHint" : "glowHint")) : null),
         segmented([["color", t("bgColor")], ["glow", t("bgGlow")], ["rays", t("styleRays")], ["leaves", t("bgLeaves")], ["snow", t("bgSnow")]], bg.type === "none" ? "color" : bg.type, (v) => {
           // Switching between the halo and the rays keeps their color; between halo, rays and
           // leaves, the color underneath is kept too.
@@ -2353,12 +2439,12 @@ function settingsContent() {
         rangeRow(t("colOpacity"), 0, 1, 0.05, s.colAlpha, (v) => { s.colAlpha = v; saveSettingsSoon(); },
           (v) => percent.format(v))),
       h("div", { class: "set-field" },
-        h("div", { class: "set-label" }, t("layout")),
+        h("div", { class: "set-label" }, t("layout"), narrowQuery.matches ? infoBtn("layout", t("layoutNarrowHint")) : null),
         segmented([["masonry", t("layoutMasonry")], ["board", t("layoutBoard")]], s.layout, (v) => { s.layout = v; saveSettings(); render(); }),
-        narrowQuery.matches ? h("p", { class: "setting-hint" }, t("layoutNarrowHint")) : null),
+        null),
     ),
 
-    h("div", { class: "set-section" }, t("focusMode")),
+    h("div", { class: "set-section" }, t("focusMode"), infoBtn("focus", t("focusHint"))),
     group(
       switchRow("set-focus-clock", t("focusClock"), s.focusClock !== false, (v) => { s.focusClock = v; saveSettings(); refreshSettings(); }),
       s.focusClock !== false ? h("div", { class: "set-field" },
@@ -2368,20 +2454,17 @@ function settingsContent() {
       switchRow("set-focus-icons", t("focusIcons"), !!s.focusIcons, (v) => { s.focusIcons = v; saveSettings(); render(); refreshSettings(); }),
       s.focusIcons ? switchRow("set-focus-gray", t("focusGray"), !!s.focusGray, (v) => { s.focusGray = v; saveSettings(); render(); }) : null,
     ),
-    h("p", { class: "group-hint" }, t("focusHint")),
 
-    h("div", { class: "set-section" }, t("columns")),
+    h("div", { class: "set-section" }, t("columns"), infoBtn("columns", t("columnsHint"))),
     group(colList),
-    h("p", { class: "group-hint" }, t("columnsHint")),
 
-    h("div", { class: "set-section" }, t("data")),
+    h("div", { class: "set-section" }, t("data"), infoBtn("data", t("dataHint"))),
     group(
       h("div", { class: "btn-row" },
         h("button", { class: "text-btn", onclick: exportData }, svg(UI.download), t("export")),
         h("button", { class: "text-btn", onclick: () => els.fileImport.click() }, svg(UI.upload), t("import"))),
       settingsMsg ? h("p", { class: "set-msg", role: "status" }, settingsMsg) : null,
     ),
-    h("p", { class: "group-hint" }, t("dataHint")),
     h("div", { class: "btn-row" },
       h("button", { class: "text-btn", onclick: () => { closePopover({ restoreFocus: false }); showWelcome(); } },
         svg(UI.restart), t("welcomeAgain"))),
@@ -2412,6 +2495,7 @@ function refreshSettings() {
   const y = els.popover.scrollTop;
   // Rebuild the content in place: the panel keeps its position and scroll, so
   // nothing moves under the pointer while settings are changed.
+  hideTip(); // its (i) is about to be replaced
   els.popover.replaceChildren(...settingsContent());
   els.popover.scrollTop = y;
 }
@@ -2585,7 +2669,8 @@ const stringList = (v, max = 500) => (Array.isArray(v) ? v.filter((x) => typeof 
 function sanitizeSettings(raw) {
   const s = structuredClone(DEFAULT_SETTINGS);
   if (!raw || typeof raw !== "object") return s;
-  if (typeof raw.animateGlow === "boolean") s.animateGlow = raw.animateGlow;
+  if (Number.isFinite(raw.motion)) s.motion = Math.min(2, Math.max(0, raw.motion));
+  else if (raw.animateGlow === false) s.motion = 0; // 1.1 had an on/off switch
   if (typeof raw.focus === "boolean") s.focus = raw.focus;
   if (typeof raw.focusIcons === "boolean") s.focusIcons = raw.focusIcons;
   if (typeof raw.focusClock === "boolean") s.focusClock = raw.focusClock;

@@ -28,7 +28,7 @@ def branch(x,y,ang,length,depth,paths,stems):
     stems.append((pts,max(1.2,4-1.4*depth)))
     paths.append(leaf(x,y,a,60*(1-0.3*depth),17*(1-0.3*depth)))
 paths=[];stems=[]
-for (x,y,ang,L) in [(1650,-40,2.45,900),(1500,-60,2.0,620),(-60,-30,0.55,700),(1700,260,2.85,560),(300,-60,1.25,380)]:
+for (x,y,ang,L) in [(1650,-40,2.45,820),(-60,-30,0.55,700),(1700,470,2.95,440),(300,-60,1.25,380)]:
     branch(x,y,ang,L,0,paths,stems)
 out=[f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" preserveAspectRatio="xMidYMin slice">',
      '<g fill="#000">'+''.join(f'<path d="{p}"/>' for p in paths)+'</g>',

@@ -186,6 +186,47 @@
   "unhighlight": {
     "message": "Remover destaque"
   },
+  "edit": {
+    "message": "Editar"
+  },
+  "name": {
+    "message": "Nome"
+  },
+  "url": {
+    "message": "URL"
+  },
+  "invalidUrl": {
+    "message": "Introduza um endereço web válido, por exemplo https://example.com."
+  },
+  "awakeLabel": {
+    "message": "Manter ativo"
+  },
+  "keepAwake": {
+    "message": "Manter o ecrã ligado"
+  },
+  "awakeHow": {
+    "message": "Impede que o ecrã se desligue e que o computador entre em suspensão, mas só enquanto o ReStart estiver visível: pausa se mudar para outro separador ou ocultar a janela, e retoma quando voltar."
+  },
+  "awakeLeft": {
+    "message": "Ativado, faltam $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "awakeAlways": {
+    "message": "Ativado até o desativar"
+  },
+  "awakeUntilOff": {
+    "message": "Até eu desativar"
+  },
+  "awakeStop": {
+    "message": "Desativar"
+  },
+  "letterIcons": {
+    "message": "Letras em vez dos ícones dos sites"
+  },
   "rename": {
     "message": "Renomear"
   },
@@ -380,10 +421,10 @@
     "message": "Os seus marcadores, pela sua ordem."
   },
   "welcome2": {
-    "message": "Clique com o botão direito num site ou pasta para ações rápidas: fixar, mudar o nome, mover, eliminar."
+    "message": "Clique com o botão direito num site ou pasta para ações rápidas: fixar, editar, mover, eliminar."
   },
   "welcome3": {
-    "message": "Foco: uma página calma num clique."
+    "message": "Foco: uma página calma num clique. O sol ao lado mantém o ecrã ligado."
   },
   "welcomeStart": {
     "message": "Começar"

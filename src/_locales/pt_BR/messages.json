@@ -186,6 +186,47 @@
   "unhighlight": {
     "message": "Remover destaque"
   },
+  "edit": {
+    "message": "Editar"
+  },
+  "name": {
+    "message": "Nome"
+  },
+  "url": {
+    "message": "URL"
+  },
+  "invalidUrl": {
+    "message": "Digite um endereço web válido, por exemplo https://example.com."
+  },
+  "awakeLabel": {
+    "message": "Manter ativo"
+  },
+  "keepAwake": {
+    "message": "Manter a tela ligada"
+  },
+  "awakeHow": {
+    "message": "Impede que a tela desligue e que o computador entre em repouso, mas só enquanto o ReStart estiver visível: pausa se você mudar para outra aba ou ocultar a janela, e volta quando você retornar."
+  },
+  "awakeLeft": {
+    "message": "Ativado, faltam $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "awakeAlways": {
+    "message": "Ativado até você desativar"
+  },
+  "awakeUntilOff": {
+    "message": "Até eu desativar"
+  },
+  "awakeStop": {
+    "message": "Desativar"
+  },
+  "letterIcons": {
+    "message": "Letras em vez dos ícones dos sites"
+  },
   "rename": {
     "message": "Renomear"
   },
@@ -380,10 +421,10 @@
     "message": "Seus favoritos, na sua ordem."
   },
   "welcome2": {
-    "message": "Clique com o botão direito num site ou pasta para ações rápidas: fixar, renomear, mover, excluir."
+    "message": "Clique com o botão direito num site ou pasta para ações rápidas: fixar, editar, mover, excluir."
   },
   "welcome3": {
-    "message": "Foco: uma página calma em um clique."
+    "message": "Foco: uma página calma em um clique. O sol ao lado mantém a tela ligada."
   },
   "welcomeStart": {
     "message": "Começar"

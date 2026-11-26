@@ -186,6 +186,47 @@
   "unhighlight": {
     "message": "Losmaken"
   },
+  "edit": {
+    "message": "Bewerken"
+  },
+  "name": {
+    "message": "Naam"
+  },
+  "url": {
+    "message": "URL"
+  },
+  "invalidUrl": {
+    "message": "Voer een geldig webadres in, bijvoorbeeld https://example.com."
+  },
+  "awakeLabel": {
+    "message": "Wakker houden"
+  },
+  "keepAwake": {
+    "message": "Scherm aan houden"
+  },
+  "awakeHow": {
+    "message": "Voorkomt dat het scherm uitgaat en de computer in slaap valt, maar alleen zolang ReStart zichtbaar is: het pauzeert als u naar een ander tabblad gaat of het venster verbergt, en gaat verder als u terugkomt."
+  },
+  "awakeLeft": {
+    "message": "Aan, nog $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "awakeAlways": {
+    "message": "Aan tot u het uitzet"
+  },
+  "awakeUntilOff": {
+    "message": "Tot ik het uitzet"
+  },
+  "awakeStop": {
+    "message": "Uitzetten"
+  },
+  "letterIcons": {
+    "message": "Letters in plaats van sitepictogrammen"
+  },
   "rename": {
     "message": "Naam wijzigen"
   },
@@ -380,10 +421,10 @@
     "message": "Je bladwijzers, in jouw volgorde."
   },
   "welcome2": {
-    "message": "Klik met de rechtermuisknop op een site of map voor snelle acties: vastzetten, hernoemen, verplaatsen, verwijderen."
+    "message": "Klik met de rechtermuisknop op een site of map voor snelle acties: vastzetten, bewerken, verplaatsen, verwijderen."
   },
   "welcome3": {
-    "message": "Focus: een rustige pagina met één klik."
+    "message": "Focus: een rustige pagina met één klik. Het zonnetje ernaast houdt het scherm aan."
   },
   "welcomeStart": {
     "message": "Aan de slag"

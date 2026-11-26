@@ -7,7 +7,7 @@ ReStart replaces the browser's new tab page with a start page that displays the 
 ## Permission justifications
 
 **bookmarks**
-ReStart's single purpose is to display the user's bookmarks on the new tab page. It reads the bookmark tree to build the page, and changes bookmarks only when the user explicitly asks: "Rename", "Delete" or "Move to…" on a bookmark or a folder in the right-click menu, dragging a bookmark, a folder or a column to reorder it (which moves it in the user's bookmarks), or "Add to bookmarks" on a Most visited site (which creates the bookmark, and a new folder if the user names one).
+ReStart's single purpose is to display the user's bookmarks on the new tab page. It reads the bookmark tree to build the page, and changes bookmarks only when the user explicitly asks: "Edit" (name and address) on a bookmark, "Rename" on a folder, "Delete" or "Move to…" on either, in the right-click menu, dragging a bookmark, a folder or a column to reorder it (which moves it in the user's bookmarks), or "Add to bookmarks" on a Most visited site (which creates the bookmark, and a new folder if the user names one).
 
 **favicon**
 Used to display each bookmarked site's icon from the browser's favicon cache, next to the bookmark title.

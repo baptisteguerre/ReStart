@@ -186,6 +186,47 @@
   "unhighlight": {
     "message": "Ne plus mettre en avant"
   },
+  "edit": {
+    "message": "Modifier"
+  },
+  "name": {
+    "message": "Nom"
+  },
+  "url": {
+    "message": "URL"
+  },
+  "invalidUrl": {
+    "message": "Saisissez une adresse web valide, par exemple https://example.com."
+  },
+  "awakeLabel": {
+    "message": "Rester éveillé"
+  },
+  "keepAwake": {
+    "message": "Garder l'écran allumé"
+  },
+  "awakeHow": {
+    "message": "Empêche l'écran de s'éteindre et l'ordinateur de se mettre en veille, mais seulement tant que ReStart est affiché : cela s'interrompt si vous passez à un autre onglet ou masquez la fenêtre, et reprend quand vous revenez."
+  },
+  "awakeLeft": {
+    "message": "Activé, encore $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "awakeAlways": {
+    "message": "Activé jusqu'à ce que vous l'arrêtiez"
+  },
+  "awakeUntilOff": {
+    "message": "Jusqu'à ce que je l'arrête"
+  },
+  "awakeStop": {
+    "message": "Arrêter"
+  },
+  "letterIcons": {
+    "message": "Lettres au lieu des icônes des sites"
+  },
   "rename": {
     "message": "Renommer"
   },
@@ -380,10 +421,10 @@
     "message": "Vos favoris, dans votre ordre."
   },
   "welcome2": {
-    "message": "Clic droit sur un site ou un dossier pour agir : épingler, renommer, déplacer, supprimer."
+    "message": "Clic droit sur un site ou un dossier pour agir : épingler, modifier, déplacer, supprimer."
   },
   "welcome3": {
-    "message": "Focus : une page calme en un clic."
+    "message": "Focus : une page calme en un clic. Le soleil à côté garde l'écran allumé."
   },
   "welcomeStart": {
     "message": "C'est parti"

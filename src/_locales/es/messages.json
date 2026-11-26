@@ -186,6 +186,47 @@
   "unhighlight": {
     "message": "Quitar de destacados"
   },
+  "edit": {
+    "message": "Editar"
+  },
+  "name": {
+    "message": "Nombre"
+  },
+  "url": {
+    "message": "URL"
+  },
+  "invalidUrl": {
+    "message": "Introduce una dirección web válida, por ejemplo https://example.com."
+  },
+  "awakeLabel": {
+    "message": "Mantener activo"
+  },
+  "keepAwake": {
+    "message": "Mantener la pantalla encendida"
+  },
+  "awakeHow": {
+    "message": "Evita que la pantalla se apague y que el ordenador entre en reposo, pero solo mientras ReStart está a la vista: se pausa si cambias a otra pestaña u ocultas la ventana, y se reanuda al volver."
+  },
+  "awakeLeft": {
+    "message": "Activado, quedan $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "awakeAlways": {
+    "message": "Activado hasta que lo desactives"
+  },
+  "awakeUntilOff": {
+    "message": "Hasta que lo desactive"
+  },
+  "awakeStop": {
+    "message": "Desactivar"
+  },
+  "letterIcons": {
+    "message": "Letras en lugar de los iconos de los sitios"
+  },
   "rename": {
     "message": "Cambiar nombre"
   },
@@ -380,10 +421,10 @@
     "message": "Tus marcadores, en tu orden."
   },
   "welcome2": {
-    "message": "Haz clic derecho en un sitio o una carpeta para acciones rápidas: fijar, renombrar, mover, eliminar."
+    "message": "Haz clic derecho en un sitio o una carpeta para acciones rápidas: fijar, editar, mover, eliminar."
   },
   "welcome3": {
-    "message": "Enfoque: una página tranquila en un clic."
+    "message": "Enfoque: una página tranquila en un clic. El sol de al lado mantiene la pantalla encendida."
   },
   "welcomeStart": {
     "message": "Empezar"

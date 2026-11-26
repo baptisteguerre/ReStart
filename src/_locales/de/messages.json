@@ -186,6 +186,47 @@
   "unhighlight": {
     "message": "Lösen"
   },
+  "edit": {
+    "message": "Bearbeiten"
+  },
+  "name": {
+    "message": "Name"
+  },
+  "url": {
+    "message": "URL"
+  },
+  "invalidUrl": {
+    "message": "Geben Sie eine gültige Webadresse ein, zum Beispiel https://example.com."
+  },
+  "awakeLabel": {
+    "message": "Wach halten"
+  },
+  "keepAwake": {
+    "message": "Bildschirm anlassen"
+  },
+  "awakeHow": {
+    "message": "Verhindert, dass der Bildschirm ausgeht und der Computer in den Ruhezustand wechselt, aber nur solange ReStart angezeigt wird: Es pausiert, wenn Sie zu einem anderen Tab wechseln oder das Fenster ausblenden, und setzt wieder ein, wenn Sie zurückkommen."
+  },
+  "awakeLeft": {
+    "message": "An, noch $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "awakeAlways": {
+    "message": "An, bis Sie es ausschalten"
+  },
+  "awakeUntilOff": {
+    "message": "Bis ich es ausschalte"
+  },
+  "awakeStop": {
+    "message": "Ausschalten"
+  },
+  "letterIcons": {
+    "message": "Buchstaben statt Seitensymbolen"
+  },
   "rename": {
     "message": "Umbenennen"
   },
@@ -380,10 +421,10 @@
     "message": "Deine Lesezeichen, in deiner Reihenfolge."
   },
   "welcome2": {
-    "message": "Rechtsklick auf eine Seite oder einen Ordner für schnelle Aktionen: anheften, umbenennen, verschieben, löschen."
+    "message": "Rechtsklick auf eine Seite oder einen Ordner für schnelle Aktionen: anheften, bearbeiten, verschieben, löschen."
   },
   "welcome3": {
-    "message": "Fokus: eine ruhige Seite mit einem Klick."
+    "message": "Fokus: eine ruhige Seite mit einem Klick. Die Sonne daneben lässt den Bildschirm an."
   },
   "welcomeStart": {
     "message": "Los geht's"

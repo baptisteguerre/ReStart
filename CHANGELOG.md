@@ -2,6 +2,25 @@
 
 All notable changes to ReStart. Versions follow [semantic versioning](https://semver.org).
 
+## 1.3.0
+
+### Added
+
+- **Keep the screen on.** A *Keep Awake* button (a sun) next to *Focus* keeps the screen on and the computer awake for 15 minutes, 30 minutes, 1, 2 or 4 hours, or until you turn it off, like the *Caffeine* apps. The time left shows next to its label, and every ReStart tab shares the same state. It uses the browser's Screen Wake Lock: no permission is needed, but it only works while a ReStart page is shown. It pauses when you switch to another tab or hide the window, and starts again when you come back; the menu explains this. The welcome card mentions it.
+- **Letters instead of site icons** (Appearance, off by default): every site gets a pastel square with the first letter of its name, for a calm, even look. Each site keeps the same color everywhere. No icon is requested while it is on.
+- **Edit a bookmark's address.** *Rename* in a bookmark's right-click menu becomes *Edit*: the name and the address, saved in the browser's bookmarks. An address typed without a scheme gets `https://`; scripts, inline documents and invalid addresses are refused. A pinned bookmark stays pinned, at the same place. Bookmarklets keep their address: only their name can be edited. The welcome card says *edit* instead of *rename*.
+
+### Changed
+
+- **Tiles above the search bar can go anywhere.** Pinned sites and sites of the bookmarks bar are no longer two separate groups: drag any tile before or after any other (or use *Move left* / *Move right*). Sites of the bookmarks bar still move in the bar itself. Pinned bookmarks that share a folder also take that order in their folder, swapping the places they already hold there, so the other bookmarks don't move. ReStart remembers where each pinned site sits among the others, and exports it with the other customizations.
+- **An accent color drawn from the background.** The accent (focus rings, selections, buttons) takes the hue of the background instead of a fixed blue: the halo or Sky color of the moment, the chosen color or tint, or else the sky of the hour. Its lightness is adjusted to stay legible (at least 4.5:1 against cards and menus, and behind white text on buttons).
+- **Clearer on and off.** *Focus* and *Keep Awake* take the accent color when they are on, in light and dark mode; off, they stay neutral.
+
+### Fixed
+
+- **Mosaic stays centered.** With fewer folders than the width allows, the cards kept their width but started on the left, leaving an empty space on the right. They are now centered under the search bar.
+- **More room in small forms.** Editing a bookmark and renaming a folder open with the padding of a panel instead of the tight edges of a menu.
+
 ## 1.2.1
 
 ### Added

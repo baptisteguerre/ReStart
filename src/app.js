@@ -47,6 +47,7 @@ const DEFAULT_SETTINGS = {
   motion: 1,                  // speed of every movement (halo, rays, leaves, breeze): 0 still, 1 normal, 2 twice as fast
   glowStrength: 1,            // 0 .. 2, shown as 0-100 % with the default (1) at 50 %; multiplies the halo intensity
   colAlpha: 0.5,              // 0 .. 1
+  letterIcons: false,         // a pastel letter for every site instead of its icon, for a calm, even look
   layout: "masonry",          // masonry (Mosaic, Keep-like, the default) | board (horizontal columns); wide windows only
   bg: { type: "glow", value: null }, // none | color | glow (halo) | rays (light rays); glow and rays share the color
 };
@@ -67,6 +68,7 @@ const els = {
   popover: $("popover"),
   settingsBtn: $("settings-btn"),
   focusBtn: $("focus-btn"),
+  awakeBtn: $("awake-btn"),
   focusView: $("focus-view"),
   page: document.querySelector(".page"),
   fileImport: $("file-import"),
@@ -83,6 +85,7 @@ const state = {
   open: new Set(),           // expanded subfolder ids
   openCols: new Set(),       // expanded columns in stacked layout
   highlighted: [],           // URLs of bookmarks pinned above the search bar (loose or inside folders)
+  pinAfter: Object.create(null), // where each pinned tile sits among the loose sites: URL of the site it follows ("" = first)
   byId: new Map(),           // bookmark id → node, for the bars' and folders' children
   query: "",
   target: null,              // the single remaining link while filtering
@@ -158,7 +161,22 @@ const hasIcon = (name) => typeof name === "string" && Object.hasOwn(ICONS, name)
 // All settings live in the extension's local storage, on this device only.
 // (Moving them to another device is done with Export / Import.)
 const store = ext.storage.local;
-const isPrefKey = (k) => ["settings", "order", "hidden", "highlighted"].includes(k) || k.startsWith(STYLE_PREFIX);
+const isPrefKey = (k) => ["settings", "order", "hidden", "highlighted", "pinAfter"].includes(k) || k.startsWith(STYLE_PREFIX);
+
+// Where pinned tiles sit among the loose sites: { pinned URL: URL of the loose site it follows,
+// or "" for the start }. Only strings, a bounded number of entries, no inherited keys.
+function sanitizePinAfter(raw) {
+  const out = Object.create(null);
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return out;
+  let n = 0;
+  for (const [k, v] of Object.entries(raw)) {
+    if (n >= 1000) break;
+    if (typeof v !== "string" || !k || k.length > 4096 || v.length > 4096) continue;
+    out[k] = v;
+    n++;
+  }
+  return out;
+}
 const saveLocal = (items) => store.set(items).catch((e) => console.warn("ReStart: could not save settings", e));
 
 function openUrl(url, { newTab = false } = {}) {
@@ -201,9 +219,13 @@ function defaultFingerprint(size) {
   return fingerprints.get(size);
 }
 
+// A pastel square with a letter. Its color comes from the site's address, so a site keeps the
+// same color everywhere. The letter is the site's (its host); with "letters instead of site
+// icons", it is the bookmark's name instead, since that is what is read next to it.
 function letterBadge(title, url) {
   const host = hostOf(url);
-  const ch = (host || title || "?").replace(/[^\p{L}\p{N}]/gu, "").charAt(0) || "?";
+  const source = state.settings.letterIcons ? cleanText(title) || host : host || title;
+  const ch = (source || "?").replace(/[^\p{L}\p{N}]/gu, "").charAt(0).toLocaleUpperCase() || "?";
   const p = PASTELS[1 + (hash(host || title || "") % LETTER_COUNT)];
   return h("span", { class: "letter", style: `background-color:${isDark() ? p.dark : p.light}` }, ch);
 }
@@ -228,9 +250,10 @@ async function loadSiteIcons() {
   }
 }
 
-// Site icon from the browser, or a colored letter when there is none.
+// Site icon from the browser, or a colored letter when there is none (or when the
+// "letters instead of site icons" option is on).
 function favicon(url, title, size) {
-  if (!isWebUrl(url)) return letterBadge(title, url);
+  if (state.settings.letterIcons || !isWebUrl(url)) return letterBadge(title, url);
   if (!HAS_FAVICON_API) {
     const data = siteIcons.get(url) || siteIcons.get(hostOf(url));
     if (!data) return letterBadge(title, url);
@@ -342,28 +365,110 @@ function topRowSites() {
   };
   for (const c of state.bar.children) if (!c.url) walk(c);
   if (state.other) walk(state.other);
-  // Loose sites keep the order of the bookmarks bar; pinned sites follow in the order they were pinned or arranged.
+  // Pinned sites follow the order they were pinned or arranged in.
   const rank = (c) => state.highlighted.indexOf(c.url);
-  return [...loose, ...out.sort((a, b) => rank(a) - rank(b))];
+  out.sort((a, b) => rank(a) - rank(b));
+  if (!loose.length) return out;
+  // Loose sites keep the order of the bookmarks bar; each pinned site sits right after the
+  // loose site it was placed after (or first), and at the end when it was never placed.
+  const at = (c) => state.pinAfter[c.url];
+  const looseUrls = new Set(loose.map((c) => c.url));
+  const seq = out.filter((p) => at(p) === "");
+  for (const c of loose) seq.push(c, ...out.filter((p) => at(p) === c.url));
+  seq.push(...out.filter((p) => at(p) !== "" && !looseUrls.has(at(p))));
+  return seq;
 }
 
-// Loose sites are moved in the bookmarks bar itself; pinned sites only change their order among pins.
-const tileGroup = (c) => (!sitesOverflow() && c.parentId === state.bar.id ? "bar" : "pin");
+// A loose site is a bookmark of the bookmarks bar shown as a tile: it moves in the bookmarks bar
+// itself. Pinned sites only change their place among the tiles (kept in ReStart).
+const isLooseTile = (c) => !sitesOverflow() && c.parentId === state.bar.id;
 
+// Put a tile before or after another one. Every tile can go anywhere: a loose site moves in the
+// bookmarks bar (next to the closest loose site), and each pinned site remembers which loose
+// site it follows, so the row looks exactly as it was arranged.
 function placeTile(node, target, after) {
-  if (node === target || tileGroup(node) !== tileGroup(target)) return;
-  if (tileGroup(node) === "bar") { moveBookmark(node, target, after); return; }
-  const urls = topRowSites().filter((c) => tileGroup(c) === "pin").map((c) => c.url).filter((u) => u !== node.url);
-  urls.splice(urls.indexOf(target.url) + (after ? 1 : 0), 0, node.url);
-  state.highlighted = [...urls, ...state.highlighted.filter((u) => !urls.includes(u))];
-  saveLocal({ highlighted: state.highlighted });
+  if (node === target) return;
+  const seq = topRowSites().filter((c) => c !== node);
+  const i = seq.indexOf(target);
+  if (i === -1) return;
+  seq.splice(i + (after ? 1 : 0), 0, node);
+  const pins = seq.filter((c) => !isLooseTile(c)).map((c) => c.url);
+  state.highlighted = [...pins, ...state.highlighted.filter((u) => !pins.includes(u))];
+  const pinAfter = Object.create(null);
+  let last = "";
+  for (const c of seq) {
+    if (isLooseTile(c)) last = c.url;
+    else pinAfter[c.url] = last;
+  }
+  state.pinAfter = pinAfter;
+  saveLocal({ highlighted: state.highlighted, pinAfter });
+  syncPinnedOrder(seq);
+  if (isLooseTile(node)) {
+    const k = seq.indexOf(node);
+    const next = seq.slice(k + 1).find(isLooseTile);
+    const prev = seq.slice(0, k).reverse().find(isLooseTile);
+    const loose = looseSites();
+    const j = loose.indexOf(node);
+    // Move in the bookmarks bar only when its order among the loose sites changes.
+    if (next && loose[j + 1] !== next) moveBookmark(node, next, false);
+    else if (!next && prev && loose[j - 1] !== prev) moveBookmark(node, prev, true);
+  }
   render();
 }
 
+// Pinned bookmarks that share a folder follow, in that folder, the order of their tiles: they
+// swap the places they already hold there, so the other bookmarks don't move.
+async function syncPinnedOrder(seq) {
+  const groups = new Map();
+  for (const c of seq) {
+    if (isLooseTile(c) || !c.id || !c.parentId || c.unmodifiable) continue;
+    groups.set(c.parentId, [...(groups.get(c.parentId) || []), c.id]);
+  }
+  for (const [parentId, wanted] of groups) {
+    if (wanted.length < 2) continue;
+    try {
+      const ids = (await ext.bookmarks.getChildren(parentId)).map((c) => c.id);
+      const ordered = [...new Set(wanted)].filter((id) => ids.includes(id));
+      let k = 0;
+      const next = ids.map((id) => (ordered.includes(id) ? ordered[k++] : id));
+      if (next.some((id, i) => id !== ids[i])) await applyChildOrder(parentId, next);
+    } catch (e) {
+      console.warn("ReStart: move failed", e);
+      scheduleReload();
+    }
+  }
+}
+
 function moveTile(node, delta) {
-  const sibs = topRowSites().filter((c) => tileGroup(c) === tileGroup(node));
+  const sibs = topRowSites();
   const target = sibs[sibs.indexOf(node) + delta];
   if (target) placeTile(node, target, delta > 0);
+}
+
+// An address typed by the user: a web address without its scheme gets https://. Scripts and
+// inline documents are refused, like anything that is not a valid URL.
+function normalizeUrl(value) {
+  let v = String(value || "").trim();
+  if (!v || v.length > 8192 || /[\u0000-\u001f\u007f]/.test(v)) return null;
+  if (!/^[a-z][a-z0-9+.-]*:/i.test(v)) v = `https://${v}`;
+  if (isScriptUrl(v)) return null;
+  try {
+    const u = new URL(v);
+    if (/^(https?|ftp):$/.test(u.protocol) && !u.hostname) return null;
+    return u.href;
+  } catch {
+    return null;
+  }
+}
+
+// A pinned bookmark whose address changes stays pinned, at the same place.
+function renamePinnedUrl(from, to) {
+  if (!state.highlighted.includes(from) && !Object.values(state.pinAfter).includes(from)) return;
+  state.highlighted = state.highlighted.map((u) => (u === from ? to : u));
+  const pinAfter = Object.create(null);
+  for (const [k, v] of Object.entries(state.pinAfter)) pinAfter[k === from ? to : k] = v === from ? to : v;
+  state.pinAfter = pinAfter;
+  saveLocal({ highlighted: state.highlighted, pinAfter });
 }
 
 /* ----- Moving bookmarks and folders, for real ----- */
@@ -843,7 +948,7 @@ function render() {
   const alone = cols.length === 1 && cols[0].classList.contains("wide");
   cols[0]?.classList.toggle("full", alone);
   if (masonry && !alone) layoutMasonry(cols);
-  else els.board.replaceChildren(...cols);
+  else { els.board.style.width = ""; els.board.replaceChildren(...cols); }
   els.board.hidden = !cols.length;
   els.empty.hidden = !(filtering && !cols.length && !loose.length);
   // An invitation to build the page, while there are almost no bookmarks.
@@ -938,6 +1043,104 @@ function renderFocusIcons() {
   }
 }
 
+/* ===================== Keep the screen on ===================== */
+// Like the "caffeine" apps (a sun, in keeping with the nature theme): keeps the screen on and the computer awake, indefinitely or for a
+// while. It uses the browser's Screen Wake Lock, which needs no permission but only works while
+// a ReStart page is shown: the browser releases it when the page is hidden (another tab, a
+// hidden window) and ReStart asks again when the page comes back. The menu says so.
+// The state is shared by every ReStart tab ("awakeUntil" in local storage: 0 = off,
+// -1 = until turned off, otherwise the end time). It is not a setting: never exported.
+const AWAKE_ICON = ICONS.sunny; // a sun: daylight, keeping the page awake
+const AWAKE_FOR = [15, 30, 60, 120, 240]; // minutes
+const awake = { until: 0, lock: null, timer: 0 };
+const awakeOn = () => awake.until === -1 || awake.until > Date.now();
+
+// "42 min", "1 h 05": minutes left, rounded up.
+function formatLeft(ms) {
+  const mins = Math.max(1, Math.ceil(ms / 60000));
+  const lang = t("lang");
+  const unit = (u, n, display = "short") => {
+    try { return new Intl.NumberFormat(lang, { style: "unit", unit: u, unitDisplay: display }).format(n); }
+    catch { return `${n} ${u === "hour" ? "h" : "min"}`; }
+  };
+  if (mins < 60) return unit("minute", mins);
+  const m = mins % 60;
+  return m ? `${unit("hour", Math.floor(mins / 60), "narrow")} ${String(m).padStart(2, "0")}` : unit("hour", mins / 60, "narrow");
+}
+const formatDuration = (mins) => formatLeft(mins * 60000);
+
+async function holdAwake() {
+  if (!awakeOn() || awake.lock || document.visibilityState !== "visible") return;
+  try {
+    const lock = await navigator.wakeLock.request("screen");
+    if (!awakeOn()) { lock.release().catch(() => {}); return; } // turned off meanwhile
+    awake.lock = lock;
+    lock.addEventListener("release", () => { if (awake.lock === lock) awake.lock = null; });
+  } catch (e) {
+    console.warn("ReStart: could not keep the screen on", e);
+  }
+}
+
+function showAwake() {
+  const on = awakeOn();
+  if (!on && awake.until) awake.until = 0;
+  if (!on && awake.lock) { awake.lock.release().catch(() => {}); awake.lock = null; }
+  if (on) holdAwake();
+  const timed = on && awake.until !== -1;
+  const left = timed ? formatLeft(awake.until - Date.now()) : "";
+  els.awakeBtn.setAttribute("aria-pressed", String(on));
+  els.awakeBtn.classList.toggle("timed", timed);
+  $("awake-left").textContent = left;
+  const label = !on ? t("keepAwake") : timed ? t("awakeLeft", left) : t("awakeAlways");
+  els.awakeBtn.title = label;
+  els.awakeBtn.setAttribute("aria-label", label);
+  clearTimeout(awake.timer);
+  // Refresh the time left every 15 s, and switch off right on time.
+  if (timed) awake.timer = setTimeout(showAwake, Math.min(15000, Math.max(250, awake.until - Date.now())));
+}
+
+function setAwake(until) {
+  awake.until = until;
+  saveLocal({ awakeUntil: until });
+  showAwake();
+}
+
+function openAwakeMenu() {
+  const on = awakeOn();
+  const item = (label, onclick, cls = "") =>
+    h("button", { class: `menu-item ${cls}`.trim(), role: "menuitem", onclick: () => { closePopover(); onclick(); } }, label);
+  const status = !on ? null : awake.until === -1 ? t("awakeAlways") : t("awakeLeft", formatLeft(awake.until - Date.now()));
+  openPopover(els.awakeBtn, [
+    h("div", { class: "awake-head" },
+      // How it works (only while ReStart is shown) sits in the (i) bubble, out of the way.
+      h("div", { class: "awake-title" }, svg(AWAKE_ICON), t("keepAwake"), infoBtn("awake", t("awakeHow"))),
+      status ? h("div", { class: "awake-status" }, status) : null),
+    h("div", { class: "menu-sep" }),
+    ...AWAKE_FOR.map((mins) => item(formatDuration(mins), () => setAwake(Date.now() + mins * 60000))),
+    item(t("awakeUntilOff"), () => setAwake(-1)),
+    on ? h("div", { class: "menu-sep" }) : null,
+    on ? item(t("awakeStop"), () => setAwake(0)) : null,
+  ].filter(Boolean), { cls: "menu awake-menu", align: "end" });
+  els.popover.setAttribute("role", "menu");
+}
+
+if ("wakeLock" in navigator) {
+  els.awakeBtn.hidden = false;
+  els.awakeBtn.addEventListener("click", () =>
+    (els.popover.hidden || popoverAnchor !== els.awakeBtn ? openAwakeMenu() : closePopover()));
+  document.addEventListener("visibilitychange", showAwake);
+  // Another ReStart tab turned it on or off.
+  ext.storage.onChanged.addListener((changes, area) => {
+    if (area !== "local" || !("awakeUntil" in changes)) return;
+    awake.until = sanitizeAwake(changes.awakeUntil.newValue);
+    showAwake();
+  });
+  store.get("awakeUntil").then(({ awakeUntil }) => { awake.until = sanitizeAwake(awakeUntil); showAwake(); }).catch(() => {});
+}
+function sanitizeAwake(v) {
+  return v === -1 || (Number.isFinite(v) && v > Date.now() && v < Date.now() + 25 * 3600000) ? v : 0;
+}
+
 els.focusBtn.addEventListener("click", () => {
   state.settings.focus = !state.settings.focus;
   if (state.settings.focus) { state.query = ""; els.search.value = ""; }
@@ -981,8 +1184,8 @@ function renderBar(links, tokens) {
   els.barRow.replaceChildren(...tiles);
 }
 
-// Drag a tile to change the order of the sites above the search bar: loose sites move in
-// the bookmarks bar, pinned sites change their order among pins.
+// Drag a tile to change the order of the sites above the search bar: any tile can go anywhere
+// (see placeTile).
 let dragTile = null;
 function wireTileDrag(tile, node) {
   tile.draggable = true;
@@ -998,10 +1201,10 @@ function wireTileDrag(tile, node) {
     dragItem = null;
     clearDropMarks();
   });
-  // A tile takes another tile of its group, or a bookmark from a folder (into the bookmarks bar).
+  // A tile takes any other tile, or a bookmark from a folder (into the bookmarks bar, next to a loose site).
   const accepts = () => (dragTile
-    ? dragTile !== node && tileGroup(dragTile) === tileGroup(node)
-    : !!dragItem && tileGroup(node) === "bar" && canMoveInto(dragItem, state.bar));
+    ? dragTile !== node
+    : !!dragItem && isLooseTile(node) && canMoveInto(dragItem, state.bar));
   tile.addEventListener("dragover", (e) => {
     if (!accepts()) return;
     e.stopPropagation();
@@ -1053,6 +1256,17 @@ new ResizeObserver(() => {
 const LANE_MIN = 250;
 const LANE_GAP = 12;
 let laneCount = 0;
+let laneRoom = 0; // lanes the width allows, even when fewer are used
+
+// The width the lanes can use: the board's room, not its own width, which is narrowed
+// to the lanes in use so that a few folders sit centered under the search bar.
+function masonryInner() {
+  const wrap = els.board.parentElement;
+  const ws = getComputedStyle(wrap);
+  const bs = getComputedStyle(els.board);
+  const room = Math.min(parseFloat(bs.maxWidth) || Infinity, wrap.clientWidth - parseFloat(ws.paddingLeft) - parseFloat(ws.paddingRight));
+  return room - parseFloat(bs.paddingLeft) - parseFloat(bs.paddingRight);
+}
 
 function lanesFor(width) {
   return Math.max(1, Math.floor((width + LANE_GAP) / (LANE_MIN + LANE_GAP)));
@@ -1060,9 +1274,19 @@ function lanesFor(width) {
 
 function layoutMasonry(cards) {
   cards = [...cards];
+  els.board.style.width = "";
   const style = getComputedStyle(els.board);
-  const inner = els.board.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-  laneCount = lanesFor(inner);
+  const inner = masonryInner();
+  laneRoom = lanesFor(inner);
+  // Fewer cards than lanes: keep the lanes' width but use only the lanes needed, and
+  // narrow the board to them so the block stays centered (the sites card takes two lanes).
+  const wide = cards.some((c) => c.classList.contains("wide")) && laneRoom >= 3;
+  laneCount = Math.max(1, Math.min(laneRoom, cards.length + (wide ? 1 : 0)));
+  if (laneCount < laneRoom) {
+    const laneW = (inner - (laneRoom - 1) * LANE_GAP) / laneRoom;
+    const pad = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+    els.board.style.width = `${Math.floor(laneCount * laneW + (laneCount - 1) * LANE_GAP + pad)}px`;
+  }
   const lanes = Array.from({ length: laneCount }, () => h("div", { class: "lane" }));
   els.board.replaceChildren(...lanes);
   const spacer = (height) => h("div", { class: "lane-spacer", style: `height:${height}px` });
@@ -1103,10 +1327,8 @@ function layoutMasonry(cards) {
 // Re-flow only when the number of lanes changes (not when a subfolder opens).
 new ResizeObserver(() => {
   if (!els.board.classList.contains("masonry")) return;
-  const style = getComputedStyle(els.board);
-  const inner = els.board.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-  if (lanesFor(inner) !== laneCount) render();
-}).observe(els.board);
+  if (lanesFor(masonryInner()) !== laneRoom) render();
+}).observe(els.board.parentElement);
 
 /* ===================== Column reordering (drag & drop) ===================== */
 
@@ -1200,11 +1422,68 @@ const hasUnderColor = (type) => isLit(type) || type === "leaves" || type === "sn
 // The page color that follows the hour, used when no color is chosen.
 const pageBase = () => (isDark() ? "#2a2a2e" : "#f6f6f7"); // dark: a soft charcoal, never black
 
+/* ----- Accent color: drawn from the background ----- */
+// The accent (focus rings, selections, buttons, Focus and Keep Awake when on) takes the hue of
+// the background: the halo or sky color, the chosen color or tint, or else the sky of the hour.
+// Its lightness is then set for legibility: at least 4.5:1 against the cards and menus for
+// text and rings (--accent), and against white text for filled buttons (--accent-fill).
+const luminance = ([r, g, b]) => {
+  const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+  return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+};
+const contrast = (a, b) => { const [x, y] = [luminance(a), luminance(b)].sort((m, n) => n - m); return (x + 0.05) / (y + 0.05); };
+function toHsl([r, g, b]) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), l = (max + min) / 2, d = max - min;
+  if (!d) return [0, 0, l];
+  const s = d / (1 - Math.abs(2 * l - 1));
+  const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return [(h * 60 + 360) % 360, s, l];
+}
+function fromHsl([h, s, l]) {
+  const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(((h / 60) % 2) - 1)), m = l - c / 2;
+  const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+  return [r, g, b].map((v) => Math.round((v + m) * 255));
+}
+// Move the lightness one way until the color reaches `ratio` against `against`.
+function legible([h, s, l], against, ratio, darker) {
+  for (let i = 0; i < 100; i++) {
+    const rgb = fromHsl([h, s, l]);
+    if (contrast(rgb, against) >= ratio || l <= 0.05 || l >= 0.95) return rgb;
+    l += darker ? -0.01 : 0.01;
+  }
+  return fromHsl([h, s, l]);
+}
+function accentSource(now) {
+  const bg = state.settings.bg || {};
+  const sky = () => skyAt(now)[0];
+  const solid = (v) => (HEX_COLOR.test(v) ? rgbOf(v) : BG_IDS.has(v) && v !== "gray" ? rgbOf(pastelOf(v).light) : null);
+  let rgb = null;
+  if (isLit(bg.type)) { const g = glowOf(bg.value); rgb = g.id === "sky" ? sky() : rgbOf(g.base); }
+  else if (bg.type === "color") rgb = solid(bg.value);
+  else rgb = solid(bg.tint);
+  // No color chosen, or one without a hue (gray): the sky of the hour.
+  if (!rgb || toHsl(rgb)[1] < 0.08) rgb = sky();
+  return rgb;
+}
+function applyAccent(now = new Date()) {
+  const [h, s] = toHsl(accentSource(now));
+  const hsl = [h, Math.min(0.85, Math.max(0.5, s)), isDark() ? 0.62 : 0.45];
+  const white = [255, 255, 255];
+  const surface = isDark() ? rgbOf("#36363a") : white;
+  const text = legible(hsl, surface, 4.5, !isDark());
+  const fill = legible([h, hsl[1], Math.min(hsl[2], 0.48)], white, 4.5, true);
+  const css = (c) => `rgb(${c.join(",")})`;
+  document.documentElement.style.setProperty("--accent", css(text));
+  document.documentElement.style.setProperty("--accent-fill", css(fill));
+}
+
 function applyAppearance() {
   const s = state.settings;
   const root = document.documentElement.style;
   root.setProperty("--col-alpha", String(s.colAlpha));
   applyTheme();
+  applyAccent();
 
   let layer = "none";
   let glow = { halo: "none", rays: [] };
@@ -1852,7 +2131,7 @@ function openBookmarkMenu(node, anchor, x, y) {
 
   const tileMoves = () => {
     if (!anchor.closest?.(".bar-row") || state.query) return [];
-    const urls = topRowSites().filter((c) => tileGroup(c) === tileGroup(node)).map((c) => c.url);
+    const urls = topRowSites().map((c) => c.url);
     const i = urls.indexOf(node.url);
     const move = (d) => () => { closePopover({ restoreFocus: false }); moveTile(node, d); };
     return [
@@ -1878,42 +2157,69 @@ function openBookmarkMenu(node, anchor, x, y) {
       !isLoose || sitesOverflow() || pinned
         ? item(pinned ? t("unhighlight") : t("highlight"), pinned ? UI.starOff : UI.star, () => {
           state.highlighted = pinned ? state.highlighted.filter((u) => u !== node.url) : [...state.highlighted, node.url];
-          saveLocal({ highlighted: state.highlighted });
+          if (pinned) delete state.pinAfter[node.url]; // pinned again later, it starts at the end
+          saveLocal({ highlighted: state.highlighted, pinAfter: state.pinAfter });
           closePopover({ restoreFocus: false });
           render();
         })
         : null,
-      // Tiles above the search bar: move left or right (order kept in ReStart only).
+      // Tiles above the search bar: move left or right.
       ...tileMoves(),
       editable && !state.query && state.byId.has(node.parentId) ? item(t("moveTo"), UI.subfolder, () => showMoveTo(node, x, y)) : null,
       editable ? h("div", { class: "menu-sep" }) : null,
-      editable ? item(t("rename"), UI.edit, showRename) : null,
+      editable ? item(t("edit"), UI.edit, showEdit) : null,
       editable ? del : null,
     ].filter(Boolean));
   };
 
-  const showRename = () => {
-    const input = h("input", { class: "icon-filter", type: "text", maxlength: "1000", value: node.title || "", "aria-label": t("rename") });
+  // Edit the name and the address of the bookmark, in the browser's bookmarks.
+  // Bookmarklets keep their address: only their name can be changed here.
+  const showEdit = () => {
+    const withUrl = !isScriptUrl(node.url);
+    const name = h("input", { class: "icon-filter", type: "text", maxlength: "1000", value: node.title || "", "aria-label": t("name") });
+    const address = withUrl
+      ? h("input", { class: "icon-filter", type: "url", maxlength: "8192", value: node.url || "", "aria-label": t("url"), spellcheck: "false", autocapitalize: "off" })
+      : null;
+    const error = h("p", { class: "edit-error", role: "alert", hidden: true });
     const save = () => {
-      const title = input.value.trim();
-      closePopover({ restoreFocus: false });
-      if (title && title !== node.title) {
-        ext.bookmarks.update(node.id, { title }).catch((e) => console.warn("ReStart: rename failed", e));
+      const title = name.value.trim();
+      const changes = {};
+      if (title && title !== node.title) changes.title = title;
+      if (address) {
+        const url = normalizeUrl(address.value);
+        if (!url) {
+          error.textContent = t("invalidUrl");
+          error.hidden = false;
+          address.setAttribute("aria-invalid", "true");
+          address.focus();
+          return;
+        }
+        if (url !== node.url) changes.url = url;
       }
+      closePopover({ restoreFocus: false });
+      if (!Object.keys(changes).length) return;
+      if (changes.url) renamePinnedUrl(node.url, changes.url);
+      ext.bookmarks.update(node.id, changes).catch((e) => console.warn("ReStart: edit failed", e));
     };
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") { e.preventDefault(); save(); }
-      if (e.key === "Escape") { e.stopPropagation(); closePopover(); }
-    });
-    els.popover.replaceChildren(
-      h("div", { class: "pop-section" }, t("rename")),
-      input,
+    for (const input of [name, address].filter(Boolean)) {
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") { e.preventDefault(); save(); }
+        if (e.key === "Escape") { e.stopPropagation(); closePopover(); }
+      });
+    }
+    els.popover.replaceChildren(...[
+      h("div", { class: "pop-section" }, t("name")),
+      name,
+      address ? h("div", { class: "pop-section" }, t("url")) : null,
+      address,
+      error,
       h("div", { class: "btn-row", style: "justify-content:flex-end" },
         h("button", { class: "text-btn", onclick: () => closePopover() }, t("cancel")),
         h("button", { class: "text-btn primary", onclick: save }, t("save"))),
-    );
-    input.focus();
-    input.select();
+    ].filter(Boolean));
+    els.popover.classList.add("form-pop"); // a small form: more room than a menu (reset on the next popover)
+    name.focus();
+    name.select();
   };
 
   openPopover(anchor, [], { cls: "menu", at: { x, y } });
@@ -1967,6 +2273,7 @@ function openFolderMenu(node, anchor, x, y) {
         h("button", { class: "text-btn", onclick: () => closePopover() }, t("cancel")),
         h("button", { class: "text-btn primary", onclick: save }, t("save"))),
     );
+    els.popover.classList.add("form-pop");
     placeAt(x, y);
     input.focus();
     input.select();
@@ -2513,6 +2820,7 @@ function settingsContent() {
       h("div", { class: "set-field" },
         rangeRow(t("colOpacity"), 0, 1, 0.05, s.colAlpha, (v) => { s.colAlpha = v; saveSettingsSoon(); },
           (v) => percent.format(v))),
+      switchRow("set-letter-icons", t("letterIcons"), !!s.letterIcons, (v) => { s.letterIcons = v; saveSettings(); render(); }),
       h("div", { class: "set-field" },
         h("div", { class: "set-label" }, t("layout"), narrowQuery.matches ? infoBtn("layout", t("layoutNarrowHint")) : null),
         segmented([["masonry", t("layoutMasonry")], ["board", t("layoutBoard")]], s.layout, (v) => { s.layout = v; saveSettings(); render(); }),
@@ -2751,6 +3059,7 @@ function sanitizeSettings(raw) {
   if (typeof raw.focusClock === "boolean") s.focusClock = raw.focusClock;
   if (["auto", "12", "24"].includes(raw.clockFormat)) s.clockFormat = raw.clockFormat;
   if (typeof raw.focusGray === "boolean") s.focusGray = raw.focusGray;
+  if (typeof raw.letterIcons === "boolean") s.letterIcons = raw.letterIcons;
   if (["auto", "light", "dark"].includes(raw.theme)) s.theme = raw.theme;
   if (Number.isFinite(raw.glowStrength)) s.glowStrength = Math.min(2, Math.max(0, raw.glowStrength));
   if (Number.isFinite(raw.colAlpha)) s.colAlpha = Math.min(1, Math.max(0, raw.colAlpha));
@@ -2795,6 +3104,7 @@ function sanitizeImport(prefs) {
   const out = { settings: sanitizeSettings(prefs.settings) };
   delete out.settings.showTopSites;
   for (const key of ["order", "hidden", "highlighted"]) if (key in prefs) out[key] = stringList(prefs[key]);
+  if ("pinAfter" in prefs) out.pinAfter = sanitizePinAfter(prefs.pinAfter);
   // A file exported by 1.1 may hold an order of the tiles: keep it as the order of the pinned sites.
   const tiles = stringList(prefs.tileOrder);
   if (tiles.length && out.highlighted) {
@@ -2838,6 +3148,7 @@ async function loadStorage() {
   state.order = stringList(data.order);
   state.hidden = stringList(data.hidden);
   state.highlighted = stringList(data.highlighted);
+  state.pinAfter = sanitizePinAfter(data.pinAfter);
   // 1.1 kept its own order of the tiles ("tileOrder"; test builds also had "itemOrder"). Bookmarks
   // now move for real: the bar's sites follow the bookmarks bar, and the tile order is kept as the
   // order of the pinned sites. Nothing is written to the bookmarks.
@@ -2903,6 +3214,7 @@ for (const attr of ["aria-label", "title", "placeholder"]) {
 }
 $("settings-path").setAttribute("d", UI.tune);
 $("focus-path").setAttribute("d", UI.focus);
+$("awake-path").setAttribute("d", AWAKE_ICON);
 $("search-path").setAttribute("d", UI.search);
 $("enter-path").setAttribute("d", UI.enter);
 

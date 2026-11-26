@@ -8,10 +8,10 @@ ReStart is a new tab page that displays your browser bookmarks. It has no server
 
 | Data | What for | Where it stays |
 |---|---|---|
-| Your bookmarks | Displayed on the new tab page. Changed only when you ask: rename, move or delete a bookmark or a folder (right-click menu, or dragging to reorder), or add a most visited site to your bookmarks (optionally in a new folder). | In your browser. ReStart reads and edits them through the browser's bookmarks API. |
+| Your bookmarks | Displayed on the new tab page. Changed only when you ask: edit a bookmark's name or address, rename a folder, move or delete a bookmark or a folder (right-click menu, or dragging to reorder), or add a most visited site to your bookmarks (optionally in a new folder). | In your browser. ReStart reads and edits them through the browser's bookmarks API. |
 | Most visited sites | Displayed in the optional *Most visited* column. In Firefox, also used to show the icons of those sites next to matching bookmarks. | In your browser, read on demand, never stored by ReStart. |
 | Site icons | Displayed next to each bookmark. | Read from your browser: its favicon cache in Chromium-based browsers, the icons of your most visited sites in Firefox. ReStart does not download or store them. |
-| Your settings and customizations (folder icons and colors, hidden columns, pinned sites and their order, the place of the columns that are not folders, appearance, focus mode) and display state (which folders are expanded, whether the welcome card was closed) | To remember your preferences. | In the extension's local storage, on your device only. The theme choice (auto, light or dark) is also kept in the page's local storage, so the page opens in the right theme without a flash. ReStart does not sync them; use Export / Import in the settings to move them to another device. |
+| Your settings and customizations (folder icons and colors, hidden columns, pinned sites and their place among the tiles, the place of the columns that are not folders, appearance, focus mode) and display state (which folders are expanded, whether the welcome card was closed, whether the screen is kept on and until when) | To remember your preferences. | In the extension's local storage, on your device only. The theme choice (auto, light or dark) is also kept in the page's local storage, so the page opens in the right theme without a flash. ReStart does not sync them; use Export / Import in the settings to move them to another device. |
 
 ## Export files
 

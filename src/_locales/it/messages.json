@@ -186,6 +186,47 @@
   "unhighlight": {
     "message": "Rimuovi dall'evidenza"
   },
+  "edit": {
+    "message": "Modifica"
+  },
+  "name": {
+    "message": "Nome"
+  },
+  "url": {
+    "message": "URL"
+  },
+  "invalidUrl": {
+    "message": "Inserisci un indirizzo web valido, ad esempio https://example.com."
+  },
+  "awakeLabel": {
+    "message": "Mantieni attivo"
+  },
+  "keepAwake": {
+    "message": "Mantieni lo schermo acceso"
+  },
+  "awakeHow": {
+    "message": "Impedisce allo schermo di spegnersi e al computer di andare in stop, ma solo finché ReStart è visibile: si interrompe se passi a un'altra scheda o nascondi la finestra, e riprende quando torni."
+  },
+  "awakeLeft": {
+    "message": "Attivo, ancora $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "awakeAlways": {
+    "message": "Attivo finché non lo disattivi"
+  },
+  "awakeUntilOff": {
+    "message": "Finché non lo disattivo"
+  },
+  "awakeStop": {
+    "message": "Disattiva"
+  },
+  "letterIcons": {
+    "message": "Lettere al posto delle icone dei siti"
+  },
   "rename": {
     "message": "Rinomina"
   },
@@ -380,10 +421,10 @@
     "message": "I tuoi preferiti, nel tuo ordine."
   },
   "welcome2": {
-    "message": "Fai clic destro su un sito o una cartella per le azioni rapide: fissa, rinomina, sposta, elimina."
+    "message": "Fai clic destro su un sito o una cartella per le azioni rapide: fissa, modifica, sposta, elimina."
   },
   "welcome3": {
-    "message": "Focus: una pagina calma con un clic."
+    "message": "Focus: una pagina calma con un clic. Il sole accanto mantiene lo schermo acceso."
   },
   "welcomeStart": {
     "message": "Iniziamo"

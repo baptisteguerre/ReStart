@@ -186,6 +186,47 @@
   "unhighlight": {
     "message": "Unpin"
   },
+  "edit": {
+    "message": "Edit"
+  },
+  "name": {
+    "message": "Name"
+  },
+  "url": {
+    "message": "URL"
+  },
+  "invalidUrl": {
+    "message": "Enter a valid web address, such as https://example.com."
+  },
+  "awakeLabel": {
+    "message": "Keep Awake"
+  },
+  "keepAwake": {
+    "message": "Keep the screen on"
+  },
+  "awakeHow": {
+    "message": "Stops the screen from turning off and the computer from going to sleep, but only while ReStart is shown: it pauses when you switch to another tab or hide the window, and starts again when you come back."
+  },
+  "awakeLeft": {
+    "message": "On, $NAME$ left",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "awakeAlways": {
+    "message": "On until you turn it off"
+  },
+  "awakeUntilOff": {
+    "message": "Until I turn it off"
+  },
+  "awakeStop": {
+    "message": "Turn off"
+  },
+  "letterIcons": {
+    "message": "Letters instead of site icons"
+  },
   "rename": {
     "message": "Rename"
   },
@@ -380,10 +421,10 @@
     "message": "Your bookmarks, in your order."
   },
   "welcome2": {
-    "message": "Right-click a site or a folder for quick actions: pin, rename, move, delete."
+    "message": "Right-click a site or a folder for quick actions: pin, edit, move, delete."
   },
   "welcome3": {
-    "message": "Focus: a calm page in one click."
+    "message": "Focus: a calm page in one click. The sun next to it keeps the screen on."
   },
   "welcomeStart": {
     "message": "Get started"

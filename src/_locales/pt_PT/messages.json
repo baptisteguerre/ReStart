@@ -227,6 +227,15 @@
   "letterIcons": {
     "message": "Letras em vez dos ícones dos sites"
   },
+  "collapse": {
+    "message": "Recolher"
+  },
+  "expand": {
+    "message": "Expandir"
+  },
+  "hideColumn": {
+    "message": "Ocultar esta pasta (mostrar novamente em Definições, Colunas)"
+  },
   "rename": {
     "message": "Renomear"
   },

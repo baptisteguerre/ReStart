@@ -227,6 +227,15 @@
   "letterIcons": {
     "message": "Lettres au lieu des icônes des sites"
   },
+  "collapse": {
+    "message": "Replier"
+  },
+  "expand": {
+    "message": "Déplier"
+  },
+  "hideColumn": {
+    "message": "Masquer ce dossier (le réafficher dans Réglages, Colonnes)"
+  },
   "rename": {
     "message": "Renommer"
   },

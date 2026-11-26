@@ -84,6 +84,7 @@ const state = {
   hidden: [],                // column keys hidden
   open: new Set(),           // expanded subfolder ids
   openCols: new Set(),       // expanded columns in stacked layout
+  closedCols: new Set(),     // collapsed columns in wide layouts (Mosaic, Board)
   highlighted: [],           // URLs of bookmarks pinned above the search bar (loose or inside folders)
   pinAfter: Object.create(null), // where each pinned tile sits among the loose sites: URL of the site it follows ("" = first)
   byId: new Map(),           // bookmark id → node, for the bars' and folders' children
@@ -795,7 +796,8 @@ function renderColumn(col, tokens) {
 
   const stacked = narrowQuery.matches;
   // The wide Most visited card is the whole page: always open.
-  const expanded = !stacked || filtering || spotlight || state.openCols.has(key);
+  // Wide layouts: open unless collapsed with its button. Narrow: closed unless opened.
+  const expanded = filtering || spotlight || (stacked ? state.openCols.has(key) : !state.closedCols.has(key));
   const el = h("article", { class: `column${expanded ? "" : " collapsed"}${kind === "sites" ? " wide sites" : ""}${spotlight ? " spotlight" : ""}`, "data-key": key });
   if (node && !filtering) wireDropInto(el, node);
   if (spotlight) el.style.setProperty("--per-row", String(balancedPerRow(children.length, 10)));
@@ -817,8 +819,38 @@ function renderColumn(col, tokens) {
     h("span", { class: "col-count" }, String(total)),
     svg(UI.chevron, "col-chev"));
 
+  // Wide layouts: a small button collapses the folder, in place of the count (which it
+  // keeps in its tooltip). Not while filtering, and not on the Most visited card shown alone.
+  const collapsible = !filtering && !spotlight && kind !== "sites";
+  const label = () => `${t(el.classList.contains("collapsed") ? "expand" : "collapse")} (${total})`;
+  const collapseBtn = collapsible ? h("button", {
+    class: "col-collapse", type: "button", "aria-expanded": String(expanded),
+    onclick: (e) => {
+      e.stopPropagation();
+      const open = el.classList.toggle("collapsed") === false;
+      collapseBtn.setAttribute("aria-expanded", String(open));
+      collapseBtn.title = label();
+      collapseBtn.setAttribute("aria-label", label());
+      open ? state.closedCols.delete(key) : state.closedCols.add(key);
+      store.set({ closedCols: [...state.closedCols] });
+      // Mosaic: lay the cards out again, so a folded card no longer leaves a hole below it.
+      if (els.board.classList.contains("masonry")) relayoutSmoothly();
+    },
+  }, svg(UI.chevron)) : null;
+  if (collapseBtn) { collapseBtn.title = label(); collapseBtn.setAttribute("aria-label", label()); }
+  // Folded, a folder also offers to hide it altogether (shown again from Settings › Columns).
+  const hideBtn = collapsible ? h("button", {
+    class: "col-hide", type: "button", title: t("hideColumn"), "aria-label": t("hideColumn"),
+    onclick: (e) => {
+      e.stopPropagation();
+      state.hidden = [...state.hidden.filter((k) => k !== key), key];
+      saveLocal({ hidden: state.hidden });
+      relayoutSmoothly();
+    },
+  }, svg(ICONS.visibility)) : null;
+
   const head = h("header", { class: "col-head", draggable: filtering ? null : "true" },
-    glyphBtn, toggle);
+    glyphBtn, toggle, hideBtn, collapseBtn);
   // Right-click on a folder's header: rename or delete the folder (not on Other bookmarks).
   if (node && node.id !== state.other?.id) {
     head.addEventListener("contextmenu", (e) => {
@@ -1272,6 +1304,23 @@ function lanesFor(width) {
   return Math.max(1, Math.floor((width + LANE_GAP) / (LANE_MIN + LANE_GAP)));
 }
 
+// Render again and let each card glide from its old place to its new one (FLIP), so a
+// re-layout reads as a calm movement rather than a jump.
+function relayoutSmoothly() {
+  const before = new Map([...els.board.querySelectorAll(".column")].map((c) => [c.dataset.key, c.getBoundingClientRect()]));
+  render();
+  if (motionQuery.matches || (state.settings.motion ?? 1) === 0) return;
+  for (const c of els.board.querySelectorAll(".column")) {
+    const a = before.get(c.dataset.key);
+    if (!a) continue;
+    const b = c.getBoundingClientRect();
+    const dx = a.left - b.left, dy = a.top - b.top;
+    if (!dx && !dy) continue;
+    c.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }],
+      { duration: 280, easing: "cubic-bezier(.2,.7,.2,1)" });
+  }
+}
+
 function layoutMasonry(cards) {
   cards = [...cards];
   els.board.style.width = "";
@@ -1281,7 +1330,9 @@ function layoutMasonry(cards) {
   // Fewer cards than lanes: keep the lanes' width but use only the lanes needed, and
   // narrow the board to them so the block stays centered (the sites card takes two lanes).
   const wide = cards.some((c) => c.classList.contains("wide")) && laneRoom >= 3;
-  laneCount = Math.max(1, Math.min(laneRoom, cards.length + (wide ? 1 : 0)));
+  // A folded card shares its lane with the card that follows it (see below).
+  const units = cards.filter((c, i) => !(c.classList.contains("collapsed") && i < cards.length - 1)).length;
+  laneCount = Math.max(1, Math.min(laneRoom, units + (wide ? 1 : 0)));
   if (laneCount < laneRoom) {
     const laneW = (inner - (laneRoom - 1) * LANE_GAP) / laneRoom;
     const pad = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
@@ -1306,8 +1357,10 @@ function layoutMasonry(cards) {
     cards = cards.filter((c) => c !== wide);
   }
 
+  let stick = null;
   for (const card of cards) {
     if (card.classList.contains("wide") && laneCount > 1) {
+      stick = null;
       // Two lanes only: the sites card spans both, folders continue below.
       const [a, b] = [lanes[0], lanes[1]];
       const level = Math.max(a.offsetHeight, b.offsetHeight);
@@ -1318,9 +1371,15 @@ function layoutMasonry(cards) {
       b.append(spacer(card.offsetHeight + LANE_GAP));
       continue;
     }
-    let target = free[0];
-    for (const lane of free) if (lane.offsetHeight < target.offsetHeight) target = lane;
+    // A folded folder keeps its place in the reading order, and the next card comes right
+    // under it, in the same lane (instead of whatever card happens to land there later).
+    let target = stick;
+    if (!target) {
+      target = free[0];
+      for (const lane of free) if (lane.offsetHeight < target.offsetHeight) target = lane;
+    }
     target.append(card);
+    stick = card.classList.contains("collapsed") ? target : null;
   }
 }
 
@@ -1678,7 +1737,7 @@ function glowLayer(now, value, rays = false) {
     core = base.map((c) => 255 + (c - 255) * mix);
     fringe = fringeOf(base).map((c) => 255 + (c - 255) * mix);
   }
-  const strength = lightStrength(state.settings.glowStrength ?? 1);
+  const strength = lightStrength(state.settings.glowStrength ?? 1, rays);
   const alpha = (isDark() ? 0.95 : 1) * k * strength;
   const x = sunX(t);
   if (!rays) return { halo: glowGradient(core, fringe, alpha, x, strength), rays: [] };
@@ -1730,11 +1789,12 @@ function refreshGlow() {
 }
 document.addEventListener("visibilitychange", () => updateDrift());
 
-// The intensity of the light (halo and rays). The setting is shown on a 0-100 scale with 1 in
-// the middle; for the light, that middle is 1.2 (what 60 % used to give), and the top of the
-// scale still gives 2.
-function lightStrength(v) {
-  return v <= 1 ? 1.2 * v : 1.2 + 0.8 * (v - 1);
+// The intensity of the light. The setting is shown on a 0-100 scale with 1 in the middle, and
+// the top of the scale always gives 2. The middle is set per kind of light: the glow is calmer
+// (0.96, what 40 % gave in 1.3.0), the rays a little stronger (1.2, what 60 % gave in 1.2).
+function lightStrength(v, rays = false) {
+  const mid = rays ? 1.2 : 0.96;
+  return v <= 1 ? mid * v : mid + (2 - mid) * (v - 1);
 }
 
 // Four sets of shafts, each spread across the fan so that the sets interleave.
@@ -2334,6 +2394,7 @@ function moveFolderPrefs(from, to) {
   state.order = items.order;
   state.hidden = items.hidden;
   if (state.openCols.has(from)) { state.openCols.delete(from); state.openCols.add(to); items.openCols = [...state.openCols]; }
+  if (state.closedCols.has(from)) { state.closedCols.delete(from); state.closedCols.add(to); items.closedCols = [...state.closedCols]; }
   const style = state.folderStyles[from];
   if (style && !Object.hasOwn(state.folderStyles, to)) {
     state.folderStyles[to] = style;
@@ -3223,6 +3284,7 @@ async function loadStorage() {
 
   state.open = new Set(stringList(data.open, 5000));
   state.openCols = new Set(stringList(data.openCols));
+  state.closedCols = new Set(stringList(data.closedCols));
 }
 
 let reloadTimer;

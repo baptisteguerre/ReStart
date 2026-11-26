@@ -227,6 +227,15 @@
   "letterIcons": {
     "message": "Letters in plaats van sitepictogrammen"
   },
+  "collapse": {
+    "message": "Inklappen"
+  },
+  "expand": {
+    "message": "Uitklappen"
+  },
+  "hideColumn": {
+    "message": "Deze map verbergen (weer tonen via Instellingen, Kolommen)"
+  },
   "rename": {
     "message": "Naam wijzigen"
   },

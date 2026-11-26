@@ -227,6 +227,15 @@
   "letterIcons": {
     "message": "Lettere al posto delle icone dei siti"
   },
+  "collapse": {
+    "message": "Comprimi"
+  },
+  "expand": {
+    "message": "Espandi"
+  },
+  "hideColumn": {
+    "message": "Nascondi questa cartella (mostrala di nuovo in Impostazioni, Colonne)"
+  },
   "rename": {
     "message": "Rinomina"
   },

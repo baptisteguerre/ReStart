@@ -227,6 +227,15 @@
   "letterIcons": {
     "message": "Letras en lugar de los iconos de los sitios"
   },
+  "collapse": {
+    "message": "Contraer"
+  },
+  "expand": {
+    "message": "Expandir"
+  },
+  "hideColumn": {
+    "message": "Ocultar esta carpeta (volver a mostrarla en Ajustes, Columnas)"
+  },
   "rename": {
     "message": "Cambiar nombre"
   },

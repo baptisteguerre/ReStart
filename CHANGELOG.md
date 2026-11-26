@@ -2,27 +2,42 @@
 
 All notable changes to ReStart. Versions follow [semantic versioning](https://semver.org).
 
+## 1.3.1
+
+### Added
+
+- **Pastels, a color that drifts.** Next to *Sky*, the glow and the rays can take *Pastels*: the light goes slowly through peach, pink, lilac, blue, aqua, mint and gold, about 90 seconds per color at the normal *Motion* speed (a full round in about 10 minutes). Every tab shows the same color at the same time.
+- **Collapse a folder** in Mosaic and Board: a small chevron in each folder's header, in place of the number of sites (still shown in its tooltip), folds the folder down to its header. In Mosaic, the cards then rearrange with a short, smooth movement: a folded folder keeps its place in the reading order and the next folder comes right under it, so it leaves no hole; in Board, a folded folder becomes a slim vertical strip with its name, so the other columns come closer. It stays folded until you open it again; filtering shows it open while you search. A folded folder also shows a small crossed-out eye next to its chevron, to hide it altogether (Settings, Columns shows it again). The narrow list keeps its own behavior.
+- **Keep Awake in the welcome card.** The welcome card has a fourth line for *Keep Awake* (only where the browser supports it); the *Focus* line is back to its own sentence.
+
+### Changed
+
+- **Sky in Japanese-inspired colors.** Sky's palette is redrawn, loosely inspired by traditional Japanese colors, with no greys and no ochres: wisteria at night, lilac before dawn, carnation pink at dawn and dusk, a pale rosy peach for the low sun (no more gold turning caramel), white wisteria as the light rises, sky blue at midday. The seasons change the hue rather than draining the color: winter days turn to a pale, clear aqua instead of a warm grey. In dark mode, Sky keeps a little more color.
+- **Halo is now called Glow** in English, and *Lueur* in French (the other languages keep their word).
+- **A calmer glow by default.** The middle of the *Intensity* slider (shown as 50 %) now gives the glow what 40 % gave in 1.3.0. The top of the slider is unchanged, and so are the rays.
+- **The accent never turns brown.** Orange, gold and olive hues become a sunset rose, so the accent stays fresh with every background.
+
+### Fixed
+
+- **Column opacity really makes columns see-through.** At low opacity, the columns kept their frosted blur, so the background stayed hidden behind them even at 0 %. The blur now follows the opacity: at 0 %, the background shows through, sharp.
+
 ## 1.3.0
 
 ### Added
 
-- **Keep the screen on.** A *Keep Awake* button (a sun) next to *Focus* keeps the screen on and the computer awake for 15 minutes, 30 minutes, 1, 2 or 4 hours, or until you turn it off, like the *Caffeine* apps. The time left shows next to its label, and every ReStart tab shares the same state. It uses the browser's Screen Wake Lock: no permission is needed, but it only works while a ReStart page is shown. It pauses when you switch to another tab or hide the window, and starts again when you come back; the menu explains this. The welcome card has a line for it.
-- **Pastels, a color that drifts.** Next to *Sky*, the glow and the rays can take *Pastels*: the light goes slowly through peach, pink, lilac, blue, aqua, mint and gold, about 90 seconds per color at the normal *Motion* speed (a full round in about 10 minutes). Every tab shows the same color at the same time.
+- **Keep the screen on.** A *Keep Awake* button (a sun) next to *Focus* keeps the screen on and the computer awake for 15 minutes, 30 minutes, 1, 2 or 4 hours, or until you turn it off, like the *Caffeine* apps. The time left shows next to its label, and every ReStart tab shares the same state. It uses the browser's Screen Wake Lock: no permission is needed, but it only works while a ReStart page is shown. It pauses when you switch to another tab or hide the window, and starts again when you come back; the menu explains this. The welcome card mentions it.
 - **Letters instead of site icons** (Appearance, off by default): every site gets a pastel square with the first letter of its name, for a calm, even look. Each site keeps the same color everywhere. No icon is requested while it is on.
 - **Edit a bookmark's address.** *Rename* in a bookmark's right-click menu becomes *Edit*: the name and the address, saved in the browser's bookmarks. An address typed without a scheme gets `https://`; scripts, inline documents and invalid addresses are refused. A pinned bookmark stays pinned, at the same place. Bookmarklets keep their address: only their name can be edited. The welcome card says *edit* instead of *rename*.
 
 ### Changed
 
-- **Halo is now called Glow** in English, and *Lueur* in French (the other languages keep their word).
-- **Sky in Japanese-inspired colors.** Sky's palette is redrawn, loosely inspired by traditional Japanese colors, with no greys and no ochres: wisteria at night, lilac before dawn, carnation pink at dawn and dusk, a pale rosy peach for the low sun (no more gold turning caramel), white wisteria as the light rises, sky blue at midday. The seasons change the hue rather than draining the color: winter days turn to a pale, clear aqua instead of a warm grey. In dark mode, Sky keeps a little more color.
 - **Tiles above the search bar can go anywhere.** Pinned sites and sites of the bookmarks bar are no longer two separate groups: drag any tile before or after any other (or use *Move left* / *Move right*). Sites of the bookmarks bar still move in the bar itself. Pinned bookmarks that share a folder also take that order in their folder, swapping the places they already hold there, so the other bookmarks don't move. ReStart remembers where each pinned site sits among the others, and exports it with the other customizations.
-- **An accent color drawn from the background.** The accent (focus rings, selections, buttons) takes the hue of the background instead of a fixed blue: the glow or Sky color of the moment, the chosen color or tint, or else the sky of the hour. Its lightness is adjusted to stay legible (at least 4.5:1 against cards and menus, and behind white text on buttons). Orange, gold and olive hues become a sunset rose, so the accent never turns brown.
+- **An accent color drawn from the background.** The accent (focus rings, selections, buttons) takes the hue of the background instead of a fixed blue: the halo or Sky color of the moment, the chosen color or tint, or else the sky of the hour. Its lightness is adjusted to stay legible (at least 4.5:1 against cards and menus, and behind white text on buttons).
 - **Clearer on and off.** *Focus* and *Keep Awake* take the accent color when they are on, in light and dark mode; off, they stay neutral.
 
 ### Fixed
 
 - **Mosaic stays centered.** With fewer folders than the width allows, the cards kept their width but started on the left, leaving an empty space on the right. They are now centered under the search bar.
-- **Column opacity really makes columns see-through.** At low opacity, the columns kept their frosted blur, so the background stayed hidden behind them even at 0 %. The blur now follows the opacity: at 0 %, the background shows through, sharp.
 - **More room in small forms.** Editing a bookmark and renaming a folder open with the padding of a panel instead of the tight edges of a menu.
 
 ## 1.2.1

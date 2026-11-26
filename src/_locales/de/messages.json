@@ -227,6 +227,15 @@
   "letterIcons": {
     "message": "Buchstaben statt Seitensymbolen"
   },
+  "collapse": {
+    "message": "Einklappen"
+  },
+  "expand": {
+    "message": "Ausklappen"
+  },
+  "hideColumn": {
+    "message": "Diesen Ordner ausblenden (wieder einblenden unter Einstellungen, Spalten)"
+  },
   "rename": {
     "message": "Umbenennen"
   },

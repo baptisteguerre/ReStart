@@ -227,6 +227,15 @@
   "letterIcons": {
     "message": "Letters instead of site icons"
   },
+  "collapse": {
+    "message": "Collapse"
+  },
+  "expand": {
+    "message": "Expand"
+  },
+  "hideColumn": {
+    "message": "Hide this folder (show it again in Settings, Columns)"
+  },
   "rename": {
     "message": "Rename"
   },

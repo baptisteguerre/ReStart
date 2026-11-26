@@ -89,7 +89,7 @@
     "message": "Farbe des Scheins"
   },
   "glowHint": {
-    "message": "Er folgt der Sonne, morgens links, abends rechts. Himmel nimmt die Farben des Tages an: Rosa im Morgengrauen, klares Blau am Tag, Gold und dann Rosé bei Sonnenuntergang, sanftes Blau in der Nacht. Er folgt auch der Jahreszeit: längere Tage im Sommer, sanfter und grauer im Winter. Die anderen Farben behalten ihren Ton und werden nachts sanfter."
+    "message": "Er folgt der Sonne, morgens links, abends rechts. Himmel nimmt die Farben des Tages an, inspiriert von japanischen Farben: Rosa im Morgengrauen, Himmelblau am Tag (ein blasses Aqua im Winter), Pfirsich und dann Rosa bei Sonnenuntergang, Glyzinie in der Nacht. Er folgt auch der Jahreszeit: längere Tage im Sommer, blasser und kühler im Winter. Die anderen Farben behalten ihren Ton und werden nachts sanfter. Pastelltöne wechselt langsam von einer sanften Farbe zur nächsten."
   },
   "colOpacity": {
     "message": "Spaltendeckkraft"
@@ -367,6 +367,9 @@
   "c_red": {
     "message": "Rot"
   },
+  "c_drift": {
+    "message": "Pastelltöne"
+  },
   "c_sky": {
     "message": "Himmel"
   },
@@ -424,7 +427,10 @@
     "message": "Rechtsklick auf eine Seite oder einen Ordner für schnelle Aktionen: anheften, bearbeiten, verschieben, löschen."
   },
   "welcome3": {
-    "message": "Fokus: eine ruhige Seite mit einem Klick. Die Sonne daneben lässt den Bildschirm an."
+    "message": "Fokus: eine ruhige Seite mit einem Klick."
+  },
+  "welcome4": {
+    "message": "Wach halten: Der Bildschirm bleibt an, eine Weile oder bis Sie es ausschalten."
   },
   "welcomeStart": {
     "message": "Los geht's"

@@ -89,7 +89,7 @@
     "message": "Color del halo"
   },
   "glowHint": {
-    "message": "Sigue al sol, de la izquierda por la mañana a la derecha por la tarde. Cielo toma los colores del día: rosa al amanecer, un azul claro durante el día, dorado y luego rosa al atardecer, azul suave de noche. También sigue la estación: días más largos en verano, más suaves y grises en invierno. Los demás colores mantienen su tono y se suavizan de noche."
+    "message": "Sigue al sol, de la izquierda por la mañana a la derecha por la tarde. Cielo toma los colores del día, inspirados en los colores japoneses: rosa al amanecer, azul cielo durante el día (un aguamarina pálido en invierno), melocotón y luego rosa al atardecer, glicina de noche. También sigue la estación: días más largos en verano, más pálidos y frescos en invierno. Los demás colores mantienen su tono y se suavizan de noche. Pasteles pasa lentamente de un color suave a otro."
   },
   "colOpacity": {
     "message": "Opacidad columnas"
@@ -367,6 +367,9 @@
   "c_red": {
     "message": "Rojo"
   },
+  "c_drift": {
+    "message": "Pasteles"
+  },
   "c_sky": {
     "message": "Cielo"
   },
@@ -424,7 +427,10 @@
     "message": "Haz clic derecho en un sitio o una carpeta para acciones rápidas: fijar, editar, mover, eliminar."
   },
   "welcome3": {
-    "message": "Enfoque: una página tranquila en un clic. El sol de al lado mantiene la pantalla encendida."
+    "message": "Enfoque: una página tranquila en un clic."
+  },
+  "welcome4": {
+    "message": "Mantener activo: la pantalla sigue encendida, un rato o hasta que lo desactives."
   },
   "welcomeStart": {
     "message": "Empezar"

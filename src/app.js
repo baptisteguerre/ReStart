@@ -1459,7 +1459,7 @@ function accentSource(now) {
   const sky = () => skyAt(now)[0];
   const solid = (v) => (HEX_COLOR.test(v) ? rgbOf(v) : BG_IDS.has(v) && v !== "gray" ? rgbOf(pastelOf(v).light) : null);
   let rgb = null;
-  if (isLit(bg.type)) { const g = glowOf(bg.value); rgb = g.id === "sky" ? sky() : rgbOf(g.base); }
+  if (isLit(bg.type)) { const g = glowOf(bg.value); rgb = g.id === "sky" ? sky() : g.id === "drift" ? driftColor(now) : rgbOf(g.base); }
   else if (bg.type === "color") rgb = solid(bg.value);
   else rgb = solid(bg.tint);
   // No color chosen, or one without a hue (gray): the sky of the hour.
@@ -1467,7 +1467,10 @@ function accentSource(now) {
   return rgb;
 }
 function applyAccent(now = new Date()) {
-  const [h, s] = toHsl(accentSource(now));
+  let [h, s] = toHsl(accentSource(now));
+  // Orange, gold and olive hues turn brown once darkened enough to read: take a sunset rose
+  // instead, which keeps the warmth without the brown.
+  if (h >= 15 && h < 75) h = 350;
   const hsl = [h, Math.min(0.85, Math.max(0.5, s)), isDark() ? 0.62 : 0.45];
   const white = [255, 255, 255];
   const surface = isDark() ? rgbOf("#36363a") : white;
@@ -1521,6 +1524,7 @@ function applyAppearance() {
   const motion = s.motion ?? 1;
   document.body.classList.toggle("glow-still", motion === 0);
   root.setProperty("--speed", String(Math.max(0.05, motion)));
+  updateDrift();
 
   applyFocus();
 }
@@ -1533,6 +1537,8 @@ function applyAppearance() {
 // Swatch shown in settings (pastel) → base color of the halo (stronger, it gets washed out).
 const GLOW_COLORS = [
   { id: "sky",    swatch: "linear-gradient(135deg, #ffc9a0, #a9d3f2 50%, #b6b0ee)", base: "#ffb08a" },
+  // Pastels: drifts slowly from one color to the next (see driftColor).
+  { id: "drift",  swatch: "linear-gradient(135deg, #ffcf9e, #f7bfd8 30%, #c9c0f3 55%, #abd9ee 78%, #ace3d5)", base: "#ff8c46" },
   { id: "orange", swatch: "#ffcf9e", base: "#ff8c46" },
   { id: "red",    swatch: "#ffb3ad", base: "#ff6b62" },
   { id: "pink",   swatch: "#f7bfd8", base: "#ff7eb6" },
@@ -1544,19 +1550,20 @@ const GLOW_COLORS = [
   { id: "green",  swatch: "#bde5b4", base: "#7bd36a" },
   { id: "yellow", swatch: "#fbe49a", base: "#ffc93c" },
 ];
-// Sky follows one simple thing: how high the sun is. Night is a soft slate blue; the sun near
-// the horizon (dawn, dusk) brings rose then gold; as it climbs the light whitens, then turns
-// to a clear sky. Morning and evening go through the same colors, in mirror. In winter the
-// sun stays low and the season mutes everything (see seasonal), so days stay soft and pale.
+// Sky follows how high the sun is, in colors loosely inspired by traditional Japanese ones:
+// wisteria at night (fuji), lilac before dawn (usu-murasaki), carnation pink at dawn and dusk
+// (nadeshiko), a pale rosy peach for the low sun (usu-momo), white wisteria as the light rises
+// (shira-fuji), then sky blue at midday (sora-iro), a pale aqua in winter (kame-nozoki).
+// Morning and evening go through the same colors, in mirror. No greys, no ochres.
 // [elevation -1 (deep night) .. 1 (high noon in summer), core, fringe, intensity]
 const SKY_STOPS = [
-  [-1,    "#a3add6", "#b4b2dc", 0.5],
-  [-0.3,  "#a3add6", "#b8b0da", 0.6],
-  [-0.05, "#f0b8c0", "#d9b8de", 0.85],
-  [ 0.1,  "#ffd3aa", "#f6c6c6", 0.85],
-  [ 0.28, "#f3ebe3", "#e6e9f3", 0.8],
-  [ 0.55, "#c4dcf2", "#e2ecf8", 0.8],
-  [ 1,    "#b6def0", "#d8ecfb", 0.75],
+  [-1,    "#a7a2d6", "#b9b3e3", 0.5],
+  [-0.3,  "#b3a8dd", "#c6b5e2", 0.6],
+  [-0.05, "#efb3c4", "#cdb6e6", 0.85],
+  [ 0.1,  "#f8c8bd", "#e7c3e4", 0.85],
+  [ 0.28, "#ecdff3", "#dfe9f6", 0.8],
+  [ 0.55, "#bfe1ee", "#dcedf6", 0.8],
+  [ 1,    "#a9d8ef", "#cfeaf8", 0.75],
 ];
 // Fixed colors keep their hue; they are paler at midday and softer at night.
 // [hour, depth 0..1 (low = washed toward white), intensity]
@@ -1616,13 +1623,13 @@ function solarHour(d) {
 }
 // How warm the season's light is: 1 in high summer, 0 in deep winter.
 const seasonWarmth = (d) => 0.5 + 0.5 * Math.cos((2 * Math.PI * (dayOfYear(d) - 200)) / 365);
-// Winter light is softer and greyer: the colors lose some saturation and lean toward a
-// pearl grey (neither blue nor warm), like an overcast day.
 function seasonal(rgb, w) {
+  // The season changes the hue more than the saturation: winter days drift toward a clear,
+  // pale aqua (kame-nozoki), never toward grey.
   const grey = 0.3 * rgb[0] + 0.59 * rgb[1] + 0.11 * rgb[2];
-  const sat = 0.35 + 0.65 * w;
+  const sat = 0.85 + 0.15 * w;
   const muted = rgb.map((v) => grey + (v - grey) * sat);
-  return mixRgb(muted, rgbOf("#dedad3"), (1 - w) * 0.5);
+  return mixRgb(muted, rgbOf("#d9eef2"), (1 - w) * 0.25);
 }
 
 // How high the sun is, from the clock and the season: -1 deep night, 0 at sunrise and
@@ -1658,7 +1665,7 @@ function glowLayer(now, value, rays = false) {
     [core, fringe, k] = skyAt(now);
     // The keys are pastels: deepen them so they read on the page. On a light page they
     // need more depth (a pastel on white barely shows); on a dark page, pale tints read as grey fog.
-    const deepen = isDark() ? 1.25 : 1.9; // on a dark page, keep the light bright enough to glow
+    const deepen = isDark() ? 1.5 : 1.9; // on a dark page, keep the light bright enough to glow
     [core, fringe] = [core, fringe].map((c) => c.map((v) => Math.max(0, 255 - (255 - v) * deepen)));
   } else {
     const [a, b, f] = keyAt(FIXED_KEYS, t);
@@ -1667,7 +1674,7 @@ function glowLayer(now, value, rays = false) {
     // Low depth = the color washed toward white. In dark mode a washed-out color turns
     // grey on the dark background: keep it more saturated.
     const mix = isDark() ? 0.8 + 0.2 * depth : 0.6 + 0.4 * depth;
-    const base = rgbOf(glow.base);
+    const base = glow.id === "drift" ? driftColor(now) : rgbOf(glow.base);
     core = base.map((c) => 255 + (c - 255) * mix);
     fringe = fringeOf(base).map((c) => 255 + (c - 255) * mix);
   }
@@ -1686,6 +1693,42 @@ function glowLayer(now, value, rays = false) {
     rays: RAY_LAYERS.map((layer) => raysGradient(mixRgb(mixRgb(core, fringe, 0.3), [255, 255, 255], isDark() ? 0.1 : 0.25), alpha, x, layer)),
   };
 }
+
+// Pastels: the light goes slowly through peach, pink, lilac, blue, aqua, mint and gold, then
+// round again, about 90 s from one color to the next at the normal Motion speed (a full round
+// in about 10 minutes). Every tab follows the clock, so they all show the same color. With
+// Motion at 0, it barely moves (it only changes with the minute refresh).
+const DRIFT_STOPS = ["#ff8c46", "#ff7eb6", "#c77dff", "#6f9bff", "#4cc3e6", "#3fd1b0", "#ffc93c"].map(rgbOf);
+const DRIFT_STEP = 90; // seconds per color, at the normal speed
+function driftColor(now) {
+  const speed = state.settings.motion ?? 1;
+  const pos = ((now.getTime() / 1000) * Math.max(speed, 0.05)) / DRIFT_STEP;
+  const i = Math.floor(pos) % DRIFT_STOPS.length;
+  const f = pos - Math.floor(pos);
+  const e = f * f * (3 - 2 * f); // ease from one color to the next
+  return mixRgb(DRIFT_STOPS[i], DRIFT_STOPS[(i + 1) % DRIFT_STOPS.length], e);
+}
+
+// While Pastels is shown, refresh the light (and the accent) every few seconds, so the color
+// moves smoothly; only while the page is visible and something moves.
+let driftTimer = 0;
+function updateDrift() {
+  const bg = state.settings.bg || {};
+  const on = isLit(bg.type) && glowOf(bg.value).id === "drift" && (state.settings.motion ?? 1) > 0
+    && !motionQuery.matches && !document.hidden;
+  if (on && !driftTimer) driftTimer = setInterval(refreshGlow, 2000);
+  if (!on && driftTimer) { clearInterval(driftTimer); driftTimer = 0; }
+}
+function refreshGlow() {
+  const { type, value } = state.settings.bg || {};
+  if (!isLit(type)) return;
+  const root = document.documentElement.style;
+  const glow = glowLayer(new Date(), value, type === "rays");
+  root.setProperty("--glow-layer", glow.halo);
+  RAY_LAYERS.forEach((_, i) => root.setProperty(`--rays-${i + 1}`, glow.rays[i] || "none"));
+  applyAccent();
+}
+document.addEventListener("visibilitychange", () => updateDrift());
 
 // The intensity of the light (halo and rays). The setting is shown on a 0-100 scale with 1 in
 // the middle; for the light, that middle is 1.2 (what 60 % used to give), and the top of the
@@ -3006,7 +3049,9 @@ function showWelcome() {
     h("ul", {},
       line(UI.bookmarkFill, t("welcome1")),
       line(UI.leftClick, t("welcome2")),
-      line(UI.focus, t("welcome3"))),
+      line(UI.focus, t("welcome3")),
+      // Keep Awake exists only where the browser offers Screen Wake Lock.
+      "wakeLock" in navigator ? line(AWAKE_ICON, t("welcome4")) : null),
     h("div", { class: "welcome-actions" },
       h("button", { class: "text-btn primary", onclick: closeWelcome }, t("welcomeStart"))));
   document.body.append(card);

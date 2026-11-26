@@ -80,16 +80,16 @@
     "message": "Lumière"
   },
   "bgGlow": {
-    "message": "Halo"
+    "message": "Lueur"
   },
   "bgColor": {
     "message": "Couleur"
   },
   "glowColor": {
-    "message": "Couleur du halo"
+    "message": "Couleur de la lueur"
   },
   "glowHint": {
-    "message": "Il suit le soleil, de la gauche le matin à la droite le soir. Ciel prend les couleurs de la journée : rose à l'aube, un bleu clair en journée, doré puis rose au coucher, bleu doux la nuit. Il suit aussi la saison : des jours plus longs en été, plus doux et plus gris en hiver. Les autres couleurs gardent leur teinte et s'adoucissent la nuit."
+    "message": "Il suit le soleil, de la gauche le matin à la droite le soir. Ciel prend les couleurs de la journée, inspirées des couleurs japonaises : rose à l'aube, bleu ciel en journée (un aqua pâle en hiver), pêche puis rose au coucher, glycine la nuit. Il suit aussi la saison : des jours plus longs en été, plus pâles et plus frais en hiver. Les autres couleurs gardent leur teinte et s'adoucissent la nuit. Pastels passe lentement d'une couleur douce à l'autre."
   },
   "colOpacity": {
     "message": "Opacité colonnes"
@@ -367,6 +367,9 @@
   "c_red": {
     "message": "Rouge"
   },
+  "c_drift": {
+    "message": "Pastels"
+  },
   "c_sky": {
     "message": "Ciel"
   },
@@ -424,7 +427,10 @@
     "message": "Clic droit sur un site ou un dossier pour agir : épingler, modifier, déplacer, supprimer."
   },
   "welcome3": {
-    "message": "Focus : une page calme en un clic. Le soleil à côté garde l'écran allumé."
+    "message": "Focus : une page calme en un clic."
+  },
+  "welcome4": {
+    "message": "Rester éveillé : l'écran reste allumé, un moment ou jusqu'à ce que vous l'arrêtiez."
   },
   "welcomeStart": {
     "message": "C'est parti"

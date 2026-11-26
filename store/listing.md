@@ -23,7 +23,7 @@ ReStart turns every new tab into a calm, simple start page built from the bookma
 • Right-click any bookmark to open it in a new tab, copy its link, pin it above the search bar, move it to another folder, edit its name or address, or delete it. Right-click a folder to rename, move or delete it.
 • Optional Most visited column: right-click a site to add it to your bookmarks, in an existing folder or a new one. Handy to build your page from your habits, even starting with no bookmarks.
 • Hide the columns you don't need.
-• Light and dark mode, automatic or fixed. Background of your choice: a color (or one that follows the hour), light that follows the sun across the page (a soft halo or gently moving rays), leaf shadows moved by a changing wind or a light breeze of snow, petals, dandelion seeds or autumn leaves. Prefer a calmer look? Pastel letters can replace site icons.
+• Light and dark mode, automatic or fixed. Background of your choice: a color (or one that follows the hour), light that follows the sun across the page (a soft glow or gently moving rays), leaf shadows moved by a changing wind or a light breeze of snow, petals, dandelion seeds or autumn leaves. Prefer a calmer look? Pastel letters can replace site icons.
 • Focus mode: one click hides your bookmarks and leaves only the background, with the time if you like, ideal for a calm moment or a shared screen. Site icons can stay, without names.
 • Keep the screen on, for a set time or until you turn it off, while ReStart is shown: the Keep Awake button next to Focus shows the time left.
 • Export and import your customizations.
@@ -50,7 +50,7 @@ ReStart transforme chaque nouvel onglet en une page de démarrage calme et simpl
 • Clic droit sur un favori pour l'ouvrir dans un nouvel onglet, copier son lien, le mettre en avant au-dessus de la recherche, le déplacer vers un autre dossier, modifier son nom ou son adresse, ou le supprimer. Clic droit sur un dossier pour le renommer, le déplacer ou le supprimer.
 • Colonne « Les plus visités » en option : clic droit sur un site pour l'ajouter à vos favoris, dans un dossier existant ou un nouveau. Pratique pour construire votre page à partir de vos habitudes, même en partant de zéro.
 • Masquez les colonnes dont vous n'avez pas besoin.
-• Mode clair et sombre, automatique ou fixe. Fond au choix : une couleur (ou celle de l'heure), une lumière qui suit la course du soleil sur la page (halo doux ou rayons), des ombres de feuillages qui bougent au gré d'un vent changeant ou une brise légère de neige, de pétales, d'aigrettes ou de feuilles d'automne. Envie d'un rendu plus calme ? Des lettres pastel peuvent remplacer les icônes des sites.
+• Mode clair et sombre, automatique ou fixe. Fond au choix : une couleur (ou celle de l'heure), une lumière qui suit la course du soleil sur la page (lueur douce ou rayons), des ombres de feuillages qui bougent au gré d'un vent changeant ou une brise légère de neige, de pétales, d'aigrettes ou de feuilles d'automne. Envie d'un rendu plus calme ? Des lettres pastel peuvent remplacer les icônes des sites.
 • Mode Focus : un clic masque vos favoris et ne laisse que le fond, avec l'heure si vous le souhaitez, idéal pour un moment calme ou un écran partagé. Les icônes des sites peuvent rester, sans leurs noms.
 • Gardez l'écran allumé, pour une durée choisie ou jusqu'à ce que vous l'arrêtiez, tant que ReStart est affiché : le bouton Rester éveillé, à côté de Focus, indique le temps restant.
 • Export et import de vos personnalisations.

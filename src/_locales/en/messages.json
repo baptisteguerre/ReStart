@@ -80,16 +80,16 @@
     "message": "Light"
   },
   "bgGlow": {
-    "message": "Halo"
+    "message": "Glow"
   },
   "bgColor": {
     "message": "Color"
   },
   "glowColor": {
-    "message": "Halo color"
+    "message": "Glow color"
   },
   "glowHint": {
-    "message": "It follows the sun, from the left in the morning to the right in the evening. Sky takes the colors of the day: dawn pink, a clear blue through the day, gold then rose at sunset, a soft blue at night. It follows the season too: longer days in summer, softer and greyer in winter. The other colors keep their hue and soften at night."
+    "message": "It follows the sun, from the left in the morning to the right in the evening. Sky takes the colors of the day, inspired by Japanese colors: pink at dawn, sky blue through the day (a pale aqua in winter), peach then pink at sunset, wisteria at night. It follows the season too: longer days in summer, paler and cooler in winter. The other colors keep their hue and soften at night. Pastels drifts slowly from one soft color to the next."
   },
   "colOpacity": {
     "message": "Column opacity"
@@ -367,6 +367,9 @@
   "c_red": {
     "message": "Red"
   },
+  "c_drift": {
+    "message": "Pastels"
+  },
   "c_sky": {
     "message": "Sky"
   },
@@ -424,7 +427,10 @@
     "message": "Right-click a site or a folder for quick actions: pin, edit, move, delete."
   },
   "welcome3": {
-    "message": "Focus: a calm page in one click. The sun next to it keeps the screen on."
+    "message": "Focus: a calm page in one click."
+  },
+  "welcome4": {
+    "message": "Keep Awake: the screen stays on, for a while or until you turn it off."
   },
   "welcomeStart": {
     "message": "Get started"

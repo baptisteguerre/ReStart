@@ -428,6 +428,8 @@ body.ready { opacity: 1; }
 /* Columns: opacity, tint, density */
 .column {
   background: color-mix(in srgb, var(--surface-solid) calc(var(--col-alpha) * 100%), transparent);
+  /* The frosted blur follows the opacity too: at 0 %, the background shows through, sharp. */
+  backdrop-filter: blur(calc(20px * var(--col-alpha))) saturate(calc(1 + 0.6 * var(--col-alpha)));
 }
 .column.tinted {
   background: color-mix(in srgb, color-mix(in srgb, var(--tint) 18%, var(--surface-solid)) calc(var(--col-alpha) * 100%), transparent);

@@ -89,7 +89,7 @@
     "message": "Colore dell'alone"
   },
   "glowHint": {
-    "message": "Segue il sole, da sinistra al mattino a destra la sera. Cielo prende i colori del giorno: rosa all'alba, un azzurro limpido di giorno, oro e poi rosa al tramonto, blu tenue di notte. Segue anche la stagione: giornate più lunghe d'estate, più morbide e grigie d'inverno. Gli altri colori mantengono la loro tinta e si addolciscono di notte."
+    "message": "Segue il sole, da sinistra al mattino a destra la sera. Cielo prende i colori del giorno, ispirati ai colori giapponesi: rosa all'alba, azzurro cielo di giorno (un acquamarina pallido d'inverno), pesca e poi rosa al tramonto, glicine di notte. Segue anche la stagione: giornate più lunghe d'estate, più pallide e fresche d'inverno. Gli altri colori mantengono la loro tinta e si addolciscono di notte. Pastelli passa lentamente da un colore tenue all'altro."
   },
   "colOpacity": {
     "message": "Opacità colonne"
@@ -367,6 +367,9 @@
   "c_red": {
     "message": "Rosso"
   },
+  "c_drift": {
+    "message": "Pastelli"
+  },
   "c_sky": {
     "message": "Cielo"
   },
@@ -424,7 +427,10 @@
     "message": "Fai clic destro su un sito o una cartella per le azioni rapide: fissa, modifica, sposta, elimina."
   },
   "welcome3": {
-    "message": "Focus: una pagina calma con un clic. Il sole accanto mantiene lo schermo acceso."
+    "message": "Focus: una pagina calma con un clic."
+  },
+  "welcome4": {
+    "message": "Mantieni attivo: lo schermo resta acceso, per un po' o finché non lo disattivi."
   },
   "welcomeStart": {
     "message": "Iniziamo"

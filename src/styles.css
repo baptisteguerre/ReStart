@@ -380,7 +380,6 @@ mark { background: color-mix(in srgb, #ffd60a 55%, transparent); color: inherit;
   padding: 8px 2px; cursor: pointer;
 }
 .setting-row + .setting-row { border-top: 1px solid var(--border); }
-.setting-hint { font-size: 11.5px; color: var(--text-3); margin: 8px 2px 0; line-height: 1.4; }
 .switch {
   appearance: none; width: 32px; height: 20px; border-radius: 10px; margin: 0; flex: none;
   background: var(--border-strong); position: relative; cursor: pointer; transition: background .15s;
@@ -483,7 +482,7 @@ body.ready { opacity: 1; }
 .column.dragging { opacity: .45; }
 
 /* Settings popover */
-.popover.settings { width: 340px; overflow-y: auto; scrollbar-width: thin; }
+.popover.settings { overflow-y: auto; scrollbar-width: thin; }
 .set-section {
   font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
   color: var(--text-3); margin: 14px 2px 4px;
@@ -509,7 +508,7 @@ body.ready { opacity: 1; }
 .range-track { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 1px; }
 .range-track input { width: 100%; margin: 0; }
 .range-value { font-size: 11.5px; color: var(--text-2); font-variant-numeric: tabular-nums; }
-.range-row span:first-child { flex: none; width: 120px; font-size: 13px; white-space: nowrap; }
+.range-row span:first-child { flex: none; width: 136px; font-size: 13px; white-space: nowrap; }
 .range-row input[type="range"] { accent-color: var(--accent); }
 .text-btn {
   border: 0; background: var(--hover); color: var(--text); border-radius: 7px;
@@ -656,7 +655,8 @@ body.layout-masonry .board-nav { display: none; }
 [data-theme="dark"] .column.tinted { --ring-base: var(--tint); }
 
 /* Settings panel: grouped layout */
-.popover.settings { width: 360px; padding: 18px 16px 16px; }
+/* Wide enough for the longest segmented rows (German, Portuguese) with room to spare for wider system fonts */
+.popover.settings { width: 440px; padding: 18px 16px 16px; }
 .settings-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; padding: 0 4px 2px; }
 .popover.settings .set-section { margin: 18px 6px 6px; }
 .settings-title + .set-section { margin-top: 14px; }
@@ -670,7 +670,6 @@ body.layout-masonry .board-nav { display: none; }
 .set-field .set-label { margin-bottom: 8px; }
 .set-field .segmented { margin: 0; }
 .set-field .swatches { margin: 10px 0 0; padding: 0; }
-.set-field .setting-hint { margin: 8px 0 0; }
 .set-field .bg-presets { margin: 10px 0 0; padding: 0; }
 .set-field .range-row { padding: 0; }
 .popover.settings .setting-row { padding: 10px 0; }
@@ -679,12 +678,10 @@ body.layout-masonry .board-nav { display: none; }
 .set-group .col-list .setting-row { padding: 7px 4px; }
 .set-group > .btn-row { padding: 10px 0; margin: 0; }
 .set-group > .set-msg { padding: 8px 0; margin: 0; }
-.group-hint { font-size: 11.5px; color: var(--text-3); margin: 6px 6px 0; line-height: 1.4; }
 .popover.settings > .btn-row { margin: 8px 2px 0; }
 .segmented button { height: 28px; }
-.set-field .bg-presets + .setting-hint, .set-field .swatches + .setting-hint, .set-field > div > .setting-hint { margin: 10px 0 6px; }
 
-/* Custom halo color: a swatch that opens the system color picker */
+/* Custom glow color: a swatch that opens the system color picker */
 .swatch-custom {
   position: relative; display: inline-block; cursor: pointer;
   background: conic-gradient(#ff6b62, #ffc93c, #7bd36a, #4cc3e6, #8c7dff, #ff7eb6, #ff6b62);
@@ -697,7 +694,7 @@ body.layout-masonry .board-nav { display: none; }
 .set-field .swatches { gap: 4px; flex-wrap: nowrap; justify-content: space-between; }
 .set-field .swatches .swatch { width: 20px; height: 20px; flex: none; }
 
-/* Halo: its own layer so it can "breathe" without repainting the page */
+/* Glow: its own layer so it can "breathe" without repainting the page */
 .glow {
   position: fixed; inset: 0; z-index: -2; pointer-events: none;
   background: var(--glow-layer, none);
@@ -705,7 +702,7 @@ body.layout-masonry .board-nav { display: none; }
   animation: glow-breathe calc(11s / var(--speed, 1)) ease-in-out infinite;
   will-change: opacity, transform;
 }
-/* Very slow: the halo fades and swells a little, like a breath. */
+/* Very slow: the glow fades and swells a little, like a breath. */
 @keyframes glow-breathe {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(1.12, 1.35); }
@@ -715,7 +712,7 @@ body.glow-still .glow { animation: none; }
 .set-field .setting-row { padding: 10px 0 0; border-top: 0; }
 .set-field > div > .range-row { margin: 18px 0 4px; }
 
-/* Light rays (halo style): four sets of soft shafts, each fading in and out on
+/* Light rays (glow style): four sets of soft shafts, each fading in and out on
    its own rhythm, so shafts appear and vanish like sunlight under water. */
 .ray {
   position: absolute; inset: -120px; display: none; opacity: 0;
@@ -747,16 +744,13 @@ body.glow-rays .ray { display: block; }
 /* Without animation, every set stays visible at a calm, steady level. */
 body.glow-still .ray { animation: none; opacity: .6; }
 @media (prefers-reduced-motion: reduce) { .ray { animation: none; opacity: .6; } }
-/* With rays, the faint halo behind them stays still: the shafts carry the motion. */
+/* With rays, the faint glow behind them stays still: the shafts carry the motion. */
 body.glow-rays .glow { animation: none; }
 .segmented button { white-space: nowrap; padding: 0 4px; }
-/* Optional background color under the halo or the rays */
+/* Optional background color under the glow or the rays */
 .set-field .tint-label { margin: 14px 0 0; }
 .set-field .bg-presets.tint-presets { gap: 3px; flex-wrap: nowrap; justify-content: space-between; }
 .set-field .bg-presets.tint-presets > .bg-preset { width: 19px; height: 19px; flex: none; border-radius: 6px; }
-.bg-preset-none {
-  background: linear-gradient(135deg, transparent 46%, var(--text-3) 47%, var(--text-3) 53%, transparent 54%), var(--surface-solid);
-}
 .menu-item:disabled { opacity: .5; cursor: default; background: none; }
 .menu-note { font-size: 11.5px; color: var(--text-2); padding: 4px 10px 2px; max-width: 220px; line-height: 1.35; }
 /* Empty folder in the column list: shown, but its switch is off and disabled */
@@ -891,6 +885,8 @@ body.leaves-palm .leaves i { background-image: url(img/palms.svg); }
 body.leaves-bamboo .leaves i { background-image: url(img/bamboo.svg); }
 /* Kind of leaves, under the background choice: set apart by a little space and a hairline */
 .set-field .leaf-kind { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+/* Five choices of different lengths: each one gets its text plus an equal share of the room left. */
+.leaf-kind .segmented button { flex: 1 1 auto; }
 
 /* ===================== Few or no bookmarks ===================== */
 /* The most visited sites as a wide card of tiles, centered, and a discreet invitation. */
@@ -970,7 +966,7 @@ body.focus .welcome { display: none; }
 .board.stack .column.drop-before::before, .board.masonry .column.drop-before::before { top: -7.5px; }
 .board.stack .column.drop-after::after, .board.masonry .column.drop-after::after { bottom: -7.5px; }
 
-/* Grain: a faint, fixed paper-like noise over the halo and the rays. It hides the
+/* Grain: a faint, fixed paper-like noise over the glow and the rays. It hides the
    banding of soft gradients and gives the light some matter. */
 .grain {
   position: fixed; inset: 0; z-index: -1; pointer-events: none; display: none;

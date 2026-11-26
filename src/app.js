@@ -44,13 +44,13 @@ const DEFAULT_SETTINGS = {
   clockFormat: "auto",        // auto (the language's usual format) | 12 | 24
   focusIcons: false,          // in focus mode, also show the sites above the search bar, as icons
   focusGray: true,            // ...in gray, as soft as the time (on by default)
-  motion: 1,                  // speed of every movement (halo, rays, leaves, breeze): 0 still, 1 normal, 2 twice as fast
-  glowStrength: 1,            // 0 .. 2, shown as 0-100 % with the default (1) at 50 %; multiplies the halo intensity
+  motion: 1,                  // speed of every movement (glow, rays, leaves, breeze): 0 still, 1 normal, 2 twice as fast
+  glowStrength: 1,            // 0 .. 2, shown as 0-100 % with the default (1) at 50 %; multiplies the glow intensity
   colAlpha: 0.5,              // 0 .. 1
   letterIcons: false,
   hideTileNames: false,       // sites above the search bar as icons only (bigger), names in their tooltip         // a pastel letter for every site instead of its icon, for a calm, even look
   layout: "masonry",          // masonry (Mosaic, Keep-like, the default) | board (horizontal columns); wide windows only
-  bg: { type: "glow", value: null }, // none | color | glow (halo) | rays (light rays); glow and rays share the color
+  bg: { type: "glow", value: null }, // none | color | glow | rays (light rays); glow and rays share the color
 };
 
 const $ = (id) => document.getElementById(id);
@@ -1468,7 +1468,7 @@ els.next.addEventListener("click", () => pageBoard(1));
 
 // A plain background color: a custom color as picked, or a pastel softened for
 // the page (the swatches in the settings show this same color). It never changes
-// with the time of day: only the halo and the rays do.
+// with the time of day: only the glow and the rays do.
 function plainColor(id) {
   if (HEX_COLOR.test(id)) return id;
   if (id === "gray" && !isDark()) return "#f5f5f5"; // a neutral, very light gray
@@ -1477,16 +1477,16 @@ function plainColor(id) {
 }
 const plainBackground = (id) => `linear-gradient(${plainColor(id)}, ${plainColor(id)})`;
 
-// Backgrounds drawn from the halo color: the halo itself and the light rays.
+// Backgrounds drawn from the glow color: the glow itself and the light rays.
 const isLit = (type) => type === "glow" || type === "rays";
-// Backgrounds that can have a plain color underneath: the halo, the rays and the leaf shadows.
+// Backgrounds that can have a plain color underneath: the glow, the rays and the leaf shadows.
 const hasUnderColor = (type) => isLit(type) || type === "leaves" || type === "snow";
 // The page color that follows the hour, used when no color is chosen.
 const pageBase = () => (isDark() ? "#2a2a2e" : "#f6f6f7"); // dark: a soft charcoal, never black
 
 /* ----- Accent color: drawn from the background ----- */
 // The accent (focus rings, selections, buttons, Focus and Keep Awake when on) takes the hue of
-// the background: the halo or sky color, the chosen color or tint, or else the sky of the hour.
+// the background: the glow or sky color, the chosen color or tint, or else the sky of the hour.
 // Its lightness is then set for legibility: at least 4.5:1 against the cards and menus for
 // text and rings (--accent), and against white text for filled buttons (--accent-fill).
 const luminance = ([r, g, b]) => {
@@ -1551,12 +1551,12 @@ function applyAppearance() {
   applyAccent();
 
   let layer = "none";
-  let glow = { halo: "none", rays: [] };
+  let glow = { layer: "none", rays: [] };
   const { type, value } = s.bg || {};
   const lit = isLit(type);
   if (lit) {
     glow = glowLayer(new Date(), value, type === "rays");
-    // Optional plain color under the halo or the rays; otherwise the page takes the hue of the hour.
+    // Optional plain color under the glow or the rays; otherwise the page takes the hue of the hour.
     layer = s.bg.tint ? plainBackground(s.bg.tint) : hourWall(new Date(), pageBase());
   } else if (type === "leaves") {
     // Leaf shadows on a wall softly lit by the sun: a warm, very light tint by default.
@@ -1574,7 +1574,7 @@ function applyAppearance() {
   for (const kind of LEAF_KINDS) document.body.classList.toggle(`leaves-${kind}`, type === "leaves" && value === kind);
   updateLeaves();
   root.setProperty("--bg-layer", layer);
-  root.setProperty("--glow-layer", glow.halo);
+  root.setProperty("--glow-layer", glow.layer);
   RAY_LAYERS.forEach((_, i) => root.setProperty(`--rays-${i + 1}`, glow.rays[i] || "none"));
   document.body.classList.toggle("glow-rays", type === "rays");
   document.body.classList.toggle("bg-grain", lit);
@@ -1591,12 +1591,12 @@ function applyAppearance() {
   applyFocus();
 }
 
-// Halo at the top of the page, in the chosen color. It follows the sun: it rises
+// Glow at the top of the page, in the chosen color. It follows the sun: it rises
 // on the left in the morning, crosses the top at midday and sets on the right in
 // the evening (then drifts back during the night). Its color goes from soft in
 // the morning, to pale at midday, to deep in the evening. A separate CSS
 // animation makes it "breathe" very slowly.
-// Swatch shown in settings (pastel) → base color of the halo (stronger, it gets washed out).
+// Swatch shown in settings (pastel) → base color of the glow (stronger, it gets washed out).
 const GLOW_COLORS = [
   { id: "sky",    swatch: "linear-gradient(135deg, #ffc9a0, #a9d3f2 50%, #b6b0ee)", base: "#ffb08a" },
   // Pastels: drifts slowly from one color to the next (see driftColor).
@@ -1661,7 +1661,7 @@ function fringeOf(rgb) {
 }
 const DEFAULT_GLOW = "sky";
 const HEX_COLOR = /^#[0-9a-f]{6}$/i;
-// The halo is one of the presets, or a custom color picked by the user.
+// The glow is one of the presets, or a custom color picked by the user.
 function glowOf(v) {
   if (v?.color === "custom" && HEX_COLOR.test(v.custom)) return { id: "custom", base: v.custom, swatch: v.custom };
   return GLOW_COLORS.find((c) => c.id === (v?.color || DEFAULT_GLOW)) || GLOW_COLORS[0];
@@ -1743,13 +1743,13 @@ function glowLayer(now, value, rays = false) {
   const strength = lightStrength(state.settings.glowStrength ?? 1, rays);
   const alpha = (isDark() ? 0.95 : 1) * k * strength;
   const x = sunX(t);
-  if (!rays) return { halo: glowGradient(core, fringe, alpha, x, strength), rays: [] };
-  // Light rays: a faint halo as the light source, and several sets of shafts.
+  if (!rays) return { layer: glowGradient(core, fringe, alpha, x, strength), rays: [] };
+  // Light rays: a faint glow as the light source, and several sets of shafts.
   // Each set fades in and out on its own rhythm (see .ray in styles.css), so
   // shafts appear and vanish one after another, like sunlight under water.
   return {
     // Under the rays, only a faint glow (fainter on a light page, where it would hide them).
-    halo: glowGradient(core, fringe, alpha * (isDark() ? 0.45 : 0.3), x, strength),
+    layer: glowGradient(core, fringe, alpha * (isDark() ? 0.45 : 0.3), x, strength),
     // One powdery tone for every shaft: the core, nudged toward the fringe and softened
     // toward white, so the shafts stay calm instead of striping the page in two colors.
     rays: RAY_LAYERS.map((layer) => raysGradient(mixRgb(mixRgb(core, fringe, 0.3), [255, 255, 255], isDark() ? 0.1 : 0.25), alpha, x, layer)),
@@ -1786,7 +1786,7 @@ function refreshGlow() {
   if (!isLit(type)) return;
   const root = document.documentElement.style;
   const glow = glowLayer(new Date(), value, type === "rays");
-  root.setProperty("--glow-layer", glow.halo);
+  root.setProperty("--glow-layer", glow.layer);
   RAY_LAYERS.forEach((_, i) => root.setProperty(`--rays-${i + 1}`, glow.rays[i] || "none"));
   applyAccent();
 }
@@ -1833,7 +1833,7 @@ function raysSource(x) {
 
 const hourOf = (d) => d.getHours() + d.getMinutes() / 60;
 
-// Horizontal position of the halo (percent of the width) for a time of day.
+// Horizontal position of the glow (percent of the width) for a time of day.
 const SUNRISE = 6;
 const SUNSET = 21;
 function sunX(t) {
@@ -1849,8 +1849,8 @@ function sunX(t) {
   return right - (right - left) * p;
 }
 
-// A soft, atmospheric halo: many stops on a smooth curve (no visible edge), from the
-// core color to the fringe color. Each stop is capped, so a stronger halo spreads further.
+// A soft, atmospheric glow: many stops on a smooth curve (no visible edge), from the
+// core color to the fringe color. Each stop is capped, so a stronger glow spreads further.
 function glowGradient(core, fringe, alpha, x, strength = 1) {
   const stops = [];
   for (let i = 0; i <= 10; i++) {
@@ -1866,11 +1866,11 @@ function glowGradient(core, fringe, alpha, x, strength = 1) {
   return `radial-gradient(ellipse 62% ${size}px at ${x.toFixed(1)}% -30px, ${stops.join(", ")})`;
 }
 
-// The page behind the halo, the rays or the leaves, when no color is chosen: the light of the hour, barely there.
+// The page behind the glow, the rays or the leaves, when no color is chosen: the light of the hour, barely there.
 // It takes a whisper of the Sky color of the moment (pink at dawn, warm white at midday,
 // honey in the afternoon, rose at sunset, a cool blue-grey at night), and is a little
 // brighter on the sun's side.
-// The page behind every background (a color, the halo, the rays, the leaves, the breeze): a
+// The page behind every background (a color, the glow, the rays, the leaves, the breeze): a
 // neutral base with a calm hint of the hour's and the season's hue. ("wall" is kept for a
 // warmer variant, unused for now.)
 function hourWall(now, base, kind = "page") {
@@ -2189,7 +2189,7 @@ function stopSnow() {
 }
 
 function scheduleClock() {
-  applyAppearance(); // refreshes the halo or rays (position and color follow the time) and the clock
+  applyAppearance(); // refreshes the glow or rays (position and color follow the time) and the clock
   setTimeout(scheduleClock, 60000 - (Date.now() % 60000) + 50);
 }
 
@@ -2779,7 +2779,7 @@ function settingsContent() {
     const lit = isLit(bg.type);
     const leaves = bg.type === "leaves";
     const snowy = bg.type === "snow";
-    const plainUnder = leaves || snowy; // no halo color to pick
+    const plainUnder = leaves || snowy; // no glow color to pick
     const glow = glowOf(bg.value);
     const selected = glow.id;
     const customGlow = glow.id === "custom" ? glow.base : null;
@@ -2788,7 +2788,7 @@ function settingsContent() {
     const withTint = (value) => (s.bg.tint ? { type: bg.type, value, tint: s.bg.tint } : { type: bg.type, value });
     bgExtra = h("div", {},
       lit ? h("div", { class: "leaf-kind" }, segmented([["glow", t("bgGlow")], ["rays", t("styleRays")]], bg.type,
-        // Switching between the halo and the rays keeps the color and the color underneath.
+        // Switching between the glow and the rays keeps the color and the color underneath.
         (v) => { s.bg = { ...s.bg, type: v }; saveSettings(); refreshSettings(); })) : null,
       snowy ? h("div", { class: "leaf-kind" }, segmented(BREEZE_KINDS.map((k) => [k, k === "season" ? [svg(ICONS.sunny, "seg-sun"), t("breeze_season")] : t(`breeze_${k}`)]), BREEZE_KINDS.includes(bg.value) ? bg.value : "season",
         (v) => { s.bg = { ...s.bg, value: v === "season" ? null : v }; saveSettings(); })) : null,
@@ -2914,7 +2914,7 @@ function settingsContent() {
       h("div", { class: "set-field" },
         h("div", { class: "set-label" }, t("background"), hasUnderColor(bg.type) ? infoBtn("bg", t(bg.type === "leaves" ? "leavesHint" : bg.type === "snow" ? "snowHint" : "glowHint")) : null),
         segmented([["color", t("bgColor")], ["light", t("bgLight")], ["leaves", t("bgLeaves")], ["snow", t("bgSnow")]], bg.type === "none" ? "color" : isLit(bg.type) ? "light" : bg.type, (v) => {
-          // Light opens on the halo, or stays on the kind of light already chosen. Between the
+          // Light opens on the glow, or stays on the kind of light already chosen. Between the
           // backgrounds that have a color underneath, that color is kept.
           if (v === "light") v = isLit(bg.type) ? bg.type : "glow";
           const keep = isLit(v) && isLit(bg.type);

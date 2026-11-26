@@ -14,7 +14,7 @@ All notable changes to ReStart. Versions follow [semantic versioning](https://se
 ### Changed
 
 - **Sky in Japanese-inspired colors.** Sky's palette is redrawn, loosely inspired by traditional Japanese colors, with no greys and no ochres: wisteria at night, lilac before dawn, carnation pink at dawn and dusk, a pale rosy peach for the low sun (no more gold turning caramel), white wisteria as the light rises, sky blue at midday. The seasons change the hue rather than draining the color: winter days turn to a pale, clear aqua instead of a warm grey. In dark mode, Sky keeps a little more color.
-- **Halo is now called Glow** in English, and *Lueur* in French (the other languages keep their word).
+- **Halo is now called Glow** in English, *Lueur* in French, *Resplandor* in Spanish and *Brilho* in Portuguese.
 - **A calmer glow by default.** The middle of the *Intensity* slider (shown as 50 %) now gives the glow what 40 % gave in 1.3.0. The top of the slider is unchanged, and so are the rays.
 - **The accent never turns brown.** Orange, gold and olive hues become a sunset rose, so the accent stays fresh with every background.
 
@@ -22,6 +22,7 @@ All notable changes to ReStart. Versions follow [semantic versioning](https://se
 
 - **Column opacity really makes columns see-through.** At low opacity, the columns kept their frosted blur, so the background stayed hidden behind them even at 0 %. The blur now follows the opacity: at 0 %, the background shows through, sharp.
 - **The tab icon is no longer cropped.** The small icons (16, 32 and 48 px) filled their whole square, so the browser tab cut their rounded corners and they looked too big. They now keep the same margin as the large icon.
+- **The settings panel is a little wider** (440 px instead of 360 px), so the labels of the *Breeze* choices and the sliders fit in every language, German, Spanish, Dutch and Portuguese included.
 
 ### Store
 

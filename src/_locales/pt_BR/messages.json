@@ -80,13 +80,13 @@
     "message": "Luz"
   },
   "bgGlow": {
-    "message": "Halo"
+    "message": "Brilho"
   },
   "bgColor": {
     "message": "Cor"
   },
   "glowColor": {
-    "message": "Cor do halo"
+    "message": "Cor do brilho"
   },
   "glowHint": {
     "message": "Ele acompanha o sol, da esquerda de manhã à direita à tarde. Céu assume as cores do dia, inspiradas nas cores japonesas: rosa ao amanhecer, azul-celeste durante o dia (um água-marinha pálido no inverno), pêssego e depois rosa no pôr do sol, glicínia à noite. Também acompanha a estação: dias mais longos no verão, mais pálidos e frescos no inverno. As outras cores mantêm o tom e ficam mais suaves à noite. Pastéis passa lentamente de uma cor suave para outra."

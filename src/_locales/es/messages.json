@@ -80,13 +80,13 @@
     "message": "Luz"
   },
   "bgGlow": {
-    "message": "Halo"
+    "message": "Resplandor"
   },
   "bgColor": {
     "message": "Color"
   },
   "glowColor": {
-    "message": "Color del halo"
+    "message": "Color del resplandor"
   },
   "glowHint": {
     "message": "Sigue al sol, de la izquierda por la mañana a la derecha por la tarde. Cielo toma los colores del día, inspirados en los colores japoneses: rosa al amanecer, azul cielo durante el día (un aguamarina pálido en invierno), melocotón y luego rosa al atardecer, glicina de noche. También sigue la estación: días más largos en verano, más pálidos y frescos en invierno. Los demás colores mantienen su tono y se suavizan de noche. Pasteles pasa lentamente de un color suave a otro."

@@ -432,23 +432,107 @@
       }
     }
   },
-  "welcome1": {
-    "message": "Vos favoris, dans votre ordre."
+  "welcomeAgain": {
+    "message": "Revoir la présentation"
   },
-  "welcome2": {
-    "message": "Clic droit sur un site ou un dossier pour agir : épingler, modifier, déplacer, supprimer."
+  "wSkip": {
+    "message": "Passer"
   },
-  "welcome3": {
-    "message": "Focus : une page calme en un clic."
+  "wNext": {
+    "message": "Suivant"
   },
-  "welcome4": {
-    "message": "Rester éveillé : l'écran reste allumé, un moment ou jusqu'à ce que vous l'arrêtiez."
+  "wBack": {
+    "message": "Retour"
   },
   "welcomeStart": {
     "message": "C'est parti"
   },
-  "welcomeAgain": {
-    "message": "Revoir la présentation"
+  "w1Title": {
+    "message": "Un nouveau départ, à chaque onglet."
+  },
+  "w1No": {
+    "message": "Pas de fil d'actu. Pas de pub. Pas de pistage."
+  },
+  "w1Just": {
+    "message": "Juste vos favoris, rangés dans un espace calme et clair, pour aller droit où vous voulez."
+  },
+  "w2Kicker": {
+    "message": "Choisissez votre fond"
+  },
+  "w2Title": {
+    "message": "Une page qui suit votre journée."
+  },
+  "w2Sub": {
+    "message": "La lumière suit le soleil, et les couleurs changent avec les heures et les saisons, toute l'année."
+  },
+  "w2Color": {
+    "message": "Une teinte calme, ou la couleur de l'heure."
+  },
+  "w2Light": {
+    "message": "Le soleil traverse la page, de l'aube au soir."
+  },
+  "w2Leaves": {
+    "message": "Un après-midi à l'ombre d'un arbre."
+  },
+  "w2Breeze": {
+    "message": "Pétales, feuilles ou neige, selon la saison."
+  },
+  "w2Day": {
+    "message": "Votre page au fil du jour"
+  },
+  "w2Night": {
+    "message": "Nuit"
+  },
+  "w2Dawn": {
+    "message": "Aube"
+  },
+  "w2Midday": {
+    "message": "Midi"
+  },
+  "w2Dusk": {
+    "message": "Crépuscule"
+  },
+  "w2Cap": {
+    "message": "Les couleurs changent doucement avec les heures, et deviennent plus pâles et plus fraîches en hiver."
+  },
+  "w3Kicker": {
+    "message": "Deux petits plus"
+  },
+  "w3Title": {
+    "message": "Pensé pour votre façon de travailler."
+  },
+  "w3Focus": {
+    "message": "Besoin de calme pour vous concentrer, ou sur le point de partager votre écran en réunion ? Le mode Focus masque vos favoris et ne garde que l'heure, votre fond et, si vous le souhaitez, quelques sites en icônes."
+  },
+  "w3Awake": {
+    "message": "Gardez l'écran allumé pendant que vous lisez et prenez des notes, ou pour qu'une longue tâche ne s'interrompe pas pendant votre pause café. De 15 minutes à 4 heures, ou jusqu'à ce que vous l'arrêtiez."
+  },
+  "demoMail": {
+    "message": "Mail"
+  },
+  "demoCalendar": {
+    "message": "Agenda"
+  },
+  "demoDocs": {
+    "message": "Docs"
+  },
+  "demoWork": {
+    "message": "Travail"
+  },
+  "demoDesign": {
+    "message": "Design"
+  },
+  "demoReading": {
+    "message": "Lecture"
+  },
+  "w1Alt": {
+    "message": "Une page d'accueil encombrée se vide jusqu'à ne garder que la barre de favoris, qui devient ReStart."
+  },
+  "w3FocusAlt": {
+    "message": "Avant et après : la page complète, puis seulement l'heure."
+  },
+  "w3AwakeAlt": {
+    "message": "Le bouton Rester éveillé, activé, et son menu de durées."
   },
   "close": {
     "message": "Fermer"

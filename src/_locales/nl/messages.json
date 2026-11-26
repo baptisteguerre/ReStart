@@ -432,23 +432,107 @@
       }
     }
   },
-  "welcome1": {
-    "message": "Je bladwijzers, in jouw volgorde."
+  "welcomeAgain": {
+    "message": "Introductie opnieuw tonen"
   },
-  "welcome2": {
-    "message": "Klik met de rechtermuisknop op een site of map voor snelle acties: vastzetten, bewerken, verplaatsen, verwijderen."
+  "wSkip": {
+    "message": "Overslaan"
   },
-  "welcome3": {
-    "message": "Focus: een rustige pagina met één klik."
+  "wNext": {
+    "message": "Volgende"
   },
-  "welcome4": {
-    "message": "Wakker houden: het scherm blijft aan, een tijdje of tot u het uitzet."
+  "wBack": {
+    "message": "Terug"
   },
   "welcomeStart": {
     "message": "Aan de slag"
   },
-  "welcomeAgain": {
-    "message": "Introductie opnieuw tonen"
+  "w1Title": {
+    "message": "Een frisse start, bij elk nieuw tabblad."
+  },
+  "w1No": {
+    "message": "Geen feeds. Geen advertenties. Geen tracking."
+  },
+  "w1Just": {
+    "message": "Alleen je bladwijzers, in een rustige, overzichtelijke ruimte die je brengt waar je heen wilt."
+  },
+  "w2Kicker": {
+    "message": "Kies je achtergrond"
+  },
+  "w2Title": {
+    "message": "Een pagina die je dag volgt."
+  },
+  "w2Sub": {
+    "message": "Het licht beweegt met de zon mee, en de kleuren veranderen met de uren en de seizoenen, het hele jaar door."
+  },
+  "w2Color": {
+    "message": "Eén rustige tint, of de kleur van het uur."
+  },
+  "w2Light": {
+    "message": "Zon over je pagina, van ochtend tot avond."
+  },
+  "w2Leaves": {
+    "message": "Een middag in de schaduw."
+  },
+  "w2Breeze": {
+    "message": "Bloesem, blad of sneeuw, per seizoen."
+  },
+  "w2Day": {
+    "message": "Je pagina door de dag heen"
+  },
+  "w2Night": {
+    "message": "Nacht"
+  },
+  "w2Dawn": {
+    "message": "Dageraad"
+  },
+  "w2Midday": {
+    "message": "Middag"
+  },
+  "w2Dusk": {
+    "message": "Schemer"
+  },
+  "w2Cap": {
+    "message": "De kleuren verschuiven zacht met de uren, en worden in de winter bleker en koeler."
+  },
+  "w3Kicker": {
+    "message": "Twee kleine helpers"
+  },
+  "w3Title": {
+    "message": "Gemaakt voor hoe jij werkt."
+  },
+  "w3Focus": {
+    "message": "Even rust nodig om je te concentreren, of ga je je scherm delen in een vergadering? De focusmodus verbergt je bladwijzers en laat alleen de tijd, je achtergrond en, als je wilt, een paar sites als pictogram zien."
+  },
+  "w3Awake": {
+    "message": "Houd het scherm aan terwijl je leest en aantekeningen maakt, of zorg dat een lange taak niet stopt tijdens je koffiepauze. Van 15 minuten tot 4 uur, of tot je het uitzet."
+  },
+  "demoMail": {
+    "message": "Mail"
+  },
+  "demoCalendar": {
+    "message": "Agenda"
+  },
+  "demoDocs": {
+    "message": "Docs"
+  },
+  "demoWork": {
+    "message": "Werk"
+  },
+  "demoDesign": {
+    "message": "Design"
+  },
+  "demoReading": {
+    "message": "Lezen"
+  },
+  "w1Alt": {
+    "message": "Een volle startpagina loopt leeg tot alleen de bladwijzerbalk overblijft, en die wordt ReStart."
+  },
+  "w3FocusAlt": {
+    "message": "Voor en na: de volledige pagina, daarna alleen de tijd."
+  },
+  "w3AwakeAlt": {
+    "message": "De knop Wakker houden, ingeschakeld, met het menu met tijdsduren."
   },
   "close": {
     "message": "Sluiten"

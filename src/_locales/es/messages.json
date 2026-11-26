@@ -432,23 +432,107 @@
       }
     }
   },
-  "welcome1": {
-    "message": "Tus marcadores, en tu orden."
+  "welcomeAgain": {
+    "message": "Ver de nuevo la presentación"
   },
-  "welcome2": {
-    "message": "Haz clic derecho en un sitio o una carpeta para acciones rápidas: fijar, editar, mover, eliminar."
+  "wSkip": {
+    "message": "Omitir"
   },
-  "welcome3": {
-    "message": "Enfoque: una página tranquila en un clic."
+  "wNext": {
+    "message": "Siguiente"
   },
-  "welcome4": {
-    "message": "Mantener activo: la pantalla sigue encendida, un rato o hasta que lo desactives."
+  "wBack": {
+    "message": "Atrás"
   },
   "welcomeStart": {
     "message": "Empezar"
   },
-  "welcomeAgain": {
-    "message": "Ver de nuevo la presentación"
+  "w1Title": {
+    "message": "Un nuevo comienzo en cada pestaña."
+  },
+  "w1No": {
+    "message": "Sin noticias. Sin anuncios. Sin rastreo."
+  },
+  "w1Just": {
+    "message": "Solo tus marcadores, en un espacio tranquilo y despejado que te lleva adonde quieres ir."
+  },
+  "w2Kicker": {
+    "message": "Elige tu fondo"
+  },
+  "w2Title": {
+    "message": "Una página que sigue tu día."
+  },
+  "w2Sub": {
+    "message": "La luz se mueve con el sol, y los colores cambian con las horas y las estaciones, todo el año."
+  },
+  "w2Color": {
+    "message": "Un tono sereno, o el color de la hora."
+  },
+  "w2Light": {
+    "message": "El sol cruza tu página, del alba a la noche."
+  },
+  "w2Leaves": {
+    "message": "Una tarde a la sombra de un árbol."
+  },
+  "w2Breeze": {
+    "message": "Pétalos, hojas o nieve, según la estación."
+  },
+  "w2Day": {
+    "message": "Tu página a lo largo del día"
+  },
+  "w2Night": {
+    "message": "Noche"
+  },
+  "w2Dawn": {
+    "message": "Alba"
+  },
+  "w2Midday": {
+    "message": "Mediodía"
+  },
+  "w2Dusk": {
+    "message": "Atardecer"
+  },
+  "w2Cap": {
+    "message": "Los colores cambian suavemente con las horas, y se vuelven más pálidos y fríos en invierno."
+  },
+  "w3Kicker": {
+    "message": "Dos pequeñas ayudas"
+  },
+  "w3Title": {
+    "message": "Pensado para tu forma de trabajar."
+  },
+  "w3Focus": {
+    "message": "¿Necesitas calma para concentrarte, o vas a compartir pantalla en una reunión? El modo Enfoque oculta tus marcadores y deja solo la hora, tu fondo y, si quieres, algunos sitios como iconos."
+  },
+  "w3Awake": {
+    "message": "Mantén la pantalla encendida mientras lees y tomas notas, o para que una tarea larga no se interrumpa durante tu pausa para el café. De 15 minutos a 4 horas, o hasta que lo desactives."
+  },
+  "demoMail": {
+    "message": "Correo"
+  },
+  "demoCalendar": {
+    "message": "Calendario"
+  },
+  "demoDocs": {
+    "message": "Docs"
+  },
+  "demoWork": {
+    "message": "Trabajo"
+  },
+  "demoDesign": {
+    "message": "Diseño"
+  },
+  "demoReading": {
+    "message": "Lectura"
+  },
+  "w1Alt": {
+    "message": "Una página de inicio recargada se vacía hasta que solo queda la barra de marcadores, que se convierte en ReStart."
+  },
+  "w3FocusAlt": {
+    "message": "Antes y después: la página completa, y luego solo la hora."
+  },
+  "w3AwakeAlt": {
+    "message": "El botón Mantener activo, encendido, y su menú de duraciones."
   },
   "close": {
     "message": "Cerrar"

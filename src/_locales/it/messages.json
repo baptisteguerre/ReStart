@@ -432,23 +432,107 @@
       }
     }
   },
-  "welcome1": {
-    "message": "I tuoi preferiti, nel tuo ordine."
-  },
-  "welcome2": {
-    "message": "Fai clic destro su un sito o una cartella per le azioni rapide: fissa, modifica, sposta, elimina."
-  },
-  "welcome3": {
-    "message": "Focus: una pagina calma con un clic."
-  },
-  "welcome4": {
-    "message": "Mantieni attivo: lo schermo resta acceso, per un po' o finché non lo disattivi."
-  },
-  "welcomeStart": {
-    "message": "Iniziamo"
-  },
   "welcomeAgain": {
     "message": "Rivedi la presentazione"
+  },
+  "wSkip": {
+    "message": "Salta"
+  },
+  "wNext": {
+    "message": "Avanti"
+  },
+  "wBack": {
+    "message": "Indietro"
+  },
+  "welcomeStart": {
+    "message": "Inizia"
+  },
+  "w1Title": {
+    "message": "Un nuovo inizio, a ogni nuova scheda."
+  },
+  "w1No": {
+    "message": "Niente feed. Niente pubblicità. Niente tracciamento."
+  },
+  "w1Just": {
+    "message": "Solo i tuoi preferiti, in uno spazio calmo e ordinato che ti porta dove vuoi andare."
+  },
+  "w2Kicker": {
+    "message": "Scegli il tuo sfondo"
+  },
+  "w2Title": {
+    "message": "Una pagina che segue la tua giornata."
+  },
+  "w2Sub": {
+    "message": "La luce si muove con il sole, e i colori cambiano con le ore e le stagioni, tutto l'anno."
+  },
+  "w2Color": {
+    "message": "Una tinta quieta, o il colore dell'ora."
+  },
+  "w2Light": {
+    "message": "Il sole sulla pagina, dall'alba a sera."
+  },
+  "w2Leaves": {
+    "message": "Un pomeriggio all'ombra di un albero."
+  },
+  "w2Breeze": {
+    "message": "Petali, foglie o neve, a ogni stagione."
+  },
+  "w2Day": {
+    "message": "La tua pagina nel corso del giorno"
+  },
+  "w2Night": {
+    "message": "Notte"
+  },
+  "w2Dawn": {
+    "message": "Alba"
+  },
+  "w2Midday": {
+    "message": "Mezzogiorno"
+  },
+  "w2Dusk": {
+    "message": "Tramonto"
+  },
+  "w2Cap": {
+    "message": "I colori cambiano dolcemente con le ore, e d'inverno diventano più pallidi e freschi."
+  },
+  "w3Kicker": {
+    "message": "Due piccoli aiuti"
+  },
+  "w3Title": {
+    "message": "Pensato per il tuo modo di lavorare."
+  },
+  "w3Focus": {
+    "message": "Hai bisogno di calma per concentrarti, o stai per condividere lo schermo in una riunione? La modalità Focus nasconde i tuoi preferiti e mostra solo l'ora, il tuo sfondo e, se vuoi, alcuni siti come icone."
+  },
+  "w3Awake": {
+    "message": "Tieni lo schermo acceso mentre leggi e prendi appunti, o fai in modo che un'attività lunga non si interrompa durante la pausa caffè. Da 15 minuti a 4 ore, o finché non lo disattivi."
+  },
+  "demoMail": {
+    "message": "Posta"
+  },
+  "demoCalendar": {
+    "message": "Calendario"
+  },
+  "demoDocs": {
+    "message": "Docs"
+  },
+  "demoWork": {
+    "message": "Lavoro"
+  },
+  "demoDesign": {
+    "message": "Design"
+  },
+  "demoReading": {
+    "message": "Lettura"
+  },
+  "w1Alt": {
+    "message": "Una pagina iniziale affollata si svuota fino a lasciare solo la barra dei preferiti, che diventa ReStart."
+  },
+  "w3FocusAlt": {
+    "message": "Prima e dopo: la pagina completa, poi solo l'ora."
+  },
+  "w3AwakeAlt": {
+    "message": "Il pulsante Mantieni attivo, acceso, e il suo menu di durate."
   },
   "close": {
     "message": "Chiudi"

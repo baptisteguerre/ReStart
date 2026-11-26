@@ -917,24 +917,162 @@ body.leaves-bamboo .leaves i { background-image: url(img/bamboo.svg); }
 }
 
 /* ===================== Welcome ===================== */
-.welcome {
-  position: fixed; z-index: 9; left: 50%; bottom: 24px; transform: translateX(-50%);
-  width: 380px; max-width: calc(100vw - 32px);
-  padding: 18px 18px 14px;
-  background: color-mix(in srgb, var(--surface-solid) 88%, transparent);
-  backdrop-filter: blur(30px) saturate(1.8);
-  border-radius: 14px; box-shadow: var(--shadow-lg);
-  animation: welcome-in .35s ease-out;
+/* A floating card of three slides over the dimmed page. On the backgrounds slide the page
+   dims less, so the background just picked shows behind the card. */
+.wl-overlay {
+  position: fixed; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center;
+  padding: 16px; background: rgba(18, 16, 28, .5); transition: background-color .4s ease;
+  animation: wl-fade .3s ease-out;
 }
-@keyframes welcome-in { from { opacity: 0; transform: translate(-50%, 8px); } }
-.welcome h2 { margin: 0 28px 12px 0; font-size: 15px; font-weight: 600; color: var(--text); }
-.welcome ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-.welcome li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; line-height: 1.4; color: var(--text-2); }
-.welcome li svg { width: 18px; height: 18px; flex: none; fill: var(--text-3); }
-.welcome-close { position: absolute; top: 10px; right: 10px; }
-.welcome-actions { display: flex; justify-content: flex-end; margin-top: 14px; }
-body.focus .welcome { display: none; }
-@media (prefers-reduced-motion: reduce) { .welcome { animation: none; } }
+.wl-overlay.see-through { background: rgba(18, 16, 28, .18); }
+@keyframes wl-fade { from { opacity: 0; } }
+.wl-card {
+  width: 760px; max-width: 100%; max-height: 100%; overflow-y: auto; box-sizing: border-box;
+  background: var(--surface-solid); color: var(--text); border-radius: 22px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .28), 0 0 0 .5px rgba(0, 0, 0, .1);
+  padding: 28px 40px 26px; display: flex; flex-direction: column; gap: 20px;
+  animation: wl-in .35s ease-out;
+}
+@keyframes wl-in { from { opacity: 0; transform: translateY(10px) scale(.98); } }
+.wl-head { display: flex; justify-content: space-between; align-items: center; }
+.wl-kicker { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-2); }
+.wl-skip, .wl-back { border: 0; background: none; color: var(--text-2); font-size: 13px; font-weight: 500; cursor: pointer; padding: 10px 12px; margin: -10px -12px; border-radius: 8px; }
+.wl-back { font-size: 14px; margin: 0 0 0 -12px; }
+.wl-skip:hover, .wl-back:hover { color: var(--text); }
+.wl-slide { display: flex; flex-direction: column; gap: 20px; }
+.wl-slide[hidden] { display: none; }
+.wl-text { display: flex; flex-direction: column; gap: 8px; padding: 0 4px; margin: 0; }
+.wl-card h1 { margin: 0; font-size: 26px; line-height: 1.2; font-weight: 650; letter-spacing: -.015em; text-wrap: pretty; }
+.wl-card h2 { margin: 0; font-size: 16px; font-weight: 600; }
+.wl-card p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--text-2); text-wrap: pretty; }
+.wl-card p.wl-strong { color: var(--text); font-weight: 500; }
+.wl-foot { display: flex; justify-content: space-between; align-items: center; }
+.wl-steps { display: flex; gap: 6px; }
+.wl-steps i { width: 6px; height: 6px; border-radius: 3px; background: var(--border-strong); transition: width .25s ease, background-color .25s ease; }
+.wl-steps i.on { width: 18px; background: var(--accent-fill); }
+.wl-next { border: 0; height: 44px; padding: 0 22px; border-radius: 12px; background: var(--accent-fill); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
+.wl-next:hover { background: color-mix(in srgb, var(--accent-fill) 85%, #000); }
+.wl-card:focus { outline: none; }
+.wl-card button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Slide 1: a crowded new tab page empties, its bookmarks bar comes down and becomes ReStart (12 s loop). */
+.wl-stage { position: relative; border-radius: 16px; background: #f2f1f4; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .06); color: #3a3846; }
+.wl-anim { height: 280px; }
+.wl-chrome { position: absolute; inset: 0 0 auto; height: 30px; background: #e9e7ec; display: flex; align-items: center; gap: 10px; padding: 0 14px; }
+.wl-dots { display: flex; gap: 5px; }
+.wl-dots i { width: 8px; height: 8px; border-radius: 50%; background: #ff6159; }
+.wl-dots i:nth-child(2) { background: #ffbd2e; } .wl-dots i:nth-child(3) { background: #28c941; }
+.wl-url { flex: 1; max-width: 340px; height: 16px; border-radius: 8px; background: #fff; }
+.wl-busy { position: absolute; inset: 58px 0 0; padding: 8px 14px 0; display: flex; flex-direction: column; gap: 8px; animation: wl-busy 12s ease-in-out infinite; }
+.wl-row { display: flex; gap: 7px; align-items: center; }
+.wl-search { flex: 1; height: 24px; border-radius: 12px; background: #fff; box-shadow: 0 0 0 1px #dcd8e2; }
+.wl-sale { height: 24px; padding: 0 10px; border-radius: 6px; background: linear-gradient(90deg, #ff3d00, #ff9800); color: #fff; font-size: 10px; font-weight: 800; display: flex; align-items: center; letter-spacing: .04em; white-space: nowrap; }
+.wl-bell { position: relative; width: 24px; height: 24px; flex: none; border-radius: 12px; background: #fff; box-shadow: 0 0 0 1px #dcd8e2; }
+.wl-bell b { position: absolute; right: -6px; top: -5px; font-size: 8px; line-height: 12px; padding: 0 3px; border-radius: 6px; background: #e5243b; color: #fff; }
+.wl-t { position: relative; width: 34px; height: 34px; flex: none; border-radius: 9px; background: var(--c); }
+.wl-t b { position: absolute; right: -4px; top: -5px; font-size: 7px; padding: 1px 3px; border-radius: 3px; background: #e85d04; color: #fff; }
+.wl-weather { margin-left: auto; height: 34px; padding: 0 8px; border-radius: 9px; background: #d0e4ff; display: flex; align-items: center; gap: 6px; }
+.wl-weather i:first-child { width: 18px; height: 18px; border-radius: 50%; background: #ffc300; }
+.wl-weather i:last-child { width: 34px; height: 6px; border-radius: 3px; background: #7d9fd1; }
+.wl-stocks { height: 34px; padding: 0 8px; border-radius: 9px; background: #fff; box-shadow: 0 0 0 1px #dcd8e2; display: flex; align-items: center; gap: 5px; font-size: 9px; font-weight: 700; }
+.wl-stocks svg { width: 34px; height: 14px; fill: none; stroke: #e5243b; stroke-width: 1.6; }
+.wl-stocks .up { color: #2b9348; } .wl-stocks .down { color: #e5243b; }
+.wl-news { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
+.wl-video { position: relative; height: 96px; border-radius: 8px; background: #1f1d2b; }
+.wl-video b { position: absolute; left: 6px; top: 6px; font-size: 8px; padding: 1px 4px; border-radius: 3px; background: #e5243b; color: #fff; }
+.wl-video i { position: absolute; left: 50%; top: 50%; margin: -8px 0 0 -5px; border-left: 14px solid #fff; border-top: 8px solid transparent; border-bottom: 8px solid transparent; }
+.wl-article { border-radius: 8px; background: #fff; box-shadow: 0 0 0 1px #dcd8e2; padding: 6px; display: flex; flex-direction: column; gap: 5px; font-size: 8px; font-weight: 700; }
+.wl-article i { height: 5px; border-radius: 3px; background: #c9c5d1; }
+.wl-article i:first-child { height: 44px; border-radius: 5px; background: var(--c); }
+.wl-article i:nth-child(3) { width: 70%; background: #dedbe3; }
+.wl-ad { border-radius: 8px; background: repeating-linear-gradient(135deg, #ffe066 0 8px, #ffd43b 8px 16px); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: #7a4b00; }
+.wl-busy.wl-cookies { inset: auto 0 0; height: 26px; padding: 0 14px; background: #26242f; color: #fff; font-size: 9.5px; flex-direction: row; align-items: center; justify-content: space-between; gap: 10px; white-space: nowrap; overflow: hidden; }
+.wl-cookies b { padding: 3px 8px; border-radius: 4px; background: #4dabf7; color: #0b2540; }
+.wl-calm { position: absolute; inset: 30px 0 0; opacity: 0; background: radial-gradient(60% 75% at 65% 0%, #f8c8bd 0%, #ecdff3 50%, #f5f4f7 88%); animation: wl-calm 12s ease-in-out infinite; }
+.wl-tiles { position: absolute; top: 22px; inset-inline: 0; display: flex; justify-content: center; gap: 18px; font-size: 9px; }
+.wl-tiles > span { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.wl-tile { width: 38px; height: 38px; border-radius: 11px; background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, .06); display: flex; align-items: center; justify-content: center; }
+.wl-tile i { width: 18px; height: 18px; border-radius: 5px; }
+.wl-filter { position: absolute; top: 88px; left: 50%; transform: translateX(-50%); width: 200px; height: 20px; border-radius: 10px; background: rgba(255, 255, 255, .75); }
+.wl-cols { position: absolute; top: 122px; inset-inline: 70px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; font-size: 9.5px; font-weight: 600; }
+.wl-cols div { border-radius: 10px; background: rgba(255, 255, 255, .82); padding: 9px 10px; display: flex; flex-direction: column; gap: 7px; }
+.wl-cols i { height: 5px; border-radius: 3px; background: #e4e0ea; }
+.wl-cols i.short { width: 70%; }
+.wl-bar { position: absolute; inset: 30px 0 auto; height: 26px; display: flex; align-items: center; gap: 4px; padding: 0 12px; font-size: 9.5px; background: #e9e7ec; white-space: nowrap; overflow: hidden; animation: wl-bar 12s ease-in-out infinite; }
+.wl-bar > span { display: flex; align-items: center; gap: 4px; padding: 3px 6px; }
+.wl-bar i { width: 9px; height: 9px; border-radius: 3px; }
+.wl-bar i.fold { width: 10px; height: 8px; border-radius: 2px; background: #a1a1a6; }
+@keyframes wl-busy { 0%, 22% { opacity: 1; transform: none; filter: none; } 32%, 90% { opacity: 0; transform: scale(.97); filter: blur(3px); } 100% { opacity: 1; transform: none; filter: none; } }
+@keyframes wl-bar {
+  0%, 24% { transform: none; background: #e9e7ec; box-shadow: none; border-radius: 0; opacity: 1; }
+  34% { transform: none; background: #fff; box-shadow: 0 0 0 2px var(--accent-fill), 0 6px 20px rgba(0, 0, 0, .15); border-radius: 10px; opacity: 1; }
+  46% { transform: translateY(96px) scale(.9); background: #fff; box-shadow: 0 0 0 2px var(--accent-fill), 0 6px 20px rgba(0, 0, 0, .15); border-radius: 10px; opacity: 1; }
+  54%, 90% { transform: translateY(96px) scale(.9); background: #fff; border-radius: 10px; opacity: 0; }
+  91% { transform: none; background: #e9e7ec; box-shadow: none; border-radius: 0; opacity: 0; }
+  100% { transform: none; background: #e9e7ec; border-radius: 0; opacity: 1; }
+}
+@keyframes wl-calm { 0%, 46% { opacity: 0; transform: translateY(6px); } 56%, 88% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; } }
+
+/* Slide 2: the four backgrounds, and the colors of a day */
+.wl-picks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.wl-pick { border: 0; background: none; color: inherit; font: inherit; text-align: start; cursor: pointer; min-width: 0; display: flex; flex-direction: column; gap: 8px; padding: 8px 8px 12px; border-radius: 14px; box-shadow: 0 0 0 1px var(--border-strong); transition: box-shadow .2s ease; }
+.wl-pick:hover { box-shadow: 0 0 0 1px var(--text-3); }
+.wl-pick[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--accent), 0 4px 14px rgba(0, 0, 0, .12); }
+.wl-prev { height: 96px; border-radius: 10px; overflow: hidden; display: block; }
+.wl-prev svg { width: 100%; height: 100%; display: block; }
+.wl-prev-color { background: #e4dcf5; display: flex; align-items: flex-end; gap: 4px; padding: 8px; box-sizing: border-box; }
+.wl-prev-color i { width: 12px; height: 12px; border-radius: 4px; background: #f6c9d6; }
+.wl-prev-color i:nth-child(2) { background: #bfe1ee; } .wl-prev-color i:nth-child(3) { background: #d6f0dc; }
+.wl-prev-light { background: radial-gradient(70% 90% at 70% 0%, #f8c8bd 0%, #efb3c4 30%, #ecdff3 65%, #f6f2fa 100%); }
+.wl-prev-leaves { background: radial-gradient(90% 90% at 30% 20%, #fbf6ea 0%, #efe9dc 70%, #e7e1d3 100%); }
+.wl-prev-leaves g { fill: rgba(70, 82, 58, .3); stroke: rgba(70, 82, 58, .3); filter: blur(1.4px); }
+.wl-prev-leaves .stem { fill: none; stroke-width: 2.4; }
+.wl-prev-breeze { background: linear-gradient(180deg, #fbf1f4, #f6eaf3); }
+.wl-prev-breeze path { fill: #f3a6bd; opacity: .9; } .wl-prev-breeze path.b { fill: #f7bccd; opacity: .75; }
+.wl-name { font-size: 14px; font-weight: 600; padding: 0 2px; }
+.wl-desc { font-size: 12.5px; line-height: 1.4; color: var(--text-2); padding: 0 2px; text-wrap: balance; }
+.wl-day { display: flex; flex-direction: column; gap: 7px; padding: 12px 14px; border-radius: 12px; background: var(--hover); }
+.wl-day-title { font-size: 12.5px; font-weight: 600; }
+.wl-day-strip { height: 12px; border-radius: 6px; background: linear-gradient(90deg, #a7a2d6 0%, #b3a8dd 14%, #efb3c4 24%, #f8c8bd 31%, #ecdff3 40%, #bfe1ee 50%, #a9d8ef 58%, #ecdff3 68%, #f8c8bd 76%, #efb3c4 84%, #b3a8dd 92%, #a7a2d6 100%); }
+.wl-day-labels { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-2); }
+.wl-card .wl-day p { font-size: 12.5px; line-height: 1.4; }
+
+/* Slide 3: Focus mode and Keep Awake */
+.wl-feats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.wl-feats.single { grid-template-columns: minmax(0, 1fr); }
+.wl-feat { display: flex; flex-direction: column; gap: 12px; }
+.wl-feat h2, .wl-feat p { padding: 0 4px; }
+.wl-card .wl-feat p { font-size: 13.5px; }
+.wl-small { height: 170px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0 10px; }
+.wl-mini { position: relative; width: 118px; height: 84px; flex: none; border-radius: 8px; overflow: hidden; background: radial-gradient(80% 70% at 65% 0%, #f8c8bd, #ecdff3 60%, #f7f5fa); box-shadow: 0 1px 3px rgba(0, 0, 0, .08); }
+.wl-mini-tiles { position: absolute; top: 9px; inset-inline: 0; display: flex; justify-content: center; gap: 5px; }
+.wl-mini-tiles i { width: 12px; height: 12px; border-radius: 4px; background: #fff; }
+.wl-mini-cols { position: absolute; top: 30px; inset-inline: 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+.wl-mini-cols i { height: 44px; border-radius: 5px; background: rgba(255, 255, 255, .85); }
+.wl-mini-cols i:nth-child(2) { height: 34px; } .wl-mini-cols i:nth-child(3) { height: 40px; }
+.wl-mini-clock { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+.wl-mini-time { font-size: 24px; font-weight: 300; letter-spacing: -.02em; }
+.wl-mini-date { font-size: 7px; color: #6e6e73; }
+.wl-arrow { width: 22px; height: 22px; flex: none; fill: none; stroke: #a1a1a6; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.wl-awake-pill { flex: none; display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 15px; white-space: nowrap; background: #ece7fa; box-shadow: 0 0 0 1px rgba(91, 69, 194, .35); color: #4a36ad; font-size: 12px; font-weight: 600; }
+.wl-awake-pill svg { width: 15px; height: 15px; fill: currentColor; }
+.wl-left { font-weight: 500; opacity: .8; }
+.wl-awake-menu { flex: none; min-width: 100px; white-space: nowrap; border-radius: 10px; background: #fff; box-shadow: 0 6px 20px rgba(0, 0, 0, .1), 0 0 0 .5px rgba(0, 0, 0, .1); padding: 4px; display: flex; flex-direction: column; font-size: 10.5px; }
+.wl-awake-menu span { padding: 3px 7px; border-radius: 5px; }
+.wl-awake-menu span.on { background: #f0edf7; font-weight: 600; }
+
+@media (max-width: 640px) {
+  .wl-card { padding: 22px 20px 20px; }
+  .wl-picks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wl-feats { grid-template-columns: minmax(0, 1fr); }
+  .wl-anim { height: 240px; }
+  .wl-news { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wl-overlay, .wl-card { animation: none; }
+  .wl-busy, .wl-bar { animation: none; opacity: 0; }
+  .wl-calm { animation: none; opacity: 1; }
+}
 
 /* ===================== Reordering inside folders ===================== */
 .col-body .item.dragging, .sub.dragging { opacity: .4; }

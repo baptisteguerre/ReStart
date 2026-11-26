@@ -57,6 +57,9 @@ const $ = (id) => document.getElementById(id);
 const t = (key, ...subs) => ext.i18n.getMessage(key, subs.map(String)) || key;
 const colorName = (id) => t(`c_${id}`);
 const percent = new Intl.NumberFormat(ext.i18n.getUILanguage(), { style: "percent" });
+// The welcome screen while it is open (see Welcome, below).
+const welcome = { el: null, slide: 1, inert: [] };
+
 const els = {
   search: $("search"),
   searchLabel: document.querySelector(".search"),
@@ -1034,7 +1037,7 @@ function applyFocus() {
   document.body.classList.toggle("focus", on);
   els.focusBtn.setAttribute("aria-pressed", String(on));
   els.focusView.hidden = !on;
-  els.page.inert = on; // hidden bookmarks can't be reached with the keyboard either
+  els.page.inert = on || !!welcome.el; // hidden bookmarks can't be reached with the keyboard either
   const showClock = state.settings.focusClock !== false;
   $("fc-time").hidden = $("fc-date").hidden = !showClock;
   if (!on || !showClock) return;
@@ -2577,6 +2580,21 @@ function openIconPicker(anchor, title) {
 
 /* ----- Settings ----- */
 
+// The four kinds of background offered in Settings and on the welcome screen.
+const bgGroup = () => { const type = state.settings.bg.type; return type === "none" ? "color" : isLit(type) ? "light" : type; };
+function chooseBackground(v) {
+  const bg = state.settings.bg;
+  if (!["color", "light", "leaves", "snow"].includes(v)) return;
+  if (v === bgGroup()) return;
+  // Light opens on the glow, or stays on the kind of light already chosen. Between the
+  // backgrounds that have a color underneath, that color is kept.
+  if (v === "light") v = isLit(bg.type) ? bg.type : "glow";
+  const keep = isLit(v) && isLit(bg.type);
+  const keepTint = hasUnderColor(v) && hasUnderColor(bg.type) && bg.tint;
+  state.settings.bg = { type: v, value: keep ? bg.value : null, ...(keepTint ? { tint: bg.tint } : {}) };
+  saveSettings();
+}
+
 function saveSettings() {
   clearTimeout(saveTimer);
   saveLocal({ settings: state.settings });
@@ -2913,14 +2931,8 @@ function settingsContent() {
         })),
       h("div", { class: "set-field" },
         h("div", { class: "set-label" }, t("background"), hasUnderColor(bg.type) ? infoBtn("bg", t(bg.type === "leaves" ? "leavesHint" : bg.type === "snow" ? "snowHint" : "glowHint")) : null),
-        segmented([["color", t("bgColor")], ["light", t("bgLight")], ["leaves", t("bgLeaves")], ["snow", t("bgSnow")]], bg.type === "none" ? "color" : isLit(bg.type) ? "light" : bg.type, (v) => {
-          // Light opens on the glow, or stays on the kind of light already chosen. Between the
-          // backgrounds that have a color underneath, that color is kept.
-          if (v === "light") v = isLit(bg.type) ? bg.type : "glow";
-          const keep = isLit(v) && isLit(bg.type);
-          const keepTint = hasUnderColor(v) && hasUnderColor(bg.type) && bg.tint;
-          s.bg = { type: v, value: keep ? bg.value : null, ...(keepTint ? { tint: bg.tint } : {}) };
-          saveSettings();
+        segmented([["color", t("bgColor")], ["light", t("bgLight")], ["leaves", t("bgLeaves")], ["snow", t("bgSnow")]], bgGroup(), (v) => {
+          chooseBackground(v);
           refreshSettings();
         }),
         bgExtra),
@@ -3082,44 +3094,118 @@ els.search.addEventListener("keydown", (e) => {
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
+    if (welcome.el) { closeWelcome(); return; }
     if (!els.popover.hidden) { closePopover(); return; }
-    if ($("welcome")) { closeWelcome(); return; }
+
     if (els.search.value) { els.search.value = ""; els.search.dispatchEvent(new Event("input")); }
     els.search.blur();
     return;
   }
   const t = e.target;
   const typing = t instanceof HTMLInputElement || t instanceof HTMLTextAreaElement || t.isContentEditable;
-  if (!typing && !state.settings.focus && e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey && els.popover.hidden) {
+  if (!typing && !welcome.el && !state.settings.focus && e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey && els.popover.hidden) {
     els.search.focus();
   }
 });
 
 /* ===================== Welcome ===================== */
 
-// Shown once, on the first new tab: three lines, dismissed in one click or with Esc.
-// "welcomed" is a device flag, not a preference: it is not exported nor imported.
+// Three slides over the dimmed page, shown once on the first new tab and again from Settings.
+// Skip, Esc or the last button close it. "welcomed" is a device flag, not a preference:
+// it is not exported nor imported. All the text comes from the extension's own messages.
+const WELCOME_KICKERS = [null, "w2Kicker", "w3Kicker"];
+
+function localize(root) {
+  root.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
+  for (const attr of ["aria-label", "title", "placeholder"]) {
+    root.querySelectorAll(`[data-i18n-${attr}]`).forEach((el) => el.setAttribute(attr, t(el.getAttribute(`data-i18n-${attr}`))));
+  }
+}
+
+function welcomeGo(n) {
+  const el = welcome.el;
+  if (!el) return;
+  welcome.slide = n = Math.min(3, Math.max(1, n));
+  el.querySelectorAll(".wl-slide").forEach((s) => { s.hidden = Number(s.dataset.slide) !== n; });
+  const card = el.querySelector(".wl-card");
+  card.setAttribute("aria-labelledby", `wl-title-${n}`);
+  card.scrollTop = 0; // small windows: each slide starts at its top
+  el.querySelector("[data-wl-kicker]").textContent = n === 1 ? t("welcomeTitle", t("appName")) : t(WELCOME_KICKERS[n - 1]);
+  el.querySelectorAll(".wl-steps i").forEach((d, i) => d.classList.toggle("on", i === n - 1));
+  el.querySelector(".wl-back").style.visibility = n === 1 ? "hidden" : "";
+  el.querySelector(".wl-next").textContent = t(n === 3 ? "welcomeStart" : "wNext");
+  // On the backgrounds slide the page dims less, so the background picked shows behind.
+  el.classList.toggle("see-through", n === 2);
+  syncWelcomePicks();
+  // Back is hidden on the first slide: don't leave the focus on it.
+  if (!el.contains(document.activeElement) || document.activeElement.style.visibility === "hidden") el.querySelector(".wl-next").focus();
+}
+
+function syncWelcomePicks() {
+  const group = bgGroup();
+  welcome.el?.querySelectorAll(".wl-pick").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.bg === group)));
+}
+
 function closeWelcome() {
-  const card = $("welcome");
-  if (card) card.remove();
+  if (welcome.el) {
+    welcome.el.remove();
+    welcome.el = null;
+    for (const [node, was] of welcome.inert) node.inert = was;
+    welcome.inert = [];
+    els.page.inert = !!state.settings.focus;
+    if (!state.settings.focus) els.search.focus();
+  }
   if (!state.welcomed) { state.welcomed = true; saveLocal({ welcomed: true }); }
 }
 
 function showWelcome() {
-  $("welcome")?.remove();
-  const line = (icon, text) => h("li", {}, svg(icon), h("span", {}, text));
-  const card = h("section", { class: "welcome", id: "welcome", role: "dialog", "aria-modal": "false", "aria-labelledby": "welcome-title" },
-    h("button", { class: "icon-btn welcome-close", title: t("close"), "aria-label": t("close"), onclick: closeWelcome }, svg(UI.close)),
-    h("h2", { id: "welcome-title" }, t("welcomeTitle", t("appName"))),
-    h("ul", {},
-      line(UI.bookmarkFill, t("welcome1")),
-      line(UI.leftClick, t("welcome2")),
-      line(UI.focus, t("welcome3")),
-      // Keep Awake exists only where the browser offers Screen Wake Lock.
-      "wakeLock" in navigator ? line(AWAKE_ICON, t("welcome4")) : null),
-    h("div", { class: "welcome-actions" },
-      h("button", { class: "text-btn primary", onclick: closeWelcome }, t("welcomeStart"))));
-  document.body.append(card);
+  if (welcome.el) return;
+  const el = $("welcome-tpl").content.firstElementChild.cloneNode(true);
+  localize(el);
+
+  // Slide 3: the time and date as Focus mode shows them, and the real Keep Awake menu.
+  const now = new Date();
+  el.querySelector("[data-wl-time]").textContent = (timeFormats[state.settings.clockFormat] || timeFormats.auto).format(now);
+  el.querySelector("[data-wl-date]").textContent = dateFormat.format(now);
+  if ("wakeLock" in navigator) {
+    el.querySelector("[data-wl-sun]").setAttribute("d", AWAKE_ICON);
+    el.querySelector("[data-wl-left]").textContent = formatLeft(84 * 60000);
+    el.querySelector("[data-wl-menu]").replaceChildren(
+      ...AWAKE_FOR.map((mins) => h("span", { class: mins === 120 ? "on" : null }, formatDuration(mins))),
+      h("span", {}, t("awakeUntilOff")));
+  } else {
+    // Keep Awake exists only where the browser offers Screen Wake Lock.
+    el.querySelector("[data-wl-awake]").remove();
+    el.querySelector(".wl-feats").classList.add("single");
+  }
+
+  el.addEventListener("click", (e) => {
+    const pick = e.target.closest(".wl-pick");
+    if (pick) { chooseBackground(pick.dataset.bg); syncWelcomePicks(); return; }
+    const action = e.target.closest("[data-wl]")?.dataset.wl;
+    if (action === "skip") closeWelcome();
+    else if (action === "back") welcomeGo(welcome.slide - 1);
+    else if (action === "next") welcome.slide === 3 ? closeWelcome() : welcomeGo(welcome.slide + 1);
+  });
+
+  // Tab and Shift+Tab go round the card's buttons.
+  el.addEventListener("keydown", (e) => {
+    if (e.key !== "Tab") return;
+    const stops = [...el.querySelectorAll("button")].filter((b) => !b.closest("[hidden]") && b.style.visibility !== "hidden");
+    const i = stops.indexOf(document.activeElement);
+    const next = e.shiftKey ? (i <= 0 ? stops.length - 1 : i - 1) : (i === -1 || i === stops.length - 1 ? 0 : i + 1);
+    e.preventDefault();
+    stops[next]?.focus();
+  });
+
+  // Modal: everything else is out of reach until the welcome screen closes.
+  welcome.inert = [els.page, $("focus-view"), document.querySelector(".topbar")].map((n) => [n, n.inert]);
+  for (const [node] of welcome.inert) node.inert = true;
+  closePopover({ restoreFocus: false });
+  document.body.append(el);
+  welcome.el = el;
+  welcomeGo(1);
+  el.querySelector(".wl-card").focus(); // the dialog itself, so no button looks pressed at first
 }
 
 /* ===================== Data ===================== */
@@ -3320,10 +3406,7 @@ narrowQuery.addEventListener("change", render);
 
 document.documentElement.lang = ext.i18n.getUILanguage();
 document.title = t("newTab");
-document.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
-for (const attr of ["aria-label", "title", "placeholder"]) {
-  document.querySelectorAll(`[data-i18n-${attr}]`).forEach((el) => el.setAttribute(attr, t(el.getAttribute(`data-i18n-${attr}`))));
-}
+localize(document);
 $("settings-path").setAttribute("d", UI.tune);
 $("focus-path").setAttribute("d", UI.focus);
 $("awake-path").setAttribute("d", AWAKE_ICON);

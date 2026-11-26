@@ -2,6 +2,25 @@
 
 All notable changes to ReStart. Versions follow [semantic versioning](https://semver.org).
 
+## 1.4.0
+
+### Added
+
+- **A welcome screen** replaces the small welcome card. Three slides on a card over the dimmed page, with *Skip* always at hand:
+  - *A fresh start, every new tab*: a crowded new tab page (feeds, ads, widgets, a cookie banner) empties until only the bookmarks bar is left, and the bookmarks bar becomes ReStart: its sites turn into the tiles, its folders into the columns.
+  - *A page that follows your day*: the four backgrounds, each with a short line. The one you pick applies at once, and the page dims less on this slide so you see it behind the card. A strip shows how the colors go from night to dawn, midday and dusk.
+  - *Made for the way you work*: *Focus mode* (before and after) and *Keep Awake* (with its real menu of durations), only where the browser supports it.
+
+  It shows once, on the first new tab; *Show the introduction again* in the settings displays it again. It works with the keyboard (Tab stays inside, Esc closes), in every language, in dark mode and in small windows; with reduced motion, the first slide shows ReStart without the animation.
+
+### Removed
+
+- The welcome card's tip on right-clicking a site or a folder for quick actions.
+
+## 1.3.2
+
+No change from 1.3.1. Firefox Add-ons never accepts the same version number twice, and an earlier build of 1.3.1 had already been sent there, so the final 1.3.1 is published again as 1.3.2.
+
 ## 1.3.1
 
 ### Added
@@ -22,7 +41,7 @@ All notable changes to ReStart. Versions follow [semantic versioning](https://se
 
 - **Column opacity really makes columns see-through.** At low opacity, the columns kept their frosted blur, so the background stayed hidden behind them even at 0 %. The blur now follows the opacity: at 0 %, the background shows through, sharp.
 - **The tab icon is no longer cropped.** The small icons (16, 32 and 48 px) filled their whole square, so the browser tab cut their rounded corners and they looked too big. They now keep the same margin as the large icon.
-- **The settings panel is a little wider** (440 px instead of 360 px), so the labels of the *Breeze* choices and the sliders fit in every language, German, Spanish, Dutch and Portuguese included.
+- **The settings panel is a little wider** (440 px instead of 360 px), so the labels fit in every language: the *Breeze* choices had no room left in German, Dutch and Portuguese, and a slider label was cut in Spanish. The *Breeze* choices also share the room evenly, so long words get as much space around them as short ones.
 
 ### Store
 

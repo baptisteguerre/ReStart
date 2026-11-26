@@ -432,23 +432,107 @@
       }
     }
   },
-  "welcome1": {
-    "message": "Deine Lesezeichen, in deiner Reihenfolge."
+  "welcomeAgain": {
+    "message": "Einführung erneut zeigen"
   },
-  "welcome2": {
-    "message": "Rechtsklick auf eine Seite oder einen Ordner für schnelle Aktionen: anheften, bearbeiten, verschieben, löschen."
+  "wSkip": {
+    "message": "Überspringen"
   },
-  "welcome3": {
-    "message": "Fokus: eine ruhige Seite mit einem Klick."
+  "wNext": {
+    "message": "Weiter"
   },
-  "welcome4": {
-    "message": "Wach halten: Der Bildschirm bleibt an, eine Weile oder bis Sie es ausschalten."
+  "wBack": {
+    "message": "Zurück"
   },
   "welcomeStart": {
     "message": "Los geht's"
   },
-  "welcomeAgain": {
-    "message": "Einführung erneut zeigen"
+  "w1Title": {
+    "message": "Ein frischer Start, in jedem neuen Tab."
+  },
+  "w1No": {
+    "message": "Keine Feeds. Keine Werbung. Kein Tracking."
+  },
+  "w1Just": {
+    "message": "Nur deine Lesezeichen, in einem ruhigen, aufgeräumten Raum, der dich direkt ans Ziel bringt."
+  },
+  "w2Kicker": {
+    "message": "Wähle deinen Hintergrund"
+  },
+  "w2Title": {
+    "message": "Eine Seite, die deinem Tag folgt."
+  },
+  "w2Sub": {
+    "message": "Das Licht wandert mit der Sonne, und die Farben ändern sich mit den Stunden und den Jahreszeiten, das ganze Jahr über."
+  },
+  "w2Color": {
+    "message": "Ein ruhiger Farbton oder die Farbe der Stunde."
+  },
+  "w2Light": {
+    "message": "Die Sonne zieht über deine Seite."
+  },
+  "w2Leaves": {
+    "message": "Ein Nachmittag im Schatten eines Baumes."
+  },
+  "w2Breeze": {
+    "message": "Blüten, Laub oder Schnee, je nach Saison."
+  },
+  "w2Day": {
+    "message": "Deine Seite im Lauf des Tages"
+  },
+  "w2Night": {
+    "message": "Nacht"
+  },
+  "w2Dawn": {
+    "message": "Morgengrauen"
+  },
+  "w2Midday": {
+    "message": "Mittag"
+  },
+  "w2Dusk": {
+    "message": "Abenddämmerung"
+  },
+  "w2Cap": {
+    "message": "Die Farben wandeln sich sanft mit den Stunden und werden im Winter blasser und kühler."
+  },
+  "w3Kicker": {
+    "message": "Zwei kleine Helfer"
+  },
+  "w3Title": {
+    "message": "Gemacht für deine Art zu arbeiten."
+  },
+  "w3Focus": {
+    "message": "Brauchst du Ruhe zum Konzentrieren, oder teilst du gleich deinen Bildschirm in einem Meeting? Der Fokusmodus blendet deine Lesezeichen aus und zeigt nur die Uhrzeit, deinen Hintergrund und, wenn du möchtest, ein paar Seiten als Symbole."
+  },
+  "w3Awake": {
+    "message": "Lass den Bildschirm an, während du liest und Notizen machst, oder damit eine lange Aufgabe in der Kaffeepause nicht unterbrochen wird. Von 15 Minuten bis 4 Stunden oder bis du es ausschaltest."
+  },
+  "demoMail": {
+    "message": "Mail"
+  },
+  "demoCalendar": {
+    "message": "Kalender"
+  },
+  "demoDocs": {
+    "message": "Docs"
+  },
+  "demoWork": {
+    "message": "Arbeit"
+  },
+  "demoDesign": {
+    "message": "Design"
+  },
+  "demoReading": {
+    "message": "Lesen"
+  },
+  "w1Alt": {
+    "message": "Eine überladene Startseite leert sich, bis nur die Lesezeichenleiste bleibt, und daraus wird ReStart."
+  },
+  "w3FocusAlt": {
+    "message": "Vorher und nachher: die ganze Seite, dann nur die Uhrzeit."
+  },
+  "w3AwakeAlt": {
+    "message": "Die Schaltfläche Wach halten, eingeschaltet, mit dem Menü der Dauern."
   },
   "close": {
     "message": "Schließen"

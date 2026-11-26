@@ -432,23 +432,107 @@
       }
     }
   },
-  "welcome1": {
-    "message": "Your bookmarks, in your order."
-  },
-  "welcome2": {
-    "message": "Right-click a site or a folder for quick actions: pin, edit, move, delete."
-  },
-  "welcome3": {
-    "message": "Focus: a calm page in one click."
-  },
-  "welcome4": {
-    "message": "Keep Awake: the screen stays on, for a while or until you turn it off."
-  },
-  "welcomeStart": {
-    "message": "Get started"
-  },
   "welcomeAgain": {
     "message": "Show the introduction again"
+  },
+  "wSkip": {
+    "message": "Skip"
+  },
+  "wNext": {
+    "message": "Next"
+  },
+  "wBack": {
+    "message": "Back"
+  },
+  "welcomeStart": {
+    "message": "Get Started"
+  },
+  "w1Title": {
+    "message": "A fresh start, every new tab."
+  },
+  "w1No": {
+    "message": "No feeds. No ads. No tracking."
+  },
+  "w1Just": {
+    "message": "Just your bookmarks, laid out in a calm, clean space that gets you where you are going."
+  },
+  "w2Kicker": {
+    "message": "Choose your background"
+  },
+  "w2Title": {
+    "message": "A page that follows your day."
+  },
+  "w2Sub": {
+    "message": "The light moves with the sun, and the colors change with the hours and the seasons, all year long."
+  },
+  "w2Color": {
+    "message": "One quiet tint, or the color of the hour."
+  },
+  "w2Light": {
+    "message": "Sunlight crossing your page, dawn to dusk."
+  },
+  "w2Leaves": {
+    "message": "An afternoon in the shade of a tree."
+  },
+  "w2Breeze": {
+    "message": "Petals, seeds, leaves or snow, by season."
+  },
+  "w2Day": {
+    "message": "Your page through the day"
+  },
+  "w2Night": {
+    "message": "Night"
+  },
+  "w2Dawn": {
+    "message": "Dawn"
+  },
+  "w2Midday": {
+    "message": "Midday"
+  },
+  "w2Dusk": {
+    "message": "Dusk"
+  },
+  "w2Cap": {
+    "message": "The colors shift gently with the hours, and grow paler and cooler in winter."
+  },
+  "w3Kicker": {
+    "message": "Two small helpers"
+  },
+  "w3Title": {
+    "message": "Made for the way you work."
+  },
+  "w3Focus": {
+    "message": "Need quiet time to concentrate, or about to share your screen in a meeting? Focus mode hides your bookmarks and keeps only the time, your background and, if you like, a few sites as icons."
+  },
+  "w3Awake": {
+    "message": "Keep the screen on while you read and take notes, or make sure a long task is not interrupted during your coffee break. From 15 minutes to 4 hours, or until you turn it off."
+  },
+  "demoMail": {
+    "message": "Mail"
+  },
+  "demoCalendar": {
+    "message": "Calendar"
+  },
+  "demoDocs": {
+    "message": "Docs"
+  },
+  "demoWork": {
+    "message": "Work"
+  },
+  "demoDesign": {
+    "message": "Design"
+  },
+  "demoReading": {
+    "message": "Reading"
+  },
+  "w1Alt": {
+    "message": "A crowded new tab page empties until only the bookmarks bar is left, then the bookmarks bar becomes ReStart."
+  },
+  "w3FocusAlt": {
+    "message": "Before and after: the full page, then only the time."
+  },
+  "w3AwakeAlt": {
+    "message": "The Keep Awake button, turned on, and its menu of durations."
   },
   "close": {
     "message": "Close"

@@ -60,6 +60,114 @@
     <nav class="fc-icons" id="fc-icons" data-i18n-aria-label="bookmarksBar"></nav>
   </div>
 
+  <!-- Welcome screen: three slides, shown once on the first new tab (and again from Settings).
+       Static markup only; app.js fills in the localized durations and the time. -->
+  <template id="welcome-tpl">
+    <div class="wl-overlay" id="welcome">
+      <section class="wl-card" role="dialog" aria-modal="true" aria-labelledby="wl-title-1" tabindex="-1">
+        <div class="wl-head">
+          <span class="wl-kicker" data-wl-kicker></span>
+          <button class="wl-skip" type="button" data-wl="skip" data-i18n="wSkip"></button>
+        </div>
+
+        <div class="wl-slide" data-slide="1">
+          <div class="wl-stage wl-anim" role="img" data-i18n-aria-label="w1Alt">
+            <div class="wl-chrome" aria-hidden="true"><span class="wl-dots"><i></i><i></i><i></i></span><i class="wl-url"></i></div>
+            <div class="wl-busy" aria-hidden="true">
+              <div class="wl-row"><i class="wl-search"></i><span class="wl-sale">MEGA SALE · SPONSORED</span><span class="wl-bell"><b>9+</b></span></div>
+              <div class="wl-row">
+                <i class="wl-t" style="--c:#ffb4a2"></i><span class="wl-t" style="--c:#ffd166"><b>AD</b></span><i class="wl-t" style="--c:#90e0ef"></i><span class="wl-t" style="--c:#c77dff"><b>AD</b></span><i class="wl-t" style="--c:#80ed99"></i><span class="wl-t" style="--c:#ff8fab"><b>AD</b></span>
+                <span class="wl-weather"><i></i><i></i></span>
+                <span class="wl-stocks"><span class="up">▲</span><svg viewBox="0 0 34 14"><path d="M1 3l6 4 5-3 6 6 5-2 5 4 5-1"/></svg><span class="down">▼</span></span>
+              </div>
+              <div class="wl-news">
+                <div class="wl-video"><b>● LIVE</b><i></i></div>
+                <div class="wl-article" style="--c:#b8c0ff"><i></i><i></i><i></i><span style="color:#d6336c">TRENDING</span></div>
+                <div class="wl-article" style="--c:#ffcad4"><i></i><i></i><i></i><span style="color:#b35c00">SPONSORED</span></div>
+                <div class="wl-ad">AD</div>
+              </div>
+            </div>
+            <div class="wl-busy wl-cookies" aria-hidden="true">We value your privacy. We and our 846 partners use cookies.<b>Accept all</b></div>
+            <div class="wl-calm" aria-hidden="true">
+              <div class="wl-tiles">
+                <span><span class="wl-tile"><i style="background:#3b82f6"></i></span><span data-i18n="demoMail"></span></span>
+                <span><span class="wl-tile"><i style="background:#ef4444"></i></span><span data-i18n="demoCalendar"></span></span>
+                <span><span class="wl-tile"><i style="background:#22c55e"></i></span><span data-i18n="demoDocs"></span></span>
+              </div>
+              <i class="wl-filter"></i>
+              <div class="wl-cols">
+                <div><span data-i18n="demoWork"></span><i></i><i></i><i class="short"></i></div>
+                <div><span data-i18n="demoDesign"></span><i></i><i class="short"></i></div>
+                <div><span data-i18n="demoReading"></span><i></i><i></i></div>
+              </div>
+            </div>
+            <div class="wl-bar" aria-hidden="true">
+              <span><i style="background:#3b82f6"></i><span data-i18n="demoMail"></span></span>
+              <span><i style="background:#ef4444"></i><span data-i18n="demoCalendar"></span></span>
+              <span><i style="background:#22c55e"></i><span data-i18n="demoDocs"></span></span>
+              <span><i class="fold"></i><span data-i18n="demoWork"></span></span>
+              <span><i class="fold"></i><span data-i18n="demoDesign"></span></span>
+              <span><i class="fold"></i><span data-i18n="demoReading"></span></span>
+            </div>
+          </div>
+          <div class="wl-text">
+            <h1 id="wl-title-1" data-i18n="w1Title"></h1>
+            <p class="wl-strong" data-i18n="w1No"></p>
+            <p data-i18n="w1Just"></p>
+          </div>
+        </div>
+
+        <div class="wl-slide" data-slide="2" hidden>
+          <div class="wl-text">
+            <h1 id="wl-title-2" data-i18n="w2Title"></h1>
+            <p data-i18n="w2Sub"></p>
+          </div>
+          <div class="wl-picks" role="group" data-i18n-aria-label="background">
+            <button class="wl-pick" type="button" data-bg="color" aria-pressed="false"><span class="wl-prev wl-prev-color" aria-hidden="true"><i></i><i></i><i></i></span><span class="wl-name" data-i18n="bgColor"></span><span class="wl-desc" data-i18n="w2Color"></span></button>
+            <button class="wl-pick" type="button" data-bg="light" aria-pressed="false"><span class="wl-prev wl-prev-light" aria-hidden="true"></span><span class="wl-name" data-i18n="bgLight"></span><span class="wl-desc" data-i18n="w2Light"></span></button>
+            <button class="wl-pick" type="button" data-bg="leaves" aria-pressed="false"><span class="wl-prev wl-prev-leaves" aria-hidden="true"><svg viewBox="0 0 160 96" preserveAspectRatio="xMidYMid slice"><g><path class="stem" d="M-6 70C30 50 70 40 170 18"/><path d="M0 0C5-5 15-5 22 0C15 5 5 5 0 0Z" transform="translate(40 40) rotate(-30)"/><path d="M0 0C5-5 15-5 22 0C15 5 5 5 0 0Z" transform="translate(52 30) rotate(-60)"/><path d="M0 0C5-5 15-5 22 0C15 5 5 5 0 0Z" transform="translate(66 44) rotate(20)"/><path d="M0 0C5-5 15-5 22 0C15 5 5 5 0 0Z" transform="translate(78 28) rotate(-50)"/><path d="M0 0C5-5 15-5 22 0C15 5 5 5 0 0Z" transform="translate(92 40) rotate(15)"/><path d="M0 0C5-5 15-5 22 0C15 5 5 5 0 0Z" transform="translate(104 26) rotate(-40)"/><path d="M0 0C5-5 15-5 22 0C15 5 5 5 0 0Z" transform="translate(116 38) rotate(30)"/><path d="M0 0C5-5 15-5 22 0C15 5 5 5 0 0Z" transform="translate(128 24) rotate(-20)"/><path d="M0 0C5-5 15-5 22 0C15 5 5 5 0 0Z" transform="translate(58 56) rotate(60)"/><path d="M0 0C5-5 15-5 22 0C15 5 5 5 0 0Z" transform="translate(98 54) rotate(50)"/></g></svg></span><span class="wl-name" data-i18n="bgLeaves"></span><span class="wl-desc" data-i18n="w2Leaves"></span></button>
+            <button class="wl-pick" type="button" data-bg="snow" aria-pressed="false"><span class="wl-prev wl-prev-breeze" aria-hidden="true"><svg viewBox="0 0 160 96" preserveAspectRatio="xMidYMid slice"><path d="M0 0C3-4 8-4 9 0C8 4 3 4 0 0Z" transform="translate(24 22) rotate(20) scale(1.3)"/><path class="b" d="M0 0C3-4 8-4 9 0C8 4 3 4 0 0Z" transform="translate(52 14) rotate(-40) scale(1.3)"/><path d="M0 0C3-4 8-4 9 0C8 4 3 4 0 0Z" transform="translate(84 30) rotate(60) scale(1.3)"/><path class="b" d="M0 0C3-4 8-4 9 0C8 4 3 4 0 0Z" transform="translate(118 18) rotate(-10) scale(1.3)"/><path class="b" d="M0 0C3-4 8-4 9 0C8 4 3 4 0 0Z" transform="translate(36 58) rotate(80) scale(1.3)"/><path d="M0 0C3-4 8-4 9 0C8 4 3 4 0 0Z" transform="translate(70 70) rotate(-60) scale(1.3)"/><path d="M0 0C3-4 8-4 9 0C8 4 3 4 0 0Z" transform="translate(104 62) rotate(30) scale(1.3)"/><path class="b" d="M0 0C3-4 8-4 9 0C8 4 3 4 0 0Z" transform="translate(136 48) rotate(-30) scale(1.3)"/><path d="M0 0C3-4 8-4 9 0C8 4 3 4 0 0Z" transform="translate(146 80) rotate(10) scale(1.3)"/><path d="M0 0C3-4 8-4 9 0C8 4 3 4 0 0Z" transform="translate(16 84) rotate(-20) scale(1.3)"/></svg></span><span class="wl-name" data-i18n="bgSnow"></span><span class="wl-desc" data-i18n="w2Breeze"></span></button>
+          </div>
+          <div class="wl-day">
+            <span class="wl-day-title" data-i18n="w2Day"></span>
+            <i class="wl-day-strip" aria-hidden="true"></i>
+            <div class="wl-day-labels"><span data-i18n="w2Night"></span><span data-i18n="w2Dawn"></span><span data-i18n="w2Midday"></span><span data-i18n="w2Dusk"></span><span data-i18n="w2Night"></span></div>
+            <p data-i18n="w2Cap"></p>
+          </div>
+        </div>
+
+        <div class="wl-slide" data-slide="3" hidden>
+          <h1 id="wl-title-3" class="wl-text" data-i18n="w3Title"></h1>
+          <div class="wl-feats">
+            <div class="wl-feat">
+              <div class="wl-stage wl-small" role="img" data-i18n-aria-label="w3FocusAlt">
+                <div class="wl-mini" aria-hidden="true"><span class="wl-mini-tiles"><i></i><i></i><i></i><i></i></span><span class="wl-mini-cols"><i></i><i></i><i></i></span></div>
+                <svg class="wl-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                <div class="wl-mini wl-mini-clock" aria-hidden="true"><span class="wl-mini-time" data-wl-time></span><span class="wl-mini-date" data-wl-date></span></div>
+              </div>
+              <h2 data-i18n="focusMode"></h2>
+              <p data-i18n="w3Focus"></p>
+            </div>
+            <div class="wl-feat" data-wl-awake>
+              <div class="wl-stage wl-small" role="img" data-i18n-aria-label="w3AwakeAlt">
+                <span class="wl-awake-pill" aria-hidden="true"><svg viewBox="0 -960 960 960"><path data-wl-sun/></svg><span data-i18n="awakeLabel"></span><span class="wl-left" data-wl-left></span></span>
+                <span class="wl-awake-menu" aria-hidden="true" data-wl-menu></span>
+              </div>
+              <h2 data-i18n="awakeLabel"></h2>
+              <p data-i18n="w3Awake"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="wl-foot">
+          <button class="wl-back" type="button" data-wl="back" data-i18n="wBack"></button>
+          <span class="wl-steps" aria-hidden="true"><i></i><i></i><i></i></span>
+          <button class="wl-next" type="button" data-wl="next" data-i18n="wNext"></button>
+        </div>
+      </section>
+    </div>
+  </template>
+
   <div class="popover" id="popover" role="dialog" aria-modal="false" hidden></div>
   <input type="file" id="file-import" accept="application/json,.json" hidden>
 

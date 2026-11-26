@@ -21,6 +21,11 @@ All notable changes to ReStart. Versions follow [semantic versioning](https://se
 ### Fixed
 
 - **Column opacity really makes columns see-through.** At low opacity, the columns kept their frosted blur, so the background stayed hidden behind them even at 0 %. The blur now follows the opacity: at 0 %, the background shows through, sharp.
+- **The tab icon is no longer cropped.** The small icons (16, 32 and 48 px) filled their whole square, so the browser tab cut their rounded corners and they looked too big. They now keep the same margin as the large icon.
+
+### Store
+
+- New screenshots at different hours and seasons (dawn, midday, dusk, night, winter), instead of mostly midday blue.
 
 ## 1.3.0
 

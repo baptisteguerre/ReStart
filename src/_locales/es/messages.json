@@ -236,6 +236,9 @@
   "hideColumn": {
     "message": "Ocultar esta carpeta (volver a mostrarla en Ajustes, Columnas)"
   },
+  "hideTileNames": {
+    "message": "Ocultar los nombres de los mosaicos"
+  },
   "rename": {
     "message": "Cambiar nombre"
   },

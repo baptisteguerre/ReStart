@@ -236,6 +236,9 @@
   "hideColumn": {
     "message": "Masquer ce dossier (le réafficher dans Réglages, Colonnes)"
   },
+  "hideTileNames": {
+    "message": "Masquer les noms des tuiles"
+  },
   "rename": {
     "message": "Renommer"
   },

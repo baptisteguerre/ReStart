@@ -236,6 +236,9 @@
   "hideColumn": {
     "message": "Hide this folder (show it again in Settings, Columns)"
   },
+  "hideTileNames": {
+    "message": "Hide tile names"
+  },
   "rename": {
     "message": "Rename"
   },

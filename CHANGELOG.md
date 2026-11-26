@@ -8,6 +8,7 @@ All notable changes to ReStart. Versions follow [semantic versioning](https://se
 
 - **Pastels, a color that drifts.** Next to *Sky*, the glow and the rays can take *Pastels*: the light goes slowly through peach, pink, lilac, blue, aqua, mint and gold, about 90 seconds per color at the normal *Motion* speed (a full round in about 10 minutes). Every tab shows the same color at the same time.
 - **Collapse a folder** in Mosaic and Board: a small chevron in each folder's header, in place of the number of sites (still shown in its tooltip), folds the folder down to its header. In Mosaic, the cards then rearrange with a short, smooth movement: a folded folder keeps its place in the reading order and the next folder comes right under it, so it leaves no hole; in Board, a folded folder becomes a slim vertical strip with its name, so the other columns come closer. It stays folded until you open it again; filtering shows it open while you search. A folded folder also shows a small crossed-out eye next to its chevron, to hide it altogether (Settings, Columns shows it again). The narrow list keeps its own behavior.
+- **Hide tile names** (Appearance, off by default): the sites above the search bar show icons only, a little bigger to make up for it. Names stay in each tile's tooltip, and come back while you filter. Focus mode is not affected.
 - **Keep Awake in the welcome card.** The welcome card has a fourth line for *Keep Awake* (only where the browser supports it); the *Focus* line is back to its own sentence.
 
 ### Changed

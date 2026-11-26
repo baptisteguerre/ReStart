@@ -236,6 +236,9 @@
   "hideColumn": {
     "message": "Ocultar esta pasta (mostrar de novo em Configurações, Colunas)"
   },
+  "hideTileNames": {
+    "message": "Ocultar os nomes dos blocos"
+  },
   "rename": {
     "message": "Renomear"
   },

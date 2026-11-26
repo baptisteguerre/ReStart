@@ -236,6 +236,9 @@
   "hideColumn": {
     "message": "Nascondi questa cartella (mostrala di nuovo in Impostazioni, Colonne)"
   },
+  "hideTileNames": {
+    "message": "Nascondi i nomi dei riquadri"
+  },
   "rename": {
     "message": "Rinomina"
   },

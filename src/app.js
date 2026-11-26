@@ -47,7 +47,8 @@ const DEFAULT_SETTINGS = {
   motion: 1,                  // speed of every movement (halo, rays, leaves, breeze): 0 still, 1 normal, 2 twice as fast
   glowStrength: 1,            // 0 .. 2, shown as 0-100 % with the default (1) at 50 %; multiplies the halo intensity
   colAlpha: 0.5,              // 0 .. 1
-  letterIcons: false,         // a pastel letter for every site instead of its icon, for a calm, even look
+  letterIcons: false,
+  hideTileNames: false,       // sites above the search bar as icons only (bigger), names in their tooltip         // a pastel letter for every site instead of its icon, for a calm, even look
   layout: "masonry",          // masonry (Mosaic, Keep-like, the default) | board (horizontal columns); wide windows only
   bg: { type: "glow", value: null }, // none | color | glow (halo) | rays (light rays); glow and rays share the color
 };
@@ -1210,6 +1211,8 @@ function renderBar(links, tokens) {
   barCapacityKey = `${normalCap}/${tilesPerRow(true) * MAX_ROWS}`;
   const compact = links.length > normalCap;
   els.barRow.classList.toggle("compact", compact);
+  // Icons only, a little bigger; the names come back while filtering, to show what matched.
+  els.barRow.classList.toggle("no-names", !!state.settings.hideTileNames && !tokens.length);
   els.barRow.style.setProperty("--per-row", String(Math.min(balancedPerRow(links.length, 8), tilesPerRow(compact))));
   const tiles = links.map((c) => bookmarkLink(c, tokens, { cls: "tile" }));
   if (!tokens.length) tiles.forEach((tile, i) => { if (!links[i].unmodifiable) wireTileDrag(tile, links[i]); });
@@ -2925,6 +2928,7 @@ function settingsContent() {
         rangeRow(t("colOpacity"), 0, 1, 0.05, s.colAlpha, (v) => { s.colAlpha = v; saveSettingsSoon(); },
           (v) => percent.format(v))),
       switchRow("set-letter-icons", t("letterIcons"), !!s.letterIcons, (v) => { s.letterIcons = v; saveSettings(); render(); }),
+      switchRow("set-tile-names", t("hideTileNames"), !!s.hideTileNames, (v) => { s.hideTileNames = v; saveSettings(); render(); }),
       h("div", { class: "set-field" },
         h("div", { class: "set-label" }, t("layout"), narrowQuery.matches ? infoBtn("layout", t("layoutNarrowHint")) : null),
         segmented([["masonry", t("layoutMasonry")], ["board", t("layoutBoard")]], s.layout, (v) => { s.layout = v; saveSettings(); render(); }),
@@ -3166,6 +3170,7 @@ function sanitizeSettings(raw) {
   if (["auto", "12", "24"].includes(raw.clockFormat)) s.clockFormat = raw.clockFormat;
   if (typeof raw.focusGray === "boolean") s.focusGray = raw.focusGray;
   if (typeof raw.letterIcons === "boolean") s.letterIcons = raw.letterIcons;
+  if (typeof raw.hideTileNames === "boolean") s.hideTileNames = raw.hideTileNames;
   if (["auto", "light", "dark"].includes(raw.theme)) s.theme = raw.theme;
   if (Number.isFinite(raw.glowStrength)) s.glowStrength = Math.min(2, Math.max(0, raw.glowStrength));
   if (Number.isFinite(raw.colAlpha)) s.colAlpha = Math.min(1, Math.max(0, raw.colAlpha));

@@ -236,6 +236,9 @@
   "hideColumn": {
     "message": "Diesen Ordner ausblenden (wieder einblenden unter Einstellungen, Spalten)"
   },
+  "hideTileNames": {
+    "message": "Kachelnamen ausblenden"
+  },
   "rename": {
     "message": "Umbenennen"
   },

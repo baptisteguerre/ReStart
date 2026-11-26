@@ -586,6 +586,15 @@ body.layout-masonry .board-nav { display: none; }
 .bar-row.compact .tile .fav-box .fav { width: 20px; height: 20px; }
 .bar-row.compact .tile .fav-box .letter { width: 36px; height: 36px; font-size: 15px; }
 .bar-row.compact .tile-label { font-size: 11px; }
+/* Names hidden: icons only, a little bigger to make up for it (names stay in the tooltip) */
+.bar-row.no-names .tile-label { display: none; }
+.bar-row.no-names .tile { padding: 6px 2px; }
+.bar-row.no-names .tile .fav-box { width: 58px; height: 58px; border-radius: 15px; }
+.bar-row.no-names .tile .fav-box .fav { width: 32px; height: 32px; }
+.bar-row.no-names .tile .fav-box .letter { width: 58px; height: 58px; font-size: 24px; }
+.bar-row.no-names.compact .tile .fav-box { width: 44px; height: 44px; border-radius: 11px; }
+.bar-row.no-names.compact .tile .fav-box .fav { width: 24px; height: 24px; }
+.bar-row.no-names.compact .tile .fav-box .letter { width: 44px; height: 44px; font-size: 18px; }
 
 /* Sites card (more than 20 loose sites): two columns wide, scrollable grid of tiles */
 .column.wide { width: calc(2 * var(--col-w) + 12px); }

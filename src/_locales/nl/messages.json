@@ -236,6 +236,9 @@
   "hideColumn": {
     "message": "Deze map verbergen (weer tonen via Instellingen, Kolommen)"
   },
+  "hideTileNames": {
+    "message": "Namen van tegels verbergen"
+  },
   "rename": {
     "message": "Naam wijzigen"
   },

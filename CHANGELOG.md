@@ -6,12 +6,7 @@ All notable changes to ReStart. Versions follow [semantic versioning](https://se
 
 ### Added
 
-- **A welcome screen** replaces the small welcome card. Three slides on a card over the dimmed page, with *Skip* always at hand:
-  - *A fresh start, every new tab*: a crowded new tab page (feeds, ads, widgets, a cookie banner) empties until only the bookmarks bar is left, and the bookmarks bar becomes ReStart: its sites turn into the tiles, its folders into the columns.
-  - *A page that follows your day*: the four backgrounds, each with a short line. The one you pick applies at once, and the page dims less on this slide so you see it behind the card. A strip shows how the colors go from night to dawn, midday and dusk.
-  - *Made for the way you work*: *Focus mode* (before and after) and *Keep Awake* (with its real menu of durations), only where the browser supports it.
-
-  It shows once, on the first new tab; *Show the introduction again* in the settings displays it again. It works with the keyboard (Tab stays inside, Esc closes), in every language, in dark mode and in small windows; with reduced motion, the first slide shows ReStart without the animation.
+- **A welcome screen** replaces the small welcome card. Three slides on a card over the dimmed page, with *Skip* always at hand.
 
 ### Removed
 
@@ -26,14 +21,14 @@ No change from 1.3.1. Firefox Add-ons never accepts the same version number twic
 ### Added
 
 - **Pastels, a color that drifts.** Next to *Sky*, the glow and the rays can take *Pastels*: the light goes slowly through peach, pink, lilac, blue, aqua, mint and gold, about 90 seconds per color at the normal *Motion* speed (a full round in about 10 minutes). Every tab shows the same color at the same time.
-- **Collapse a folder** in Mosaic and Board: a small chevron in each folder's header, in place of the number of sites (still shown in its tooltip), folds the folder down to its header. In Mosaic, the cards then rearrange with a short, smooth movement: a folded folder keeps its place in the reading order and the next folder comes right under it, so it leaves no hole; in Board, a folded folder becomes a slim vertical strip with its name, so the other columns come closer. It stays folded until you open it again; filtering shows it open while you search. A folded folder also shows a small crossed-out eye next to its chevron, to hide it altogether (Settings, Columns shows it again). The narrow list keeps its own behavior.
-- **Hide tile names** (Appearance, off by default): the sites above the search bar show icons only, a little bigger to make up for it. Names stay in each tile's tooltip, and come back while you filter. Focus mode is not affected.
+- **Collapse a folder** in Mosaic and Board: a small chevron in each folder's header, in place of the number of sites (still shown in its tooltip), folds the folder down to its header.
+- **Hide tile names**: the sites above the search bar show icons only, a little bigger to make up for it. Names stay in each tile's tooltip, and come back while you filter. Focus mode is not affected.
 - **Keep Awake in the welcome card.** The welcome card has a fourth line for *Keep Awake* (only where the browser supports it); the *Focus* line is back to its own sentence.
 
 ### Changed
 
 - **Sky in Japanese-inspired colors.** Sky's palette is redrawn, loosely inspired by traditional Japanese colors, with no greys and no ochres: wisteria at night, lilac before dawn, carnation pink at dawn and dusk, a pale rosy peach for the low sun (no more gold turning caramel), white wisteria as the light rises, sky blue at midday. The seasons change the hue rather than draining the color: winter days turn to a pale, clear aqua instead of a warm grey. In dark mode, Sky keeps a little more color.
-- **Halo is now called Glow** in English, *Lueur* in French, *Resplandor* in Spanish and *Brilho* in Portuguese.
+- **Halo is now called Glow**.
 - **A calmer glow by default.** The middle of the *Intensity* slider (shown as 50 %) now gives the glow what 40 % gave in 1.3.0. The top of the slider is unchanged, and so are the rays.
 - **The accent never turns brown.** Orange, gold and olive hues become a sunset rose, so the accent stays fresh with every background.
 
@@ -41,23 +36,19 @@ No change from 1.3.1. Firefox Add-ons never accepts the same version number twic
 
 - **Column opacity really makes columns see-through.** At low opacity, the columns kept their frosted blur, so the background stayed hidden behind them even at 0 %. The blur now follows the opacity: at 0 %, the background shows through, sharp.
 - **The tab icon is no longer cropped.** The small icons (16, 32 and 48 px) filled their whole square, so the browser tab cut their rounded corners and they looked too big. They now keep the same margin as the large icon.
-- **The settings panel is a little wider** (440 px instead of 360 px), so the labels fit in every language: the *Breeze* choices had no room left in German, Dutch and Portuguese, and a slider label was cut in Spanish. The *Breeze* choices also share the room evenly, so long words get as much space around them as short ones.
-
-### Store
-
-- New screenshots at different hours and seasons (dawn, midday, dusk, night, winter), instead of mostly midday blue.
+- **The settings panel is a little wider** (440 px instead of 360 px), so the labels fit in every language.
 
 ## 1.3.0
 
 ### Added
 
-- **Keep the screen on.** A *Keep Awake* button (a sun) next to *Focus* keeps the screen on and the computer awake for 15 minutes, 30 minutes, 1, 2 or 4 hours, or until you turn it off, like the *Caffeine* apps. The time left shows next to its label, and every ReStart tab shares the same state. It uses the browser's Screen Wake Lock: no permission is needed, but it only works while a ReStart page is shown. It pauses when you switch to another tab or hide the window, and starts again when you come back; the menu explains this. The welcome card mentions it.
-- **Letters instead of site icons** (Appearance, off by default): every site gets a pastel square with the first letter of its name, for a calm, even look. Each site keeps the same color everywhere. No icon is requested while it is on.
+- **Keep the screen on.** A *Keep Awake* button next to *Focus* keeps the screen on and the computer awake for 15 minutes, 30 minutes, 1, 2 or 4 hours, or until you turn it off, like the *Caffeine* apps. The time left shows next to its label, and every ReStart tab shares the same state. It uses the browser's Screen Wake Lock: no permission is needed, but it only works while a ReStart page is shown. It pauses when you switch to another tab or hide the window, and starts again when you come back; the menu explains this. The welcome card mentions it.
+- **Letters instead of site icons**: every site gets a pastel square with the first letter of its name, for a calm, even look. Each site keeps the same color everywhere. No icon is requested while it is on.
 - **Edit a bookmark's address.** *Rename* in a bookmark's right-click menu becomes *Edit*: the name and the address, saved in the browser's bookmarks. An address typed without a scheme gets `https://`; scripts, inline documents and invalid addresses are refused. A pinned bookmark stays pinned, at the same place. Bookmarklets keep their address: only their name can be edited. The welcome card says *edit* instead of *rename*.
 
 ### Changed
 
-- **Tiles above the search bar can go anywhere.** Pinned sites and sites of the bookmarks bar are no longer two separate groups: drag any tile before or after any other (or use *Move left* / *Move right*). Sites of the bookmarks bar still move in the bar itself. Pinned bookmarks that share a folder also take that order in their folder, swapping the places they already hold there, so the other bookmarks don't move. ReStart remembers where each pinned site sits among the others, and exports it with the other customizations.
+- **Tiles above the search bar can go anywhere.** Pinned sites and sites of the bookmarks bar are no longer two separate groups: drag any tile before or after any other (or use *Move left* / *Move right*). Sites of the bookmarks bar still move in the bar itself.
 - **An accent color drawn from the background.** The accent (focus rings, selections, buttons) takes the hue of the background instead of a fixed blue: the halo or Sky color of the moment, the chosen color or tint, or else the sky of the hour. Its lightness is adjusted to stay legible (at least 4.5:1 against cards and menus, and behind white text on buttons).
 - **Clearer on and off.** *Focus* and *Keep Awake* take the accent color when they are on, in light and dark mode; off, they stay neutral.
 
@@ -70,17 +61,15 @@ No change from 1.3.1. Firefox Add-ons never accepts the same version number twic
 
 ### Added
 
-- **Sky follows the sun and the seasons** (northern hemisphere, no location needed). Its colors now follow the height of the sun, in one continuous arc, the same in mirror morning and evening: slate blue at night, rose then gold as the sun rises, a whitening light, then a clear sky at midday. Sunrise and sunset move with the date, as in Paris: in late November, 10:00 is still the early morning light and night falls around 17:00. In winter the sun stays low and the light is soft and pearl grey, like an overcast day; summer light is clearer and warmer.
+- **Sky follows the sun and the seasons** (northern hemisphere, no location needed). Its colors now follow the height of the sun, in one continuous arc, the same in mirror morning and evening: slate blue at night, rose then gold as the sun rises, a whitening light, then a clear sky at midday.
 - **Bamboo leaf shadows:** tall culms with nodes and sprays of long, narrow leaves, next to branches and palm fronds.
 - **Motion speed.** A *Motion* slider sets the pace of the halo's breathing, the rays, the leaves and the breeze, from still to twice the normal pace. It replaces the on/off animation switch; an animation turned off before stays still.
 
 ### Changed
 
-- **Light** groups the halo and the rays: the background is now a color, light, leaf shadows or breeze, and *Halo* and *Rays* are the kinds of light, as branches, palm fronds and bamboo are for the leaves. The color and the color underneath are kept when switching from one to the other.
-- **A more natural wind.** Leaf shadows no longer swing back and forth on a fixed rhythm: they follow a wind that changes direction now and then, comes in gusts, and has calmer and livelier moments. Each layer of leaves responds like a branch, a little late and with a slight rebound, the far one a moment after the near one. The breeze follows the same wind.
+- **Light** groups the halo and the rays: the background is now a color, light, leaf shadows or breeze, and *Halo* and *Rays* are the kinds of light, as branches, palm fronds and bamboo are for the leaves.
+- **A more natural wind.** Leaf shadows no longer swing back and forth on a fixed rhythm: they follow a wind that changes direction now and then, comes in gusts, and has calmer and livelier moments.
 - In Focus mode, the time, the date and the site icons stand out a little more, in light and dark mode.
-- The light is stronger by default: the middle of the *Intensity* slider now gives what 60 % used to give for the halo and the rays (the top of the slider is unchanged). Leaf shadows and breeze are unchanged.
-- The page color that follows the hour starts from a neutral base and takes a calm but visible hint of the sky's hue. Leaf shadows now sit on it too, instead of an always-beige wall.
 - Dark mode is a soft charcoal rather than near black (cards included), and the halo and rays glow a little brighter on it.
 - The halo's second tone is only a hint at its edge, instead of a grey-blue band.
 - Olive and monstera shadows are replaced by bamboo (olive was too close to the branches); a page set to one of them shows branches.
@@ -112,7 +101,6 @@ First version submitted to the Chrome Web Store and to addons.mozilla.org.
 - **Balanced rows of tiles** above the search bar and in Focus mode: up to 6 on one row, then rows of at most 8 (for example 4 + 3, 6 + 6, 7 + 7 + 6) instead of one very long line.
 - **Long folders** keep a fixed height in every layout and scroll inside, with a soft fade at the bottom when more sites follow.
 - *Mosaic* is now the default layout for wide windows, and comes first in the settings. A layout you already chose is kept.
-- *None* and *Color* are merged into *Color*, which starts with the page color that follows the hour; a background set to *None* becomes this one.
 - Background colors fit two rows of six with the color picker: pink and lime are no longer offered (a page already set to one of them keeps it).
 - Export saves the column order as shown, so a backup knows every folder present at that time. The settings explain that the file holds ReStart's own settings, while the bookmarks and their order are saved by the browser.
 

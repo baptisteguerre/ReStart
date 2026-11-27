@@ -148,7 +148,10 @@ function applyTheme() {
   document.documentElement.style.colorScheme = theme;
   try { localStorage.setItem("restart-theme", state.settings.theme); } catch { /* storage unavailable */ }
 }
-const pastelOf = (id) => PASTELS.find((c) => c.id === id) || (id === LIME.id ? LIME : PASTELS[0]);
+// A folder color is a pastel id, or a custom "#rrggbb" picked by the user (a little deeper in dark mode, like the pastels).
+const pastelOf = (id) => HEX_COLOR.test(id)
+  ? { id, light: id, dark: rgbToHex(...mixRgb(rgbOf(id), [0, 0, 0], 0.12).map(Math.round)) }
+  : PASTELS.find((c) => c.id === id) || (id === LIME.id ? LIME : PASTELS[0]);
 const pastel = (id) => (isDark() ? pastelOf(id).dark : pastelOf(id).light);
 const isWebUrl = (url) => /^(https?|ftp|file):/i.test(url);
 // URLs a new tab page must never open: bookmarklets and inline documents.
@@ -2215,6 +2218,7 @@ function openPopover(anchor, content, { align = "start", cls = "", at = null } =
   closePopover({ restoreFocus: false });
   popoverAnchor = anchor;
   els.popover.className = `popover ${cls}`.trim();
+  els.popover.removeAttribute("aria-labelledby"); // set by the delete confirmation only
   els.popover.replaceChildren(...content);
   els.popover.hidden = false;
   if (at) placeAt(at.x, at.y);
@@ -2346,19 +2350,41 @@ function openFolderMenu(node, anchor, x, y) {
   const count = countLinks(node);
 
   const showMain = () => {
+    const remove = () => {
+      closePopover({ restoreFocus: false });
+      ext.bookmarks.removeTree(node.id).catch((e) => console.warn("ReStart: delete failed", e));
+    };
+    // A folder with something inside asks first, plainly; an empty one is deleted with a second click.
     const del = item(t("delete"), UI.trash, () => {
+      if (node.children?.length) { showConfirmDelete(remove); return; }
       if (!del.classList.contains("armed")) {
         del.classList.add("armed");
         del.lastChild.textContent = t("confirmDelete");
-        if (count) del.after(h("div", { class: "menu-note" }, t("folderContains", count)));
         placeAt(x, y);
         return;
       }
-      closePopover({ restoreFocus: false });
-      ext.bookmarks.removeTree(node.id).catch((e) => console.warn("ReStart: delete failed", e));
+      remove();
     }, "danger");
     const moveTo = !state.query && state.byId.has(node.parentId) ? item(t("moveTo"), UI.subfolder, () => showMoveTo(node, x, y)) : null;
     els.popover.replaceChildren(...[moveTo, h("div", { class: "menu-sep" }), item(t("rename"), UI.edit, showRename), del].filter(Boolean));
+  };
+
+  // The folder and all it holds go to the browser's bookmarks bin of no return: say so before.
+  const showConfirmDelete = (remove) => {
+    const cancel = h("button", { class: "text-btn", onclick: () => closePopover() }, t("cancel"));
+    els.popover.replaceChildren(
+      h("div", { class: "del-title", id: "del-title" }, t("deleteFolderQ", cleanText(node.title) || t("folderName"))),
+      h("p", { class: "del-warn" }, t("deleteFolderWarn")),
+      count ? h("p", { class: "del-count" }, count === 1 ? t("oneBookmarkInside") : t("bookmarksInside", String(count))) : null,
+      h("div", { class: "btn-row", style: "justify-content:flex-end" },
+        cancel,
+        h("button", { class: "text-btn danger", onclick: remove }, svg(UI.trash), t("delete"))),
+    );
+    els.popover.setAttribute("role", "alertdialog");
+    els.popover.setAttribute("aria-labelledby", "del-title");
+    els.popover.classList.add("form-pop");
+    placeAt(x, y);
+    cancel.focus(); // the safe choice is the default
   };
 
   const showRename = () => {
@@ -2478,12 +2504,14 @@ function openTopSiteMenu(node, anchor, x, y) {
       if (e.key === "Escape") { e.stopPropagation(); closePopover(); }
     });
     els.popover.replaceChildren(
-      h("div", { class: "pop-section" }, t("newFolder")),
+      // The menu item ends with an ellipsis ("New folder…"); the form's title doesn't.
+      h("div", { class: "pop-section" }, t("newFolder").replace(/(…|\.\.\.)$/, "")),
       input,
       h("div", { class: "btn-row", style: "justify-content:flex-end" },
         h("button", { class: "text-btn", onclick: () => closePopover() }, t("cancel")),
         h("button", { class: "text-btn primary", onclick: create }, t("create"))),
     );
+    els.popover.classList.add("form-pop");
     placeAt(x, y);
     input.focus();
   };
@@ -2528,6 +2556,37 @@ function openIconPicker(anchor, title) {
   const current = () => state.folderStyles[title] || {};
   const iconNames = Object.keys(ICONS);
 
+  // Last swatch: a color of your own, with the same picker as the background colors.
+  openPicker = null;
+  const cur = current().color;
+  const pickerBox = h("div", { class: "folder-cp" });
+  let saveTimer = 0, drawQueued = false;
+  const customSwatch = h("button", {
+    class: "swatch swatch-custom", title: t("customColor"), "aria-label": t("customColor"),
+    style: HEX_COLOR.test(cur) ? `background:${cur}` : null,
+    "aria-pressed": String(HEX_COLOR.test(cur)), "aria-expanded": "false",
+    onclick: () => {
+      if (openPicker === "folder") { closeFolderPicker(); return; }
+      openPicker = "folder";
+      customSwatch.setAttribute("aria-expanded", "true");
+      const c = current().color;
+      pickerBox.replaceChildren(colorPickerPanel("folder", HEX_COLOR.test(c) ? c : null, pastelOf(c || "blue").light, (color) => {
+        // Live: the folder takes the color while you drag; saved once you pause.
+        state.folderStyles[title] = { ...current(), color };
+        if (!drawQueued) { drawQueued = true; requestAnimationFrame(() => { drawQueued = false; render(); }); }
+      }, {
+        afterPick: () => { clearTimeout(saveTimer); saveTimer = setTimeout(() => saveFolderStyle(title, {}), 300); },
+        onClose: () => closeFolderPicker(),
+      }));
+    },
+  });
+  const closeFolderPicker = () => {
+    openPicker = null;
+    customSwatch.setAttribute("aria-expanded", "false");
+    pickerBox.replaceChildren();
+    customSwatch.focus();
+  };
+
   const swatches = h("div", { class: "swatches", role: "group", "aria-label": t("color") },
     PASTELS.map((p) => h("button", {
       class: "swatch",
@@ -2538,9 +2597,11 @@ function openIconPicker(anchor, title) {
       onclick: (e) => {
         swatches.querySelectorAll(".swatch").forEach((s) => s.setAttribute("aria-pressed", "false"));
         e.currentTarget.setAttribute("aria-pressed", "true");
+        if (openPicker === "folder") closeFolderPicker();
+        clearTimeout(saveTimer);
         saveFolderStyle(title, { color: p.id === "gray" ? null : p.id });
       },
-    })));
+    })), customSwatch);
 
   const grid = h("div", { class: "icon-grid", role: "group", "aria-label": t("icon") });
   const drawGrid = (filter = "") => {
@@ -2567,10 +2628,13 @@ function openIconPicker(anchor, title) {
   openPopover(anchor, [
     h("div", { class: "pop-head" },
       h("span", { class: "pop-title" }, cleanText(title)),
-      h("button", { class: "icon-btn", "aria-label": t("reset"), title: t("reset"),
-        onclick: () => { saveFolderStyle(title, { icon: null, color: null }); closePopover(); } }, svg(UI.trash))),
+      // Back to the default look (no color, the folder symbol): a reset arrow, not a trash can,
+      // since the folder itself stays.
+      h("button", { class: "icon-btn", "aria-label": t("resetStyle"), title: t("resetStyle"),
+        onclick: () => { saveFolderStyle(title, { icon: null, color: null }); closePopover(); } }, svg(UI.restart))),
     h("div", { class: "pop-section" }, t("color")),
     swatches,
+    pickerBox,
     h("div", { class: "pop-section" }, t("icon")),
     filter,
     grid,
@@ -2718,7 +2782,9 @@ function customColorSwatch(key, current, cls) {
 }
 
 // Saturation/brightness area, hue slider and hex field (shown first, as the main input).
-function colorPickerPanel(key, current, fallback, onPick) {
+// Used in the settings (glow, tint, page color) and in a folder's style popover: opts.onClose
+// and opts.afterPick replace the settings' own refresh and save.
+function colorPickerPanel(key, current, fallback, onPick, opts = {}) {
   if (openPicker !== key) return null;
   let [hue, sat, val] = rgbToHsv(...hexToRgb(HEX_COLOR.test(current) ? current : fallback));
   const knob = h("span", { class: "cp-knob" });
@@ -2747,9 +2813,9 @@ function colorPickerPanel(key, current, fallback, onPick) {
       swatch.setAttribute("aria-pressed", "true");
     }
     onPick(color);
-    saveSettingsSoon();
+    (opts.afterPick || saveSettingsSoon)();
   };
-  const close = () => { openPicker = null; refreshSettings(); };
+  const close = () => { openPicker = null; (opts.onClose || refreshSettings)(); };
 
   const fromPointer = (e) => {
     const r = area.getBoundingClientRect();
@@ -3293,6 +3359,7 @@ function sanitizeFolderStyle(raw) {
   const style = {};
   if (hasIcon(raw.icon)) style.icon = raw.icon;
   if (PASTEL_IDS.has(raw.color) && raw.color !== "gray") style.color = raw.color;
+  else if (typeof raw.color === "string" && HEX_COLOR.test(raw.color)) style.color = raw.color.toLowerCase();
   return Object.keys(style).length ? style : null;
 }
 

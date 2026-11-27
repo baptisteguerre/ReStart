@@ -61,6 +61,9 @@
   "reset": {
     "message": "Zurücksetzen"
   },
+  "resetStyle": {
+    "message": "Farbe und Symbol zurücksetzen"
+  },
   "color": {
     "message": "Farbe"
   },
@@ -254,6 +257,28 @@
   "confirmDelete": {
     "message": "Zum Löschen erneut klicken"
   },
+  "deleteFolderQ": {
+    "message": "„$NAME$“ löschen?",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "deleteFolderWarn": {
+    "message": "Der Ordner und sein gesamter Inhalt werden aus den Lesezeichen deines Browsers gelöscht."
+  },
+  "bookmarksInside": {
+    "message": "$COUNT$ Lesezeichen darin",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "oneBookmarkInside": {
+    "message": "1 Lesezeichen darin"
+  },
   "theme": {
     "message": "Design"
   },
@@ -298,14 +323,6 @@
   },
   "create": {
     "message": "Erstellen"
-  },
-  "folderContains": {
-    "message": "Enthält $NAME$ Lesezeichen, die mitgelöscht werden",
-    "placeholders": {
-      "name": {
-        "content": "$1"
-      }
-    }
   },
   "emptyTag": {
     "message": "Leer"

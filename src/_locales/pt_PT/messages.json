@@ -61,6 +61,9 @@
   "reset": {
     "message": "Redefinir"
   },
+  "resetStyle": {
+    "message": "Redefinir cor e ícone"
+  },
   "color": {
     "message": "Cor"
   },
@@ -254,6 +257,28 @@
   "confirmDelete": {
     "message": "Clique novamente para eliminar"
   },
+  "deleteFolderQ": {
+    "message": "Eliminar “$NAME$”?",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "deleteFolderWarn": {
+    "message": "A pasta e todo o seu conteúdo serão eliminados dos marcadores do seu navegador."
+  },
+  "bookmarksInside": {
+    "message": "$COUNT$ marcadores no interior",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "oneBookmarkInside": {
+    "message": "1 marcador no interior"
+  },
   "theme": {
     "message": "Tema"
   },
@@ -298,14 +323,6 @@
   },
   "create": {
     "message": "Criar"
-  },
-  "folderContains": {
-    "message": "Contém $NAME$ marcadores, eliminados com ela",
-    "placeholders": {
-      "name": {
-        "content": "$1"
-      }
-    }
   },
   "emptyTag": {
     "message": "Vazia"

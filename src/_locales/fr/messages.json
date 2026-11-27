@@ -61,6 +61,9 @@
   "reset": {
     "message": "Réinitialiser"
   },
+  "resetStyle": {
+    "message": "Réinitialiser la couleur et l'icône"
+  },
   "color": {
     "message": "Couleur"
   },
@@ -254,6 +257,28 @@
   "confirmDelete": {
     "message": "Cliquez à nouveau pour supprimer"
   },
+  "deleteFolderQ": {
+    "message": "Supprimer « $NAME$ » ?",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "deleteFolderWarn": {
+    "message": "Le dossier et tout son contenu seront supprimés des favoris de votre navigateur."
+  },
+  "bookmarksInside": {
+    "message": "$COUNT$ favoris à l'intérieur",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "oneBookmarkInside": {
+    "message": "1 favori à l'intérieur"
+  },
   "theme": {
     "message": "Thème"
   },
@@ -298,14 +323,6 @@
   },
   "create": {
     "message": "Créer"
-  },
-  "folderContains": {
-    "message": "Contient $NAME$ favoris, supprimés avec lui",
-    "placeholders": {
-      "name": {
-        "content": "$1"
-      }
-    }
   },
   "emptyTag": {
     "message": "Vide"

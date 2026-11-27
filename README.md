@@ -57,12 +57,12 @@ ReStart replaces the new tab page of Firefox (version 140 or later) and of Chrom
 
 ## Features
 
-- **Your bookmarks, as you organized them.** Folders of the bookmarks bar become columns, in the exact order you set. Subfolders expand in place. Drag a bookmark or a subfolder to reorder it, or to move it to another folder. Sites outside folders** appear as tiles above the search bar.
+- **Your bookmarks, as you organized them.** Folders of the bookmarks bar become columns, in the exact order you set. Subfolders expand in place. Drag a bookmark or a subfolder to reorder it, or to move it to another folder. Sites outside folders appear as tiles above the search bar.
 - **Two layouts** for wide windows: *Mosaic* (cards filling the width, Google Keep-style, the default) or *Board* (horizontal columns, Trello-style). Narrow windows show a compact list of collapsible folders.
 - **Reorder or hide columns** by dragging their header or from the settings. Moving a folder's column moves the folder in your bookmarks bar.
 - **Most visited** column, optional. Right-click a site there to add it to your bookmarks, which helps build the page from your browsing habits.
-- **Instant filter.** Type in the search bar to filter bookmarks by title or URL. Press Enter to open the first bookmark in the list.
-- **Folder icons and colors.** Give each top-level folder a pastel color and a symbol (Material Symbols).
+- **Instant filter.** Type in the search bar to filter bookmarks by title or URL. When a single bookmark is left in the results, press Enter to open it.
+- **Folder icons and colors.** Give each top-level folder a pastel color, or any color with the color picker, and a symbol (Material Symbols).
 - **Focus mode.** The *Focus* button next to the settings hides everything but the background: for a calm tab, or a screen shared during a demo. It stays on in every new tab until you turn it off.
 - **Keep the screen on.** The *Keep Awake* button next to *Focus* stops the screen from turning off and the computer from going to sleep, for 15 minutes to 4 hours or until you turn it off.
 - **Appearance.** Light and dark mode follow the system, or can be fixed to light or dark. Background: a color, light effects, leaf shadows or breeze. The glow and the rays follow the sun: they move from the left in the morning to the right in the evening. With the default color, *Sky*, they follow the height of the sun, in colors loosely inspired by traditional Japanese ones. Sky also follows the seasons (northern hemisphere, without asking for your location): sunrise and sunset move with the date, and winter days turn to a pale, clear aqua instead of summer's sky blue.

@@ -2,6 +2,21 @@
 
 All notable changes to ReStart. Versions follow [semantic versioning](https://semver.org).
 
+## 1.4.1
+
+### Added
+
+- **A color of your own for a folder.** After the pastels, a last swatch opens the color picker used for the backgrounds.
+
+### Changed
+
+- **A clear warning before deleting a folder.** Deleting a folder that holds anything now asks first: the folder and everything in it will be deleted from the browser's bookmarks, with the number of bookmarks inside. *Cancel* is the default. An empty folder is still deleted with a second click.
+
+### Fixed
+
+- The *New folder* form (from *Most visited*) gets the same padding as the other small forms.
+- In a folder's color and icon popover, the reset button shows a reset arrow instead of a trash can, which suggested deleting the folder. Its tooltip now says *Reset color and icon*.
+
 ## 1.4.0
 
 ### Added

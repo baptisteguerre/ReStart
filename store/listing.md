@@ -1,6 +1,6 @@
 # Chrome Web Store listing
 
-Assets in this folder: `store-icon-128.png`, `screenshots/` (5 images, 1280x800, upload in the numbered order; the store accepts 5 at most: `1-mosaic-light.png`, `2-board-dark.png`, `3-bamboo-menu.png`, `4-customize-folder.png`, `5-focus-petals.png`), `extra/` (1280x800 extras that can replace one of the 5: `narrow-window.png`, `focus-light.png`, `focus-dark-icons.png`, `leaves-branches.png`, `focus-palm.png`, `move-to.png`, `breeze-snow-dark.png`), `promo-small-440x280.png`, `promo-marquee-1400x560.png` (optional).
+Assets in this folder: `store-icon-128.png`, `screenshots/` (5 images, 1280x800, upload in the numbered order; the store accepts 5 at most: `1-mosaic-light.png`, `2-board-dark.png`, `3-bamboo-menu.png`, `4-customize-folder.png`, `5-focus-petals.png`), `extra/` (1280x800 extras that can replace one of the 5: `mosaic-dusk.png`, `narrow-window.png`, `focus-light.png`, `focus-dark-icons.png`, `leaves-branches.png`, `focus-palm.png`, `move-to.png`, `breeze-snow-dark.png`), `promo-small-440x280.png`, `promo-marquee-1400x560.png` (optional).
 
 The title and the short summary come from `src/_locales/<lang>/messages.json` (`extName`, `appDesc`). The long descriptions below are pasted into the dashboard, one per language.
 

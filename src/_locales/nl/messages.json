@@ -61,6 +61,9 @@
   "reset": {
     "message": "Herstellen"
   },
+  "resetStyle": {
+    "message": "Kleur en pictogram herstellen"
+  },
   "color": {
     "message": "Kleur"
   },
@@ -254,6 +257,28 @@
   "confirmDelete": {
     "message": "Klik nogmaals om te verwijderen"
   },
+  "deleteFolderQ": {
+    "message": "„$NAME$” verwijderen?",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "deleteFolderWarn": {
+    "message": "De map en alles erin worden uit de bladwijzers van je browser verwijderd."
+  },
+  "bookmarksInside": {
+    "message": "$COUNT$ bladwijzers erin",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "oneBookmarkInside": {
+    "message": "1 bladwijzer erin"
+  },
   "theme": {
     "message": "Thema"
   },
@@ -298,14 +323,6 @@
   },
   "create": {
     "message": "Maken"
-  },
-  "folderContains": {
-    "message": "Bevat $NAME$ bladwijzers, die mee worden verwijderd",
-    "placeholders": {
-      "name": {
-        "content": "$1"
-      }
-    }
   },
   "emptyTag": {
     "message": "Leeg"

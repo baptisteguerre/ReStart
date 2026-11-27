@@ -61,6 +61,9 @@
   "reset": {
     "message": "Restablecer"
   },
+  "resetStyle": {
+    "message": "Restablecer color e icono"
+  },
   "color": {
     "message": "Color"
   },
@@ -254,6 +257,28 @@
   "confirmDelete": {
     "message": "Haz clic de nuevo para eliminar"
   },
+  "deleteFolderQ": {
+    "message": "¿Eliminar «$NAME$»?",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "deleteFolderWarn": {
+    "message": "La carpeta y todo su contenido se eliminarán de los marcadores de tu navegador."
+  },
+  "bookmarksInside": {
+    "message": "$COUNT$ marcadores dentro",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "oneBookmarkInside": {
+    "message": "1 marcador dentro"
+  },
   "theme": {
     "message": "Tema"
   },
@@ -298,14 +323,6 @@
   },
   "create": {
     "message": "Crear"
-  },
-  "folderContains": {
-    "message": "Contiene $NAME$ marcadores, que se eliminarán con ella",
-    "placeholders": {
-      "name": {
-        "content": "$1"
-      }
-    }
   },
   "emptyTag": {
     "message": "Vacía"

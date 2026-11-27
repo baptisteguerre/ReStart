@@ -13,23 +13,22 @@ The title and the short summary come from `src/_locales/<lang>/messages.json` (`
 
 **Description:**
 
-ReStart turns every new tab into a calm, simple start page built from the bookmarks you already have. No feeds, no widgets, no distractions: just your bookmarks, the way you organized them.
+A fresh start, every new tab. No feeds. No ads. No tracking.
 
-• Your bookmarks bar, as you organized it: each folder becomes a column, in your exact order, never alphabetical. Subfolders expand in place. Drag bookmarks, subfolders and columns to reorder them or move them to another folder: they move in your bookmarks too. Empty folders stay out of the way, long ones scroll inside their card.
-• Two layouts: Mosaic (cards that fill the width) or Board (horizontal columns). Narrow windows get a compact list.
-• Type to filter by title or URL. One result left? Press Enter.
-• Sites outside folders sit above the search bar. Have dozens? They move into a scrollable card, and you can pin your favorites on top. Any bookmark from a folder or subfolder can be pinned there too, with a right-click. Drag the tiles to reorder them.
-• Give each folder a pastel color and an icon.
-• Right-click any bookmark to open it in a new tab, copy its link, pin it above the search bar, move it to another folder, edit its name or address, or delete it. Right-click a folder to rename, move or delete it.
-• Optional Most visited column: right-click a site to add it to your bookmarks, in an existing folder or a new one. Handy to build your page from your habits, even starting with no bookmarks.
-• Hide the columns you don't need.
-• Light and dark mode, automatic or fixed. Background of your choice: a color (or one that follows the hour), light that follows the sun across the page (a soft glow or gently moving rays), leaf shadows moved by a changing wind or a light breeze of snow, petals, dandelion seeds or autumn leaves. Prefer a calmer look? Pastel letters can replace site icons.
-• Focus mode: one click hides your bookmarks and leaves only the background, with the time if you like, ideal for a calm moment or a shared screen. Site icons can stay, without names.
-• Keep the screen on, for a set time or until you turn it off, while ReStart is shown: the Keep Awake button next to Focus shows the time left.
-• Export and import your customizations.
-• Available in English, French, Spanish, Portuguese, Dutch, Italian and German.
+ReStart turns your bookmarks bar into a calm start page: its sites become tiles, its folders become columns, in your exact order. Nothing to set up, nothing to sign in to.
 
-Private by design: no account, no server, no tracking. Open source under the MIT license.
+FIND ANY SITE IN A SECOND
+Your bookmarks, laid out the way you organized them. Type a few letters to filter, press Enter to open. Pin your favorites on top, drag to reorder: your real bookmarks follow.
+
+A PAGE THAT FOLLOWS YOUR DAY
+Sunlight that crosses the page, leaf shadows in the wind, petals or snow with the seasons, or a plain color. Light or dark, always quiet.
+
+MADE FOR THE WAY YOU WORK
+• Focus mode hides your bookmarks in one click, for a calm moment or a shared screen.
+• Keep Awake keeps the screen on while you read, take notes or wait for a long task.
+
+YOURS, AND ONLY YOURS
+No account, no server, no tracking. Your settings stay in your browser. Open source (MIT). Available in 7 languages.
 
 ---
 
@@ -40,23 +39,22 @@ Private by design: no account, no server, no tracking. Open source under the MIT
 
 **Description :**
 
-ReStart transforme chaque nouvel onglet en une page de démarrage calme et simple, construite à partir des favoris que vous avez déjà. Pas de fil d'actualité, pas de widgets, pas de distractions : seulement vos favoris, tels que vous les avez organisés.
+Un nouveau départ, à chaque onglet. Pas de fil d'actu. Pas de pub. Pas de pistage.
 
-• Votre barre de favoris telle que vous l'avez organisée : chaque dossier devient une colonne, dans votre ordre exact, jamais alphabétique. Les sous-dossiers se déplient sur place. Glissez favoris, sous-dossiers et colonnes pour les réordonner ou les changer de dossier : ils bougent aussi dans vos favoris. Les dossiers vides restent discrets, les longs défilent dans leur carte.
-• Deux dispositions : Mosaïque (cartes sur toute la largeur) ou Tableau (colonnes horizontales). Les fenêtres étroites affichent une liste compacte.
-• Tapez pour filtrer par titre ou adresse. Il ne reste qu'un résultat ? Appuyez sur Entrée.
-• Les sites hors dossier s'affichent au-dessus de la recherche. Vous en avez des dizaines ? Ils passent dans une carte défilante, et vous pouvez mettre vos préférés en avant. Un clic droit permet aussi d'y mettre en avant n'importe quel favori d'un dossier ou sous-dossier. Glissez les tuiles pour changer leur ordre.
-• Donnez à chaque dossier une couleur pastel et une icône.
-• Clic droit sur un favori pour l'ouvrir dans un nouvel onglet, copier son lien, le mettre en avant au-dessus de la recherche, le déplacer vers un autre dossier, modifier son nom ou son adresse, ou le supprimer. Clic droit sur un dossier pour le renommer, le déplacer ou le supprimer.
-• Colonne « Les plus visités » en option : clic droit sur un site pour l'ajouter à vos favoris, dans un dossier existant ou un nouveau. Pratique pour construire votre page à partir de vos habitudes, même en partant de zéro.
-• Masquez les colonnes dont vous n'avez pas besoin.
-• Mode clair et sombre, automatique ou fixe. Fond au choix : une couleur (ou celle de l'heure), une lumière qui suit la course du soleil sur la page (lueur douce ou rayons), des ombres de feuillages qui bougent au gré d'un vent changeant ou une brise légère de neige, de pétales, d'aigrettes ou de feuilles d'automne. Envie d'un rendu plus calme ? Des lettres pastel peuvent remplacer les icônes des sites.
-• Mode Focus : un clic masque vos favoris et ne laisse que le fond, avec l'heure si vous le souhaitez, idéal pour un moment calme ou un écran partagé. Les icônes des sites peuvent rester, sans leurs noms.
-• Gardez l'écran allumé, pour une durée choisie ou jusqu'à ce que vous l'arrêtiez, tant que ReStart est affiché : le bouton Rester éveillé, à côté de Focus, indique le temps restant.
-• Export et import de vos personnalisations.
-• Disponible en français, anglais, espagnol, portugais, néerlandais, italien et allemand.
+ReStart transforme votre barre de favoris en une page de démarrage calme : ses sites deviennent des tuiles, ses dossiers des colonnes, dans votre ordre exact. Rien à configurer, aucun compte à créer.
 
-Respect de la vie privée : pas de compte, pas de serveur, aucun suivi. Open source sous licence MIT.
+TROUVEZ N'IMPORTE QUEL SITE EN UNE SECONDE
+Vos favoris, disposés comme vous les avez organisés. Tapez quelques lettres pour filtrer, appuyez sur Entrée pour ouvrir. Mettez vos préférés en avant, glissez pour réordonner : vos vrais favoris suivent.
+
+UNE PAGE QUI SUIT VOTRE JOURNÉE
+Une lumière qui traverse la page, des ombres de feuilles dans le vent, des pétales ou de la neige au fil des saisons, ou une couleur unie. Clair ou sombre, toujours calme.
+
+PENSÉ POUR VOTRE FAÇON DE TRAVAILLER
+• Le mode Focus masque vos favoris en un clic, pour un moment calme ou un écran partagé.
+• Rester éveillé garde l'écran allumé pendant que vous lisez, prenez des notes ou attendez la fin d'une longue tâche.
+
+À VOUS, ET SEULEMENT À VOUS
+Pas de compte, pas de serveur, aucun pistage. Vos réglages restent dans votre navigateur. Open source (MIT). Disponible en 7 langues.
 
 ---
 
@@ -67,23 +65,22 @@ Respect de la vie privée : pas de compte, pas de serveur, aucun suivi. Open sou
 
 **Descripción:**
 
-ReStart convierte cada pestaña nueva en una página de inicio tranquila y sencilla, creada a partir de los marcadores que ya tienes. Sin noticias, sin widgets, sin distracciones: solo tus marcadores, tal como los organizaste.
+Un nuevo comienzo en cada pestaña. Sin noticias. Sin anuncios. Sin rastreo.
 
-• Tu barra de marcadores tal como la organizaste: cada carpeta es una columna, en tu orden exacto, nunca alfabético. Las subcarpetas se despliegan en su sitio. Arrastra marcadores, subcarpetas y columnas para reordenarlos o cambiarlos de carpeta: también se mueven en tus marcadores. Las carpetas vacías no estorban y las largas se desplazan dentro de su tarjeta.
-• Dos diseños: Mosaico (tarjetas que ocupan todo el ancho) o Tablero (columnas horizontales). Las ventanas estrechas muestran una lista compacta.
-• Escribe para filtrar por título o dirección. ¿Queda un solo resultado? Pulsa Intro.
-• Los sitios fuera de carpetas aparecen sobre la búsqueda. ¿Tienes decenas? Pasan a una tarjeta desplazable y puedes destacar tus favoritos arriba. Con un clic derecho también puedes destacar ahí cualquier marcador de una carpeta o subcarpeta. Arrastra los mosaicos para reordenarlos.
-• Da a cada carpeta un color pastel y un icono.
-• Clic derecho en un marcador para abrirlo en una pestaña nueva, copiar el enlace, destacarlo sobre la búsqueda, moverlo a otra carpeta, editar su nombre o su dirección, o eliminarlo. Clic derecho en una carpeta para cambiarle el nombre, moverla o eliminarla.
-• Columna opcional «Más visitados»: clic derecho en un sitio para añadirlo a tus marcadores, en una carpeta existente o en una nueva. Útil para construir tu página a partir de tus hábitos, incluso sin ningún marcador.
-• Oculta las columnas que no necesitas.
-• Modo claro y oscuro, automático o fijo. Fondo a elegir: un color (o el de la hora), una luz que sigue el recorrido del sol por la página (un resplandor suave o rayos), sombras de hojas que se mecen con un viento cambiante o una brisa ligera de nieve, pétalos, vilanos u hojas de otoño. ¿Prefieres un aspecto más tranquilo? Letras pastel pueden sustituir los iconos de los sitios.
-• Modo Enfoque: un clic oculta tus marcadores y deja solo el fondo, con la hora si quieres, ideal para un momento de calma o una pantalla compartida. Los iconos de los sitios pueden quedarse, sin nombres.
-• Mantén la pantalla encendida, durante un tiempo o hasta que lo desactives, mientras ReStart está a la vista: el botón Mantener activo, junto a Focus, muestra el tiempo restante.
-• Exporta e importa tus personalizaciones.
-• Disponible en español, inglés, francés, portugués, neerlandés, italiano y alemán.
+ReStart convierte tu barra de marcadores en una página de inicio tranquila: sus sitios se vuelven mosaicos y sus carpetas, columnas, en tu orden exacto. Nada que configurar, ninguna cuenta que crear.
 
-Privacidad desde el diseño: sin cuenta, sin servidor, sin seguimiento. Código abierto con licencia MIT.
+ENCUENTRA CUALQUIER SITIO EN UN SEGUNDO
+Tus marcadores, dispuestos tal como los organizaste. Escribe unas letras para filtrar y pulsa Intro para abrir. Destaca tus favoritos y arrastra para reordenar: tus marcadores reales también cambian.
+
+UNA PÁGINA QUE SIGUE TU DÍA
+Luz del sol que cruza la página, sombras de hojas al viento, pétalos o nieve según la estación, o un color liso. Clara u oscura, siempre tranquila.
+
+PENSADO PARA TU FORMA DE TRABAJAR
+• El modo Enfoque oculta tus marcadores con un clic, para un momento de calma o una pantalla compartida.
+• Mantener activo deja la pantalla encendida mientras lees, tomas notas o esperas a que termine una tarea larga.
+
+TUYO, Y SOLO TUYO
+Sin cuenta, sin servidor, sin rastreo. Tus ajustes se quedan en tu navegador. Código abierto (MIT). Disponible en 7 idiomas.
 
 ---
 
@@ -94,23 +91,22 @@ Privacidad desde el diseño: sin cuenta, sin servidor, sin seguimiento. Código 
 
 **Descrição:**
 
-O ReStart transforma cada nova aba em uma página inicial calma e simples, criada a partir dos favoritos que você já tem. Sem notícias, sem widgets, sem distrações: só os seus favoritos, do jeito que você organizou.
+Um novo começo a cada nova aba. Sem feeds. Sem anúncios. Sem rastreamento.
 
-• Sua barra de favoritos do jeito que você organizou: cada pasta vira uma coluna, na sua ordem exata, nunca alfabética. As subpastas se abrem no lugar. Arraste favoritos, subpastas e colunas para reordená-los ou mudá-los de pasta: eles mudam de lugar também nos seus favoritos. Pastas vazias não atrapalham, e as longas rolam dentro do cartão.
-• Dois layouts: Mosaico (cartões que ocupam toda a largura) ou Quadro (colunas horizontais). Janelas estreitas mostram uma lista compacta.
-• Digite para filtrar por título ou endereço. Sobrou um resultado? Pressione Enter.
-• Sites fora de pastas aparecem acima da busca. Tem dezenas? Eles vão para um cartão rolável, e você pode destacar seus preferidos no topo. Com um clique direito, também pode destacar ali qualquer favorito de uma pasta ou subpasta. Arraste os blocos para reordená-los.
-• Dê a cada pasta uma cor pastel e um ícone.
-• Clique com o botão direito em um favorito para abrir em nova aba, copiar o link, destacar acima da busca, mover para outra pasta, editar o nome ou o endereço, ou excluir. Clique com o botão direito numa pasta para renomeá-la, movê-la ou excluí-la.
-• Coluna opcional "Mais visitados": clique com o botão direito num site para adicioná-lo aos favoritos, numa pasta existente ou nova. Prático para montar sua página a partir dos seus hábitos, mesmo sem nenhum favorito.
-• Oculte as colunas de que você não precisa.
-• Modo claro e escuro, automático ou fixo. Fundo à escolha: uma cor (ou a da hora), uma luz que acompanha o percurso do sol na página (um brilho suave ou raios), sombras de folhas que balançam ao sabor de um vento variável ou uma brisa leve de neve, pétalas, sementes de dente-de-leão ou folhas de outono. Prefere um visual mais calmo? Letras em tons pastel podem substituir os ícones dos sites.
-• Modo Foco: um clique oculta seus favoritos e deixa só o fundo, com a hora se quiser, ideal para um momento de calma ou uma tela compartilhada. Os ícones dos sites podem ficar, sem os nomes.
-• Mantenha a tela ligada, por um tempo ou até desativar, enquanto o ReStart estiver visível: o botão Manter ativo, ao lado de Foco, mostra o tempo restante.
-• Exporte e importe suas personalizações.
-• Disponível em português, inglês, francês, espanhol, holandês, italiano e alemão.
+O ReStart transforma sua barra de favoritos em uma página inicial calma: os sites viram blocos, as pastas viram colunas, na sua ordem exata. Nada para configurar, nenhuma conta para criar.
 
-Privacidade por padrão: sem conta, sem servidor, sem rastreamento. Código aberto sob licença MIT.
+ENCONTRE QUALQUER SITE EM UM SEGUNDO
+Seus favoritos, organizados do jeito que você deixou. Digite algumas letras para filtrar e pressione Enter para abrir. Destaque seus preferidos e arraste para reordenar: seus favoritos de verdade acompanham.
+
+UMA PÁGINA QUE ACOMPANHA O SEU DIA
+A luz do sol cruzando a página, sombras de folhas ao vento, pétalas ou neve conforme a estação, ou uma cor lisa. Clara ou escura, sempre tranquila.
+
+FEITO PARA O SEU JEITO DE TRABALHAR
+• O Modo Foco esconde seus favoritos com um clique, para um momento de calma ou uma tela compartilhada.
+• Manter ativo deixa a tela ligada enquanto você lê, faz anotações ou espera uma tarefa longa terminar.
+
+SEU, E SÓ SEU
+Sem conta, sem servidor, sem rastreamento. Suas configurações ficam no seu navegador. Código aberto (MIT). Disponível em 7 idiomas.
 
 ---
 
@@ -121,23 +117,22 @@ Privacidade por padrão: sem conta, sem servidor, sem rastreamento. Código aber
 
 **Descrição:**
 
-O ReStart transforma cada novo separador numa página inicial calma e simples, criada a partir dos marcadores que já tem. Sem notícias, sem widgets, sem distrações: apenas os seus marcadores, tal como os organizou.
+Um novo começo em cada separador. Sem feeds. Sem anúncios. Sem rastreio.
 
-• A sua barra de marcadores tal como a organizou: cada pasta torna-se uma coluna, na sua ordem exata, nunca alfabética. As subpastas abrem-se no lugar. Arraste marcadores, subpastas e colunas para os reordenar ou mudar de pasta: mudam de lugar também nos seus marcadores. As pastas vazias não atrapalham e as longas deslizam dentro do cartão.
-• Duas disposições: Mosaico (cartões em toda a largura) ou Quadro (colunas horizontais). Janelas estreitas mostram uma lista compacta.
-• Escreva para filtrar por título ou endereço. Resta um resultado? Prima Enter.
-• Os sites fora de pastas aparecem acima da pesquisa. Tem dezenas? Passam para um cartão deslizável, e pode destacar os seus preferidos no topo. Com um clique direito, também pode destacar aí qualquer marcador de uma pasta ou subpasta. Arraste os blocos para os reordenar.
-• Dê a cada pasta uma cor pastel e um ícone.
-• Clique com o botão direito num marcador para o abrir num novo separador, copiar a ligação, destacá-lo acima da pesquisa, movê-lo para outra pasta, editar o nome ou o endereço, ou eliminá-lo. Clique com o botão direito numa pasta para lhe mudar o nome, movê-la ou eliminá-la.
-• Coluna opcional "Mais visitados": clique com o botão direito num site para o adicionar aos marcadores, numa pasta existente ou nova. Prático para construir a sua página a partir dos seus hábitos, mesmo sem nenhum marcador.
-• Oculte as colunas de que não precisa.
-• Modo claro e escuro, automático ou fixo. Fundo à escolha: uma cor (ou a da hora), uma luz que acompanha o percurso do sol na página (um brilho suave ou raios), sombras de folhas que balançam ao sabor de um vento variável ou uma brisa leve de neve, pétalas, sementes de dente-de-leão ou folhas de outono. Prefere um visual mais calmo? Letras em tons pastel podem substituir os ícones dos sites.
-• Modo Foco: um clique oculta os seus marcadores e deixa só o fundo, com a hora se quiser, ideal para um momento calmo ou um ecrã partilhado. Os ícones dos sites podem ficar, sem os nomes.
-• Mantenha o ecrã ligado, durante um tempo ou até o desativar, enquanto o ReStart estiver visível: o botão Manter ativo, ao lado de Foco, mostra o tempo restante.
-• Exporte e importe as suas personalizações.
-• Disponível em português, inglês, francês, espanhol, neerlandês, italiano e alemão.
+O ReStart transforma a sua barra de marcadores numa página inicial calma: os sites tornam-se mosaicos, as pastas tornam-se colunas, pela sua ordem exata. Nada para configurar, nenhuma conta para criar.
 
-Privacidade de raiz: sem conta, sem servidor, sem rastreio. Código aberto sob licença MIT.
+ENCONTRE QUALQUER SITE NUM SEGUNDO
+Os seus marcadores, dispostos tal como os organizou. Escreva algumas letras para filtrar e prima Enter para abrir. Destaque os seus preferidos e arraste para reordenar: os seus marcadores reais acompanham.
+
+UMA PÁGINA QUE ACOMPANHA O SEU DIA
+A luz do sol a atravessar a página, sombras de folhas ao vento, pétalas ou neve conforme a estação, ou uma cor lisa. Clara ou escura, sempre tranquila.
+
+FEITO PARA A SUA FORMA DE TRABALHAR
+• O Modo Foco oculta os seus marcadores com um clique, para um momento de sossego ou um ecrã partilhado.
+• Manter ativo mantém o ecrã ligado enquanto lê, toma notas ou espera que uma tarefa longa termine.
+
+SEU, E SÓ SEU
+Sem conta, sem servidor, sem rastreio. As suas definições ficam no seu navegador. Código aberto (MIT). Disponível em 7 idiomas.
 
 ---
 
@@ -148,23 +143,22 @@ Privacidade de raiz: sem conta, sem servidor, sem rastreio. Código aberto sob l
 
 **Beschrijving:**
 
-ReStart maakt van elk nieuw tabblad een rustige, eenvoudige startpagina, opgebouwd uit de bladwijzers die je al hebt. Geen nieuws, geen widgets, geen afleiding: alleen je bladwijzers, zoals jij ze hebt ingedeeld.
+Een frisse start, bij elk nieuw tabblad. Geen feeds. Geen advertenties. Geen tracking.
 
-• Je bladwijzerbalk zoals jij hem hebt ingedeeld: elke map wordt een kolom, in jouw volgorde, nooit alfabetisch. Submappen klappen ter plekke open. Sleep bladwijzers, submappen en kolommen om ze te herschikken of naar een andere map te verplaatsen: ze verplaatsen ook in je bladwijzers. Lege mappen zitten niet in de weg, lange scrollen binnen hun kaart.
-• Twee indelingen: Mozaïek (kaarten over de volle breedte) of Bord (horizontale kolommen). Smalle vensters tonen een compacte lijst.
-• Typ om te filteren op titel of adres. Nog maar één resultaat? Druk op Enter.
-• Sites buiten mappen staan boven de zoekbalk. Heb je er tientallen? Dan gaan ze naar een scrollbare kaart, en je kunt je favorieten bovenaan vastzetten. Met een rechtermuisklik zet je daar ook elke bladwijzer uit een map of submap vast. Sleep de tegels om ze te herschikken.
-• Geef elke map een pastelkleur en een pictogram.
-• Klik met rechts op een bladwijzer om hem in een nieuw tabblad te openen, de link te kopiëren, hem boven de zoekbalk vast te zetten, naar een andere map te verplaatsen, de naam of het adres te bewerken, of hem te verwijderen. Klik met rechts op een map om hem te hernoemen, te verplaatsen of te verwijderen.
-• Optionele kolom Meest bezocht: klik met rechts op een site om hem aan je bladwijzers toe te voegen, in een bestaande of nieuwe map. Handig om je pagina op te bouwen vanuit je gewoontes, ook zonder bladwijzers.
-• Verberg de kolommen die je niet nodig hebt.
-• Lichte en donkere modus, automatisch of vast. Achtergrond naar keuze: een kleur (of die van het uur), licht dat de zon over de pagina volgt (een zachte gloed of stralen), bladschaduwen die wiegen in een wisselende wind of een lichte bries van sneeuw, bloesem, paardenbloempluis of herfstbladeren. Liever een rustiger geheel? Pastelletters kunnen de sitepictogrammen vervangen.
-• Focusmodus: één klik verbergt je bladwijzers en laat alleen de achtergrond zien, met de tijd als je wilt, ideaal voor een rustig moment of een gedeeld scherm. Sitepictogrammen kunnen blijven, zonder namen.
-• Houd het scherm aan, een tijdje of tot je het uitzet, zolang ReStart zichtbaar is: de knop Wakker houden naast Focus toont de resterende tijd.
-• Exporteer en importeer je aanpassingen.
-• Beschikbaar in het Nederlands, Engels, Frans, Spaans, Portugees, Italiaans en Duits.
+ReStart maakt van je bladwijzerbalk een rustige startpagina: de sites worden tegels, de mappen worden kolommen, precies in jouw volgorde. Niets in te stellen, geen account nodig.
 
-Privacy voorop: geen account, geen server, geen tracking. Open source onder de MIT-licentie.
+VIND ELKE SITE IN EEN SECONDE
+Je bladwijzers, geordend zoals jij ze hebt ingedeeld. Typ een paar letters om te filteren en druk op Enter om te openen. Zet je favorieten bovenaan en sleep om de volgorde te wijzigen: je echte bladwijzers volgen mee.
+
+EEN PAGINA DIE JE DAG VOLGT
+Zonlicht dat over de pagina trekt, schaduwen van bladeren in de wind, bloesem of sneeuw met de seizoenen, of een effen kleur. Licht of donker, altijd rustig.
+
+GEMAAKT VOOR HOE JIJ WERKT
+• De focusmodus verbergt je bladwijzers met één klik, voor een rustig moment of een gedeeld scherm.
+• Wakker houden houdt het scherm aan terwijl je leest, aantekeningen maakt of wacht tot een lange taak klaar is.
+
+VAN JOU, EN ALLEEN VAN JOU
+Geen account, geen server, geen tracking. Je instellingen blijven in je browser. Open source (MIT). Beschikbaar in 7 talen.
 
 ---
 
@@ -175,23 +169,22 @@ Privacy voorop: geen account, geen server, geen tracking. Open source onder de M
 
 **Descrizione:**
 
-ReStart trasforma ogni nuova scheda in una pagina iniziale calma e semplice, costruita con i preferiti che hai già. Niente notizie, niente widget, niente distrazioni: solo i tuoi preferiti, come li hai organizzati.
+Un nuovo inizio, a ogni nuova scheda. Niente feed. Niente pubblicità. Niente tracciamento.
 
-• La tua barra dei preferiti così come l'hai organizzata: ogni cartella diventa una colonna, nel tuo ordine esatto, mai alfabetico. Le sottocartelle si aprono sul posto. Trascina preferiti, sottocartelle e colonne per riordinarli o spostarli in un'altra cartella: si spostano anche nei tuoi preferiti. Le cartelle vuote non ingombrano, quelle lunghe scorrono nella loro scheda.
-• Due disposizioni: Mosaico (schede su tutta la larghezza) o Bacheca (colonne orizzontali). Le finestre strette mostrano un elenco compatto.
-• Digita per filtrare per titolo o indirizzo. Resta un solo risultato? Premi Invio.
-• I siti fuori dalle cartelle compaiono sopra la ricerca. Ne hai decine? Passano in una scheda scorrevole e puoi mettere in evidenza i tuoi preferiti in alto. Con un clic destro puoi metterci anche qualsiasi preferito di una cartella o sottocartella. Trascina le icone per riordinarle.
-• Assegna a ogni cartella un colore pastello e un'icona.
-• Clic destro su un preferito per aprirlo in una nuova scheda, copiare il link, metterlo in evidenza sopra la ricerca, spostarlo in un'altra cartella, modificarne il nome o l'indirizzo, o eliminarlo. Clic destro su una cartella per rinominarla, spostarla o eliminarla.
-• Colonna facoltativa «I più visitati»: clic destro su un sito per aggiungerlo ai preferiti, in una cartella esistente o nuova. Comodo per costruire la tua pagina dalle tue abitudini, anche partendo da zero.
-• Nascondi le colonne che non ti servono.
-• Modalità chiara e scura, automatica o fissa. Sfondo a scelta: un colore (o quello dell'ora), una luce che segue il percorso del sole sulla pagina (un alone morbido o raggi), ombre di foglie che ondeggiano in un vento mutevole oppure una brezza leggera di neve, petali, soffioni o foglie d'autunno. Preferisci un aspetto più calmo? Lettere pastello possono sostituire le icone dei siti.
-• Modalità Focus: un clic nasconde i preferiti e lascia solo lo sfondo, con l'ora se vuoi, ideale per un momento di calma o uno schermo condiviso. Le icone dei siti possono restare, senza nomi.
-• Mantieni lo schermo acceso, per un certo tempo o finché non lo disattivi, mentre ReStart è visibile: il pulsante Mantieni attivo, accanto a Focus, mostra il tempo rimanente.
-• Esporta e importa le tue personalizzazioni.
-• Disponibile in italiano, inglese, francese, spagnolo, portoghese, olandese e tedesco.
+ReStart trasforma la tua barra dei preferiti in una pagina iniziale calma: i siti diventano riquadri, le cartelle diventano colonne, esattamente nel tuo ordine. Niente da configurare, nessun account da creare.
 
-Privacy integrata: nessun account, nessun server, nessun tracciamento. Open source con licenza MIT.
+TROVA QUALSIASI SITO IN UN SECONDO
+I tuoi preferiti, disposti come li hai organizzati. Digita qualche lettera per filtrare e premi Invio per aprire. Metti in evidenza i siti che usi di più e trascina per riordinare: i tuoi preferiti reali seguono.
+
+UNA PAGINA CHE SEGUE LA TUA GIORNATA
+La luce del sole che attraversa la pagina, ombre di foglie nel vento, petali o neve secondo la stagione, o un colore uniforme. Chiara o scura, sempre calma.
+
+PENSATO PER IL TUO MODO DI LAVORARE
+• La modalità Focus nasconde i tuoi preferiti con un clic, per un momento di calma o uno schermo condiviso.
+• Mantieni attivo tiene lo schermo acceso mentre leggi, prendi appunti o aspetti la fine di un'attività lunga.
+
+TUO, E SOLO TUO
+Nessun account, nessun server, nessun tracciamento. Le tue impostazioni restano nel tuo browser. Open source (MIT). Disponibile in 7 lingue.
 
 ---
 
@@ -202,20 +195,20 @@ Privacy integrata: nessun account, nessun server, nessun tracciamento. Open sour
 
 **Beschreibung:**
 
-ReStart macht aus jedem neuen Tab eine ruhige, einfache Startseite, gebaut aus den Lesezeichen, die du schon hast. Keine News, keine Widgets, keine Ablenkung: nur deine Lesezeichen, so wie du sie geordnet hast.
+Ein frischer Start, in jedem neuen Tab. Keine Feeds. Keine Werbung. Kein Tracking.
 
-• Deine Lesezeichenleiste, so wie du sie geordnet hast: Jeder Ordner wird eine Spalte, in deiner genauen Reihenfolge, nie alphabetisch. Unterordner klappen direkt auf. Lesezeichen, Unterordner und Spalten per Ziehen neu ordnen oder in einen anderen Ordner verschieben: Sie wandern auch in deinen Lesezeichen mit. Leere Ordner stören nicht, lange scrollen in ihrer Karte.
-• Zwei Anordnungen: Mosaik (Karten über die volle Breite) oder Board (horizontale Spalten). Schmale Fenster zeigen eine kompakte Liste.
-• Tippen, um nach Titel oder Adresse zu filtern. Nur noch ein Treffer? Enter drücken.
-• Seiten außerhalb von Ordnern stehen über der Suche. Dutzende davon? Sie wandern in eine scrollbare Karte, und du kannst deine Favoriten oben anheften. Per Rechtsklick lässt sich dort auch jedes Lesezeichen aus einem Ordner oder Unterordner anheften. Ziehe die Kacheln, um sie neu anzuordnen.
-• Gib jedem Ordner eine Pastellfarbe und ein Symbol.
-• Rechtsklick auf ein Lesezeichen: in neuem Tab öffnen, Link kopieren, über der Suche anheften, in einen anderen Ordner verschieben, Name oder Adresse bearbeiten oder löschen. Rechtsklick auf einen Ordner: umbenennen, verschieben oder löschen.
-• Optionale Spalte „Meistbesucht“: Rechtsklick auf eine Seite fügt sie zu den Lesezeichen hinzu, in einen vorhandenen oder neuen Ordner. Praktisch, um die Seite aus den eigenen Gewohnheiten aufzubauen, auch ganz ohne Lesezeichen.
-• Blende Spalten aus, die du nicht brauchst.
-• Heller und dunkler Modus, automatisch oder fest. Hintergrund nach Wahl: eine Farbe (oder die der Tageszeit), Licht, das dem Lauf der Sonne über die Seite folgt (ein sanfter Schein oder Strahlen), Blätterschatten, die sich in wechselndem Wind wiegen oder eine leichte Brise aus Schnee, Blüten, Pusteblumensamen oder Herbstlaub. Lieber ruhiger? Pastellbuchstaben können die Seitensymbole ersetzen.
-• Fokusmodus: Ein Klick blendet deine Lesezeichen aus und lässt nur den Hintergrund, auf Wunsch mit der Uhrzeit, ideal für einen ruhigen Moment oder einen geteilten Bildschirm. Seitensymbole können bleiben, ohne Namen.
-• Lass den Bildschirm an, für eine gewählte Zeit oder bis du es ausschaltest, solange ReStart angezeigt wird: Die Schaltfläche „Wach halten“ neben Fokus zeigt die verbleibende Zeit.
-• Export und Import deiner Anpassungen.
-• Verfügbar auf Deutsch, Englisch, Französisch, Spanisch, Portugiesisch, Niederländisch und Italienisch.
+ReStart macht aus deiner Lesezeichenleiste eine ruhige Startseite: Ihre Seiten werden zu Kacheln, ihre Ordner zu Spalten, genau in deiner Reihenfolge. Nichts einzurichten, kein Konto nötig.
 
-Datenschutz eingebaut: kein Konto, kein Server, kein Tracking. Open Source unter der MIT-Lizenz.
+JEDE SEITE IN EINER SEKUNDE FINDEN
+Deine Lesezeichen, so angeordnet, wie du sie organisiert hast. Tippe ein paar Buchstaben zum Filtern, drücke Enter zum Öffnen. Hebe deine Favoriten hervor und ziehe zum Umsortieren: Deine echten Lesezeichen ziehen mit.
+
+EINE SEITE, DIE DEINEM TAG FOLGT
+Sonnenlicht, das über die Seite wandert, Blätterschatten im Wind, Blüten oder Schnee je nach Jahreszeit, oder eine schlichte Farbe. Hell oder dunkel, immer ruhig.
+
+GEMACHT FÜR DEINE ART ZU ARBEITEN
+• Der Fokusmodus blendet deine Lesezeichen mit einem Klick aus, für einen ruhigen Moment oder einen geteilten Bildschirm.
+• Wach halten lässt den Bildschirm an, während du liest, Notizen machst oder auf eine lange Aufgabe wartest.
+
+DEINS, UND NUR DEINS
+Kein Konto, kein Server, kein Tracking. Deine Einstellungen bleiben in deinem Browser. Open Source (MIT). In 7 Sprachen verfügbar.
+
